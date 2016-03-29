@@ -13,6 +13,8 @@ import com.input.keyboard.KeyboardInput;
 import com.joml.Matrix4f;
 import com.joml.Vector4f;
 
+import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -22,6 +24,8 @@ import java.nio.IntBuffer;
  * Created by german on 27/03/2016.
  */
 public class HelloWorld extends Application {
+
+    DebugGui debug;
 
     Sound sound;
     ShaderProgram program;
@@ -34,6 +38,16 @@ public class HelloWorld extends Application {
 
     @Override
     public void onInit() {
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                debug = new DebugGui();
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
         context.keyboard.setKeyboardListener(new KeyboardAdapter() {
             @Override
             public void onKeyDown(int key) {
@@ -132,11 +146,29 @@ public class HelloWorld extends Application {
 
         if (context.time.elapsedFrames()%60 == 0)
         System.out.println(context.time.getFramesPerSecond());
+
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                debug.doSomething(context.renderer.getStatistics());
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onDestroy() {
-
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                debug.dispose();
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
 }

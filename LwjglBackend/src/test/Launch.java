@@ -4,7 +4,6 @@ import com.application.Application;
 import com.application.Context;
 import com.audio.LwjglAudioRenderer;
 import com.graphics.render.LwjglRenderer;
-import com.graphics.render.RenderStats;
 import com.input.keyboard.keyboard.LwjglKeyboard;
 import com.input.mouse.LwjglMouseInput;
 import com.timing.LwjglTime;
@@ -12,9 +11,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
-
-import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 
 /**
