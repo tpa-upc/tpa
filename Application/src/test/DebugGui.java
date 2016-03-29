@@ -68,7 +68,7 @@ public class DebugGui extends JFrame {
             return "Meow";
         }
 
-        String[] col0 = {"Vbo count", "Texture switches", "shader switches", "FBO switches", "Vertices", "----------",
+        String[] col0 = {"Vbo count", "Texture switches", "shader switches", "FBO switches", "Vertices", "",
         "Allocated Textures", "Allocated Vbos", "Allocated Ebos", "Allocated Framebuffers", "Allocated Programs"};
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
