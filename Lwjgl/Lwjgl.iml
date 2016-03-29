@@ -14,7 +14,7 @@
         </CLASSES>
         <JAVADOC />
         <NATIVE>
-          <root url="file://$MODULE_DIR$/lib/native" />
+          <root url="file://$MODULE_DIR$/native" />
         </NATIVE>
         <SOURCES />
       </library>
