@@ -53,6 +53,7 @@ public class Tests extends Application {
         debug.setWrapV(TextureWrap.Repeat);
         debug.setMin(TextureFilter.MipmapLinear);
         debug.setMag(TextureFilter.Linear);
+        debug.setGenerateMipmaps(true);
 
         // create models
         cube = new Mesh(MeshUsage.Static);

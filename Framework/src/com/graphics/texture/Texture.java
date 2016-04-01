@@ -40,6 +40,9 @@ public class Texture {
     /** signal the renderer to clear the data once it's been sent to the GPU */
     private boolean keepData = true;
 
+    /** Generate mipmap flag */
+    private boolean generateMipmaps = false;
+
     public Texture (int width, int height, TextureFormat format) {
         this.format = format;
         this.width = width;
@@ -220,5 +223,13 @@ public class Texture {
      */
     public void setKeepData(boolean keepData) {
         this.keepData = keepData;
+    }
+
+    public boolean isGenerateMipmaps() {
+        return generateMipmaps;
+    }
+
+    public void setGenerateMipmaps(boolean generateMipmaps) {
+        this.generateMipmaps = generateMipmaps;
     }
 }

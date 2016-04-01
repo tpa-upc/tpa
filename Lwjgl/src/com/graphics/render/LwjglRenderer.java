@@ -8,6 +8,7 @@ import com.graphics.texture.Framebuffer;
 import com.graphics.texture.Texture;
 import com.joml.*;
 import com.utils.Destroyable;
+import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.opengl.GLUtil;
 
 import java.nio.*;
@@ -31,6 +32,7 @@ import static org.lwjgl.opengl.GL30.*;
  */
 public class LwjglRenderer implements Renderer, Destroyable {
 
+    private GLCapabilities caps;
     private static boolean debug = true;
 
     private RendererListener listener = null;
@@ -66,7 +68,8 @@ public class LwjglRenderer implements Renderer, Destroyable {
     // fbo handles
     private Map<Framebuffer, Integer> fbos = new HashMap<>();
 
-    public LwjglRenderer() {
+    public LwjglRenderer(GLCapabilities caps) {
+        this.caps = caps;
         int maxUnits = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS);
         units = new Texture[maxUnits];
 
@@ -241,7 +244,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
             // reupload data to the gpu
             int format = LwjglUtils.TextureFormat2int(texture.getFormat());
             glTexImage2D(GL_TEXTURE_2D, 0, format, texture.getWidth(), texture.getHeight(), 0, format, GL_UNSIGNED_BYTE, texture.getData());
-            glGenerateMipmap(GL_TEXTURE_2D);
 
             // we don't need the texture data anymore
             if (!texture.isKeepData()) {
@@ -258,6 +260,15 @@ public class LwjglRenderer implements Renderer, Destroyable {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, LwjglUtils.wrap2int(texture.getWrapU()));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, LwjglUtils.wrap2int(texture.getWrapV()));
             texture.setParamsDirty(false);
+        }
+
+        if (texture.isGenerateMipmaps()) {
+            texture.setGenerateMipmaps(false);
+            if (caps.OpenGL30)
+                glGenerateMipmap(GL_TEXTURE_2D);
+            else {
+                // dom something else?
+            }
         }
 
         units[unit] = texture;

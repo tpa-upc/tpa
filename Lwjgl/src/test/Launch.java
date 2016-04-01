@@ -10,6 +10,7 @@ import com.timing.LwjglTime;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.*;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 
@@ -28,7 +29,7 @@ public class Launch {
         GLFW.glfwSwapInterval(1);
 
         // create OpenGL context
-        GL.createCapabilities();
+        GLCapabilities glcaps = GL.createCapabilities();
 
         // create OpenAL context
         long device = ALC10.alcOpenDevice((String) null);
@@ -37,7 +38,7 @@ public class Launch {
         ALC10.alcMakeContextCurrent(context);
         AL.createCapabilities(alcCaps);
 
-        LwjglRenderer renderer = new LwjglRenderer();
+        LwjglRenderer renderer = new LwjglRenderer(glcaps);
         LwjglTime time = new LwjglTime(window);
         LwjglAudioRenderer audio = new LwjglAudioRenderer();
         LwjglMouseInput mouse = new LwjglMouseInput(window);
