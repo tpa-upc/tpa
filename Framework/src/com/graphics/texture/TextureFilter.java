@@ -9,5 +9,11 @@ public enum TextureFilter {
     Nearest,
 
     /** Bilinear interpolation filter */
-    Linear
+    Linear,
+
+    /** mipmap linear */
+    MipmapLinear,
+
+    /** mipmap nearest */
+    MipmapNearest
 }

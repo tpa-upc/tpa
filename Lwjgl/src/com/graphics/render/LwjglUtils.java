@@ -35,6 +35,10 @@ public class LwjglUtils {
                 return GL11.GL_LINEAR;
             case Nearest:
                 return GL11.GL_NEAREST;
+            case MipmapLinear:
+                return GL11.GL_LINEAR_MIPMAP_LINEAR;
+            case MipmapNearest:
+                return GL11.GL_LINEAR_MIPMAP_NEAREST;
             default:
                 throw new RuntimeException();
         }
