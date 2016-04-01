@@ -5,24 +5,20 @@ package com.application;
  */
 public abstract class Application {
 
-    protected Context context;
-
-    public Application (Context context) {
-        this.context = context;
-    }
-
     /**
      * Called at the beginning of the program
      */
-    public abstract void onInit ();
+    public abstract void onInit (Context context);
 
     /**
      * Called once per frame
      */
-    public void onUpdate () {}
+    public void onUpdate (Context context) {
+    }
 
     /**
      * Called at the end of the program
      */
-    public void onDestroy () {}
+    public void onDestroy (Context context) {
+    }
 }

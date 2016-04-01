@@ -103,8 +103,8 @@ public class LwjglRenderer implements Renderer, Destroyable {
     }
 
     @Override
-    public void clearColor(Vector4f color) {
-        glClearColor(color.x, color.y, color.z, color.w);
+    public void clearColor(float r, float g, float b, float a) {
+        glClearColor(r, g, b, a);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Sound {
                 .order(ByteOrder.nativeOrder())
                 .asShortBuffer();
 
-        int freq = 540;
+        int freq = 540/2;
         float edge0 = sr*dir;
         float edge1 = sr*dir/2;
 
@@ -30,7 +30,9 @@ public class Sound {
             float t = (float)(i - edge0) / (edge1 - edge0);
             if (t<0)t=0;else if (t>1)t=1;
             float gain =  t * t * (3.0f - 2.0f * t);
-            float sample = (float) Math.sin(2*Math.PI*freq/sr*i)*1;
+            float mod = (float) Math.sin(2*Math.PI*freq * 1/sr*i);
+            float sample = (float) Math.sin(2*Math.PI*freq/sr*i + mod*8) * 0.3f;
+            sample += (float) Math.sin(2*Math.PI*freq*0.5f/sr*i + mod*4) * 0.7f * (mod*0.5+0.5);
             if (sample > 1) sample = 1;
             else if (sample < -1) sample = -1;
             sine.put((short)(Short.MAX_VALUE*sample*gain));

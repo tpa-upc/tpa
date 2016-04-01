@@ -49,18 +49,18 @@ public class Launch {
         con.time = time;
         con.keyboard = keyboard;
 
-        Application program = new HelloWorld(con);
-        program.onInit();
+        Application program = new Tests();
+        program.onInit(con);
 
         while (GLFW.glfwWindowShouldClose(window) == GLFW.GLFW_FALSE) {
             time.update();
-            program.onUpdate();
+            program.onUpdate(con);
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
         }
 
-        program.onDestroy();
+        program.onDestroy(con);
 
         renderer.destroy();
         mouse.destroy();

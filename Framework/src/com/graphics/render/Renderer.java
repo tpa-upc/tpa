@@ -58,7 +58,7 @@ public interface Renderer {
      * Clear framebuffer color
      * @param color rgba color
      */
-    void clearColor (Vector4f color);
+    void clearColor (float r, float g, float b, float a);
 
     /**
      * Clear framebuffer buffers
