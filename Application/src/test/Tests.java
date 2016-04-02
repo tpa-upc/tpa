@@ -149,7 +149,7 @@ public class Tests extends Application {
 
         depth.setUniform("u_model", UniformType.Matrix4, model.identity().rotate(context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
         renderer.renderMesh(cube);
-        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(3, 2, 3f).scale(0.5f).rotate(context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
+        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(3, 2, 3f).scale(0.5f).rotate(-context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
         renderer.renderMesh(cube);
         depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
         renderer.renderMesh(plane);
@@ -166,7 +166,7 @@ public class Tests extends Application {
         renderer.setTexture(1, shadowmap.getDepth());
         diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().rotate(context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
         renderer.renderMesh(cube);
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(3, 2, 3f).scale(0.5f).rotate(context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(3, 2, 3f).scale(0.5f).rotate(-context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
         renderer.renderMesh(cube);
         diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
         renderer.renderMesh(plane);
