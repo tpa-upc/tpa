@@ -14,7 +14,9 @@ public class StaticTextures {
                 int ind = (64*i+x)*3;
                 int gridX = i/16%2;
                 int gridY = x/16%2;
-                DEBUG[ind] = DEBUG[ind+1] = DEBUG[ind+2] = pal[(gridX+gridY)%2];
+                byte c = pal[(gridX+gridY)%2];
+                if (i < 2 || i >= 62 || x < 2 || x >= 62) c = (byte)0x55;
+                DEBUG[ind] = DEBUG[ind+1] = DEBUG[ind+2] = c;
             }
         }
     }

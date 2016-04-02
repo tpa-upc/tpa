@@ -53,6 +53,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
     private Map<Mesh, Integer> vboPos = new HashMap<>();
     private Map<Mesh, Integer> vboColor = new HashMap<>();
     private Map<Mesh, Integer> vboUv = new HashMap<>();
+    private Map<Mesh, Integer> vboNormal = new HashMap<>();
     private Map<Mesh, Integer> ibos = new HashMap<>();
 
     // shader program handles
@@ -349,6 +350,11 @@ public class LwjglRenderer implements Renderer, Destroyable {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textures.get(depth), 0);
             }
 
+            if (targets.length == 0 && fbo.hasDepth()) {
+                glDrawBuffer(GL_NONE);
+                glReadBuffer(GL_NONE);
+            }
+
             int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
             if (status != GL_FRAMEBUFFER_COMPLETE)
                 throw new RuntimeException("fbo not complete");
@@ -404,6 +410,23 @@ public class LwjglRenderer implements Renderer, Destroyable {
                     if (vbo == null) {
                         vbo = glGenBuffers();
                         vboUv.put(mesh, vbo);
+                        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                        glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) data, LwjglUtils.usage2int(mesh.getUsage()));
+                        if (!mesh.isKeepData()) {
+                            mesh.getData(attrs[i]).clear();
+                            mesh.setData(attrs[i], null, true);
+                        }
+                    } else {
+                        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+                        if (mesh.isDirty())
+                            glBufferSubData(GL_ARRAY_BUFFER, data.position()<<2, (FloatBuffer) data);
+                    }
+                    break;
+                case Normal:
+                    vbo = vboNormal.get(mesh);
+                    if (vbo == null) {
+                        vbo = glGenBuffers();
+                        vboNormal.put(mesh, vbo);
                         glBindBuffer(GL_ARRAY_BUFFER, vbo);
                         glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) data, LwjglUtils.usage2int(mesh.getUsage()));
                         if (!mesh.isKeepData()) {
@@ -564,6 +587,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
         vboPos.forEach((vbos, id) -> glDeleteBuffers(id));
         vboColor.forEach((vbos, id) -> glDeleteBuffers(id));
         vboUv.forEach((vbos, id) -> glDeleteBuffers(id));
+        vboNormal.forEach((vbos, id) -> glDeleteBuffers(id));
         ibos.forEach((ibos, id) -> glDeleteBuffers(id));
 
         programs.forEach((prog, id) -> glDeleteProgram(id));
