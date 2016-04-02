@@ -90,7 +90,24 @@ public class StaticPrograms {
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_shadowmap;\n" +
             "\n" +
+            "float rand(vec2 co){\n" +
+            "    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +
+            "}\n" +
+            "\n" +
+            "vec2 samples[8];\n" +
+            "\n" +
             "void main () {\n" +
+            "\n" +
+            "    samples[0] = vec2(-0.94, -0.33);\n" +
+            "        samples[1] = vec2(0.95, 0.31);\n" +
+            "            samples[2] = vec2(-0.82, 0.58);\n" +
+            "                samples[3] = vec2(-0.48, -0.87);\n" +
+            "                    samples[4] = vec2(-0.83, -0.56);\n" +
+            "                        samples[5] = vec2(0.28, 0.96);\n" +
+            "                            samples[6] = vec2(0.87, 0.50);\n" +
+            "                                samples[7] = vec2(-0.77, 0.64);\n" +
+            "                                \n" +
+            "\n" +
             "    vec2 shadow_uv = v_shadow_position.xy * 0.5 + 0.5;\n" +
             "    float bias = 0.005;\n" +
             "    float shade = 1;\n" +
@@ -98,17 +115,19 @@ public class StaticPrograms {
             "    vec3 light_dir = normalize(vec3(1, 1, 1));\n" +
             "    float light = clamp(dot(light_dir, v_normal), 0.0, 1.0);\n" +
             "    \n" +
+            "    float random = rand(gl_FragCoord.xy);\n" +
             "    if (length(v_position.xz) < 8) {\n" +
-            "        for (int i = 0; i < 5; ++i) {\n" +
-            "            float a = 3.1415*2*float(i)/5.0;\n" +
-            "            if (texture2D(u_shadowmap, shadow_uv + vec2(sin(a), cos(a))*0.0005).r * 2 - 1 < v_shadow_position.z - bias)\n" +
-            "                shade -= 1/5.0;\n" +
+            "        for (int i = 0; i < 8; ++i) {\n" +
+            "            //float a = 3.1415*2*float(i)/5.0;\n" +
+            "            //vec2 v = vec2(sin(a), cos(a))*0.001;\n" +
+            "            if (texture2D(u_shadowmap, shadow_uv + samples[i]*0.001).r * 2 - 1 < v_shadow_position.z - bias)\n" +
+            "                shade -= 1/8.0;\n" +
             "        }\n" +
             "    }\n" +
             "    \n" +
             "    shade = min(shade, light);\n" +
             "    \n" +
-            "    frag_color = vec4(texture2D(u_texture, v_uv).rgb*mix(0.25, 1, shade), 1.0);\n" +
+            "    frag_color = vec4(texture2D(u_texture, v_uv).rgb*mix(0.25, 1, smoothstep(0, 1, shade) ), 1.0);\n" +
             "}";
 
     private StaticPrograms () {

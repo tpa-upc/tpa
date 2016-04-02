@@ -122,7 +122,8 @@ public class Tests extends Application {
         projection.setPerspective(50*3.1415f/180, 4f/3, 0.1f, 1000f);
         view.setLookAt(camX, 6, camZ, 0, 0, 0, 0, 1, 0);
 
-        shadowProjection.setOrtho(-32, 32, -32, 32, -16, 16);
+        float s = 16;
+        shadowProjection.setOrtho(-s, s, -s, s, -s, s);
         shadowView.setLookAlong(-1f, -1, -1, 0, 1, 0);
 
         diffuse.setUniform("u_projection_shadow", UniformType.Matrix4, shadowProjection);
