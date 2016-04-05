@@ -27,6 +27,9 @@ import java.util.Random;
  */
 public class Tests extends Application {
 
+    static final int WIDTH = 640;
+    static final int HEIGHT = 480;
+
     /** Projection matrix */
     Matrix4f projection = new Matrix4f();
     Matrix4f shadowProjection = new Matrix4f();
@@ -46,6 +49,7 @@ public class Tests extends Application {
     ShaderProgram diffuse;
     ShaderProgram depth;
     Texture debug;
+    Texture texture2;
     Framebuffer shadowmap;
 
     List<Matrix4f> cubes = new ArrayList<>();
@@ -63,13 +67,25 @@ public class Tests extends Application {
         depth = new ShaderProgram(StaticPrograms.SHADOWMAP_VERT, StaticPrograms.SHADOWMAP_FRAG, Attribute.Position);
 
         // create texture
-        debug = new Texture(64, 64, TextureFormat.Rgb);
-        debug.setData((ByteBuffer) ByteBuffer.allocateDirect(64*64*3).order(ByteOrder.nativeOrder()).put(StaticTextures.DEBUG).flip());
+        debug = new Texture(128, 128, TextureFormat.Rgb);
+        debug.setData((ByteBuffer) ByteBuffer.allocateDirect(128*128*3)
+                .order(ByteOrder.nativeOrder())
+                .put(StaticTextures.TEXTURE).flip());
         debug.setWrapU(TextureWrap.Repeat);
         debug.setWrapV(TextureWrap.Repeat);
         debug.setMin(TextureFilter.MipmapLinear);
         debug.setMag(TextureFilter.Linear);
         debug.setGenerateMipmaps(true);
+
+        texture2 = new Texture(128, 128, TextureFormat.Rgb);
+        texture2.setData((ByteBuffer) ByteBuffer.allocateDirect(128*128*3)
+                .order(ByteOrder.nativeOrder())
+                .put(StaticTextures.TEXTURE2).flip());
+        texture2.setWrapU(TextureWrap.Repeat);
+        texture2.setWrapV(TextureWrap.Repeat);
+        texture2.setMin(TextureFilter.MipmapLinear);
+        texture2.setMag(TextureFilter.Linear);
+        texture2.setGenerateMipmaps(true);
 
         // create models
         cube = new Mesh(MeshUsage.Static);
@@ -122,7 +138,7 @@ public class Tests extends Application {
         plane.setLength(6);
 
         Random rand = new Random(42);
-        for (int i = 0; i < 128; ++i) {
+        for (int i = 0; i < 64; ++i) {
             Vector3f axis = new Vector3f(rand.nextFloat()*2-1, rand.nextFloat()*2-1, rand.nextFloat()*2-1).normalize();
             Matrix4f mod = new Matrix4f()
                     .translate(rand.nextFloat()*42-21, rand.nextFloat()*16, rand.nextFloat()*42-21)
@@ -134,7 +150,7 @@ public class Tests extends Application {
     @Override
     public void onUpdate(Context context) {
         Random rand = new Random(42);
-        for (int i = 0; i < 128; ++i) {
+        for (int i = 0; i < cubes.size(); ++i) {
             Vector3f axis = new Vector3f(rand.nextFloat()*2-1, rand.nextFloat()*2-1, rand.nextFloat()*2-1).normalize();
             Matrix4f mod = cubes.get(i)
                     .identity()
@@ -185,7 +201,7 @@ public class Tests extends Application {
 
         // render scene
         renderer.setFramebuffer(null);
-        renderer.viewport(0, 0, 640, 480);
+        renderer.viewport(0, 0, WIDTH, HEIGHT);
         renderer.clearBuffers();
         renderer.setDepth(true);
         renderer.clearColor(0, 0, 0, 1);
@@ -207,6 +223,7 @@ public class Tests extends Application {
             renderer.renderMesh(cube);
         });
 
+        renderer.setTexture(0, texture2);
         diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1, 0));
         renderer.renderMesh(plane);
 
