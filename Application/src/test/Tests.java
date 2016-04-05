@@ -76,6 +76,7 @@ public class Tests extends Application {
         debug.setMin(TextureFilter.MipmapLinear);
         debug.setMag(TextureFilter.Linear);
         debug.setGenerateMipmaps(true);
+        debug.setKeepData(false);
 
         texture2 = new Texture(128, 128, TextureFormat.Rgb);
         texture2.setData((ByteBuffer) ByteBuffer.allocateDirect(128*128*3)
@@ -86,6 +87,7 @@ public class Tests extends Application {
         texture2.setMin(TextureFilter.MipmapLinear);
         texture2.setMag(TextureFilter.Linear);
         texture2.setGenerateMipmaps(true);
+        texture2.setKeepData(false);
 
         // create models
         cube = new Mesh(MeshUsage.Static);
@@ -161,7 +163,7 @@ public class Tests extends Application {
         float camX = (float) Math.cos(context.time.getTime()/4) * 32;
         float camZ = (float) Math.sin(context.time.getTime()/4) * 32;
         projection.setPerspective(50*3.1415f/180, 4f/3, 0.1f, 1000f);
-        view.setLookAt(camX, 24, camZ, 0, 0, 0, 0, 1, 0);
+        view.setLookAt(camX, 12 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 0, 0, 0, 1, 0);
 
         float s = 128;
         shadowProjection.setOrtho(-s, s, -s, s, -s, s);
@@ -204,7 +206,7 @@ public class Tests extends Application {
         renderer.viewport(0, 0, WIDTH, HEIGHT);
         renderer.clearBuffers();
         renderer.setDepth(true);
-        renderer.clearColor(0, 0, 0, 1);
+        renderer.clearColor(1, 1, 1, 1);
 
         renderer.setShaderProgram(diffuse);
         diffuse.setUniform("u_projection_shadow", UniformType.Matrix4, shadowProjection);

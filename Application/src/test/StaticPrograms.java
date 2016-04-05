@@ -58,6 +58,7 @@ public class StaticPrograms {
             "\n" +
             "out vec2 v_uv;\n" +
             "out vec4 v_position;\n" +
+            "out vec4 v_position_view;\n" +
             "out vec3 v_normal;\n" +
             "out vec4 v_shadow_position;\n" +
             "\n" +
@@ -72,6 +73,7 @@ public class StaticPrograms {
             "    vec4 model_trans = u_model * vec4(a_position, 1.0);\n" +
             "    gl_Position = u_projection * u_view * model_trans;\n" +
             "    v_position = model_trans;\n" +
+            "    v_position_view = u_view * model_trans;\n" +
             "    v_normal = normalize((u_model * vec4(a_normal, 0.0)).xyz);\n" +
             "    v_shadow_position = u_projection_shadow * u_view_shadow * u_model * vec4(a_position, 1.0);\n" +
             "    v_uv = a_uv;\n" +
@@ -82,6 +84,7 @@ public class StaticPrograms {
             "\n" +
             "in vec2 v_uv;\n" +
             "in vec4 v_position;\n" +
+            "in vec4 v_position_view;\n" +
             "in vec3 v_normal;\n" +
             "in vec4 v_shadow_position;\n" +
             "\n" +
@@ -117,7 +120,9 @@ public class StaticPrograms {
             "    \n" +
             "    shade = min(shade, light);\n" +
             "    \n" +
+            "    float fog = exp(-max(0, length(v_position_view.xyz)-16)*0.025);" +
             "    frag_color = vec4(texture2D(u_texture, v_uv).rgb*mix(0.25, 1, smoothstep(0, 1, shade) ), 1.0);\n" +
+            "    frag_color.rgb = mix(frag_color.rgb, vec3(1.0), 1-fog);" +
             "    frag_color.rgb = pow(frag_color.rgb, vec3(0.7));\n" +
             "}";
 
