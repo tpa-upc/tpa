@@ -541,6 +541,16 @@ public class LwjglRenderer implements Renderer, Destroyable {
                     mat3.get(matbuffer).flip();
                     glUniformMatrix3fv(loc, false, matbuffer);
                     break;
+                case Vector2Array:
+                    Vector2f[] vec2arr = (Vector2f[]) u.getValue();
+                    matbuffer.clear();
+                    for (int i = 0; i < vec2arr.length; ++i) {
+                        vec2arr[i].get(matbuffer);
+                        matbuffer.position(2*(i+1));
+                    }
+                    matbuffer.flip();
+                    glUniform2fv(loc, matbuffer);
+                    break;
                 case Matrix3Array:
                     Matrix3f[] mat3arr = (Matrix3f[]) u.getValue();
                     matbuffer.clear();

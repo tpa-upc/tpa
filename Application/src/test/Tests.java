@@ -13,9 +13,14 @@ import com.graphics.shader.ShaderProgram;
 import com.graphics.shader.UniformType;
 import com.graphics.texture.*;
 import com.joml.Matrix4f;
+import com.joml.Vector2f;
+import com.joml.Vector3f;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by germangb on 01/04/16.
@@ -42,6 +47,8 @@ public class Tests extends Application {
     ShaderProgram depth;
     Texture debug;
     Framebuffer shadowmap;
+
+    List<Matrix4f> cubes = new ArrayList<>();
 
     @Override
     public void onInit(Context context) {
@@ -113,33 +120,53 @@ public class Tests extends Application {
                 .flip());
         plane.setKeepData(false);
         plane.setLength(6);
+
+        Random rand = new Random(42);
+        for (int i = 0; i < 128; ++i) {
+            Vector3f axis = new Vector3f(rand.nextFloat()*2-1, rand.nextFloat()*2-1, rand.nextFloat()*2-1).normalize();
+            Matrix4f mod = new Matrix4f()
+                    .translate(rand.nextFloat()*42-21, rand.nextFloat()*16, rand.nextFloat()*42-21)
+                    .rotate(context.time.getTime() + i, axis);
+            cubes.add(mod);
+        }
     }
 
     @Override
     public void onUpdate(Context context) {
-        float camX = (float) Math.cos(context.time.getTime()/4) * 8;
-        float camZ = (float) Math.sin(context.time.getTime()/4) * 8;
-        projection.setPerspective(50*3.1415f/180, 4f/3, 0.1f, 1000f);
-        view.setLookAt(camX, 6, camZ, 0, 0, 0, 0, 1, 0);
+        Random rand = new Random(42);
+        for (int i = 0; i < 128; ++i) {
+            Vector3f axis = new Vector3f(rand.nextFloat()*2-1, rand.nextFloat()*2-1, rand.nextFloat()*2-1).normalize();
+            Matrix4f mod = cubes.get(i)
+                    .identity()
+                    .translate(rand.nextFloat()*42-21, rand.nextFloat()*16, rand.nextFloat()*42-21)
+                    .rotate(context.time.getTime() + i, axis);
+        }
 
-        float s = 16;
+        float camX = (float) Math.cos(context.time.getTime()/4) * 32;
+        float camZ = (float) Math.sin(context.time.getTime()/4) * 32;
+        projection.setPerspective(50*3.1415f/180, 4f/3, 0.1f, 1000f);
+        view.setLookAt(camX, 24, camZ, 0, 0, 0, 0, 1, 0);
+
+        float s = 128;
         shadowProjection.setOrtho(-s, s, -s, s, -s, s);
         shadowView.setLookAlong(-1f, -1, -1, 0, 1, 0);
-
-        diffuse.setUniform("u_projection_shadow", UniformType.Matrix4, shadowProjection);
-        diffuse.setUniform("u_view_shadow", UniformType.Matrix4, shadowView);
-        diffuse.setUniform("u_projection", UniformType.Matrix4, projection);
-        diffuse.setUniform("u_view", UniformType.Matrix4, view);
-        diffuse.setUniform("u_model", UniformType.Matrix4, model);
-        diffuse.setUniform("u_texture", UniformType.Sampler2D, 0);
-        diffuse.setUniform("u_shadowmap", UniformType.Sampler2D, 1);
 
         depth.setUniform("u_projection", UniformType.Matrix4, shadowProjection);
         depth.setUniform("u_view", UniformType.Matrix4, shadowView);
         depth.setUniform("u_model", UniformType.Matrix4, model);
 
+        Vector2f[] samples = new Vector2f[8];
+        for (int i = 0; i < 8; ++i) {
+            float a = (float) Math.random() * 3.1415f*2;
+            samples[i] = new Vector2f((float)Math.sin(a), (float)Math.cos(a));
+        }
+        depth.setUniform("u_samples", UniformType.Vector2Array, samples);
+
         Renderer renderer = context.renderer;
         renderer.beginFrame();
+        renderer.setCulling(Culling.BackFace);
+        renderer.setRenderMode(RenderMode.Fill);
+
         // render shadowmap
         renderer.setFramebuffer(shadowmap);
         renderer.viewport(0, 0, shadowmap.getWidth(), shadowmap.getHeight());
@@ -148,10 +175,11 @@ public class Tests extends Application {
 
         renderer.setShaderProgram(depth);
 
-        depth.setUniform("u_model", UniformType.Matrix4, model.identity().rotate(context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
-        renderer.renderMesh(cube);
-        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(3, 2, 3f).scale(0.5f).rotate(-context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
-        renderer.renderMesh(cube);
+        cubes.forEach(mod -> {
+            depth.setUniform("u_model", UniformType.Matrix4, mod);
+            renderer.renderMesh(cube);
+        });
+
         depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
         renderer.renderMesh(plane);
 
@@ -163,14 +191,30 @@ public class Tests extends Application {
         renderer.clearColor(0, 0, 0, 1);
 
         renderer.setShaderProgram(diffuse);
+        diffuse.setUniform("u_projection_shadow", UniformType.Matrix4, shadowProjection);
+        diffuse.setUniform("u_view_shadow", UniformType.Matrix4, shadowView);
+        diffuse.setUniform("u_projection", UniformType.Matrix4, projection);
+        diffuse.setUniform("u_view", UniformType.Matrix4, view);
+        diffuse.setUniform("u_model", UniformType.Matrix4, model);
+        diffuse.setUniform("u_texture", UniformType.Sampler2D, 0);
+        diffuse.setUniform("u_shadowmap", UniformType.Sampler2D, 1);
+
         renderer.setTexture(0, debug);
         renderer.setTexture(1, shadowmap.getDepth());
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().rotate(context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
-        renderer.renderMesh(cube);
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(3, 2, 3f).scale(0.5f).rotate(-context.time.getTime()*1.167f, 0, 1, 0).rotate(context.time.getTime()*0.27f, 1, 0, 0));
-        renderer.renderMesh(cube);
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
+
+        cubes.forEach(mod -> {
+            diffuse.setUniform("u_model", UniformType.Matrix4, mod);
+            renderer.renderMesh(cube);
+        });
+
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1, 0));
         renderer.renderMesh(plane);
+
+        renderer.setShaderProgram(wireframe);
+        renderer.setRenderMode(RenderMode.Wireframe);
+        wireframe.setUniform("u_projection", UniformType.Matrix4, projection);
+        wireframe.setUniform("u_view", UniformType.Matrix4, view);
+        wireframe.setUniform("u_model", UniformType.Matrix4, model.identity());
 
         renderer.endFrame();
     }
