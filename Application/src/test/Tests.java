@@ -33,26 +33,22 @@ public class Tests extends Application {
     static final int WIDTH = 640;
     static final int HEIGHT = 480;
 
-    /** Projection matrix */
     Matrix4f projection = new Matrix4f();
     Matrix4f shadowProjection = new Matrix4f();
-
-    /** Camera transformation */
     Matrix4f view = new Matrix4f();
-
-    /** view matrix shadowmap */
     Matrix4f shadowView = new Matrix4f();
-
-    /** model transformation */
     Matrix4f model = new Matrix4f();
+
+    Texture debug;
+    Texture texture2;
 
     Mesh cube;
     Mesh plane;
+
     ShaderProgram wireframe;
     ShaderProgram diffuse;
     ShaderProgram depth;
-    Texture debug;
-    Texture texture2;
+
     Framebuffer shadowmap;
 
     List<Matrix4f> cubes = new ArrayList<>();
@@ -71,7 +67,6 @@ public class Tests extends Application {
         diffuse = new ShaderProgram(StaticPrograms.DIFFUSE_VERT, StaticPrograms.DIFFUSE_FRAG, Attribute.Position, Attribute.Uv, Attribute.Normal);
         depth = new ShaderProgram(StaticPrograms.SHADOWMAP_VERT, StaticPrograms.SHADOWMAP_FRAG, Attribute.Position);
 
-        // load textures
         manager.setListener(new ResourceManager.ResourceManagerListener() {
             @Override
             public void onLoaded(String string, Class<?> type) {
@@ -83,6 +78,8 @@ public class Tests extends Application {
                 System.out.println("[FAILED] "+string+" ("+type+")");
             }
         });
+
+        // load resources
         manager.load("res/texture.png", Texture.class);
         manager.load("res/texture2.png", Texture.class);
         manager.load("res/cube.json", Mesh.class);
@@ -118,8 +115,8 @@ public class Tests extends Application {
                     .rotate(context.time.getTime() + i, axis);
         }
 
-        float camX = (float) Math.cos(context.time.getTime()/4) * 32;
-        float camZ = (float) Math.sin(context.time.getTime()/4) * 32;
+        float camX = (float) Math.cos(context.time.getTime()/2) * 32;
+        float camZ = (float) Math.sin(context.time.getTime()/2) * 32;
         projection.setPerspective(50*3.1415f/180, 4f/3, 0.1f, 1000f);
         view.setLookAt(camX, 12 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 0, 0, 0, 1, 0);
 
@@ -186,12 +183,6 @@ public class Tests extends Application {
         renderer.setTexture(0, texture2);
         diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1, 0));
         renderer.renderMesh(plane);
-
-        renderer.setShaderProgram(wireframe);
-        renderer.setRenderMode(RenderMode.Wireframe);
-        wireframe.setUniform("u_projection", UniformType.Matrix4, projection);
-        wireframe.setUniform("u_view", UniformType.Matrix4, view);
-        wireframe.setUniform("u_model", UniformType.Matrix4, model.identity());
 
         renderer.endFrame();
     }
