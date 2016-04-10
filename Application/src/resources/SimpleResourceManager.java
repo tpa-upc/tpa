@@ -68,7 +68,15 @@ public class SimpleResourceManager implements ResourceManager {
                     listener.onFailed(p.path, p.type, e);
             }
         } else if (p.type == Mesh.class) {
-            throw new UnsupportedOperationException();
+            try {
+                Mesh mesh = ResourceUtils.loadMesh(p.path);
+                loaded.put(p.path, mesh);
+                if (listener != null)
+                    listener.onLoaded(p.path, p.type);
+            } catch (Exception e) {
+                if (listener != null)
+                    listener.onFailed(p.path, p.type, e);
+            }
         } else if (p.type == Sound.class) {
             throw new UnsupportedOperationException();
         } else {

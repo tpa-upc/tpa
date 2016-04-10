@@ -505,7 +505,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
         if (mesh.getIndices() instanceof IntBuffer)
             glDrawElements(prim, count, GL_UNSIGNED_INT, offset << 2);
         else if (mesh.getIndices() instanceof ShortBuffer)
-            glDrawElements(prim, count, GL_UNSIGNED_SHORT, offset<<1);
+            glDrawElements(prim, count, GL_UNSIGNED_SHORT, offset << 1);
         else if (mesh.getIndices() instanceof ByteBuffer)
             glDrawElements(prim, count, GL_UNSIGNED_BYTE, offset);
 

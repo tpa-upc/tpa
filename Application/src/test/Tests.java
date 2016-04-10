@@ -75,44 +75,24 @@ public class Tests extends Application {
         manager.setListener(new ResourceManager.ResourceManagerListener() {
             @Override
             public void onLoaded(String string, Class<?> type) {
-                System.out.println("[LOADED] "+string+"("+type+")");
+                System.out.println("[LOADED] "+string+" ("+type+")");
             }
 
             @Override
             public void onFailed(String string, Class<?> type, Exception e) {
-                System.out.println("[FAILED] "+string+"("+type+")");
+                System.out.println("[FAILED] "+string+" ("+type+")");
             }
         });
         manager.load("res/texture.png", Texture.class);
         manager.load("res/texture2.png", Texture.class);
+        manager.load("res/cube.json", Mesh.class);
         manager.finishLoading();
         debug = manager.get("res/texture.png", Texture.class);
         texture2 = manager.get("res/texture2.png", Texture.class);
 
         // create models
-        cube = new Mesh(MeshUsage.Static);
-        cube.setData(Attribute.Position, ByteBuffer.allocateDirect(StaticGeometry.CUBE_POSITION.length<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(StaticGeometry.CUBE_POSITION)
-                .flip());
-        cube.setData(Attribute.Uv, ByteBuffer.allocateDirect(StaticGeometry.CUBE_UV.length<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(StaticGeometry.CUBE_UV)
-                .flip());
-        cube.setData(Attribute.Normal, ByteBuffer.allocateDirect(StaticGeometry.CUBE_NORMAL.length<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(StaticGeometry.CUBE_NORMAL)
-                .flip());
-        cube.setIndices(ByteBuffer.allocateDirect(StaticGeometry.CUBE_INDICES.length<<1)
-                .order(ByteOrder.nativeOrder())
-                .asShortBuffer()
-                .put(StaticGeometry.CUBE_INDICES)
-                .flip());
+        cube = manager.get("res/cube.json", Mesh.class);
         cube.setKeepData(false);
-        cube.setLength(36);
 
         plane = new Mesh(MeshUsage.Static);
         plane.setPrimitive(Primitive.TriangleStrp);
