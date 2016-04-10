@@ -134,7 +134,7 @@ public class Tests extends Application {
 
         float camX = (float) Math.cos(context.time.getTime()/2) * 32;
         float camZ = (float) Math.sin(context.time.getTime()/2) * 32;
-        projection.setPerspective(50*3.1415f/180, 4f/3, 0.1f, 1000f);
+        projection.setPerspective(50*3.1415f/180, (float)context.window.getWidth()/context.window.getHeight(), 0.1f, 1000f);
         view.setLookAt(camX, 12 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 0, 0, 0, 1, 0);
 
         float s = 128;

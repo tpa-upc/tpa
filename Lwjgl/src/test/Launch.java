@@ -20,7 +20,7 @@ public class Launch {
         GLFW.glfwInit();
 
         // create a window
-        long window = GLFW.glfwCreateWindow(640, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
+        long window = GLFW.glfwCreateWindow(720, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
         GLFW.glfwDefaultWindowHints();
         //GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         GLFW.glfwMakeContextCurrent(window);
