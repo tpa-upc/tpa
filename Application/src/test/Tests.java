@@ -4,10 +4,9 @@ import resources.ResourceManager;
 import resources.SimpleResourceManager;
 import tpa.application.Application;
 import tpa.application.Context;
+import tpa.application.Window;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
-import tpa.graphics.geometry.MeshUsage;
-import tpa.graphics.geometry.Primitive;
 import tpa.graphics.render.Culling;
 import tpa.graphics.render.RenderMode;
 import tpa.graphics.render.Renderer;
@@ -18,9 +17,6 @@ import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 import tpa.joml.Vector3f;
 
-import javax.xml.soap.Text;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,9 +25,6 @@ import java.util.Random;
  * Created by germangb on 01/04/16.
  */
 public class Tests extends Application {
-
-    static final int WIDTH = 640;
-    static final int HEIGHT = 480;
 
     Matrix4f projection = new Matrix4f();
     Matrix4f shadowProjection = new Matrix4f();
@@ -102,6 +95,13 @@ public class Tests extends Application {
                     .rotate(context.time.getTime() + i, axis);
             cubes.add(mod);
         }
+
+        context.window.setWindowListener(new Window.WindowListener() {
+            @Override
+            public void onResized(int width, int height) {
+                System.out.println("[RESIZED] "+width+"x"+height);
+            }
+        });
     }
 
     @Override
@@ -158,7 +158,7 @@ public class Tests extends Application {
 
         // render scene
         renderer.setFramebuffer(null);
-        renderer.viewport(0, 0, WIDTH, HEIGHT);
+        renderer.viewport(0, 0, context.window.getWidth(), context.window.getHeight());
         renderer.clearBuffers();
         renderer.setDepth(true);
         renderer.clearColor(1, 1, 1, 1);

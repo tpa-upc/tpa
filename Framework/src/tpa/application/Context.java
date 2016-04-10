@@ -11,18 +11,30 @@ import tpa.timing.Time;
  */
 public class Context {
 
+    /** window width */
+    public final Window window;
+
     /** Renderer handle */
-    public Renderer renderer;
+    public final Renderer renderer;
 
     /** Audio renderer handle */
-    public AudioRenderer audioRenderer;
+    public final AudioRenderer audioRenderer;
 
     /** Timing handle */
-    public Time time;
+    public final Time time;
 
     /** Mouse input handle */
-    public MouseInput mouse;
+    public final MouseInput mouse;
 
     /** Keyboard input handler */
-    public KeyboardInput keyboard;
+    public final KeyboardInput keyboard;
+
+    public Context (Window window, Renderer renderer, AudioRenderer audioRenderer, Time time, MouseInput mouse, KeyboardInput keyboard) {
+        this.window = window;
+        this.renderer = renderer;
+        this.audioRenderer = audioRenderer;
+        this.time = time;
+        this.mouse = mouse;
+        this.keyboard = keyboard;
+    }
 }

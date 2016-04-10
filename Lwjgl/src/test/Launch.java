@@ -2,6 +2,7 @@ package test;
 
 import tpa.application.Application;
 import tpa.application.Context;
+import tpa.application.LwjglWindow;
 import tpa.audio.LwjglAudioRenderer;
 import tpa.graphics.render.LwjglRenderer;
 import tpa.input.keyboard.LwjglKeyboardInput;
@@ -21,7 +22,7 @@ public class Launch {
         // create a window
         long window = GLFW.glfwCreateWindow(640, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
         GLFW.glfwDefaultWindowHints();
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+        //GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwSwapInterval(1);
 
@@ -31,13 +32,10 @@ public class Launch {
         LwjglMouseInput mouse = new LwjglMouseInput(window);
         LwjglKeyboardInput keyboard = new LwjglKeyboardInput(window);
         LwjglTime time = new LwjglTime(window);
+        LwjglWindow win = new LwjglWindow(window);
 
         // create a context for the application with all the needed stuff
-        Context con = new Context();
-        con.renderer = renderer;
-        con.audioRenderer = audio;
-        con.time = time;
-        con.keyboard = keyboard;
+        Context con = new Context(win, renderer, audio, time, mouse, keyboard);
 
         // create an application from which to access the context
         Application program = new Tests();
@@ -59,6 +57,7 @@ public class Launch {
         mouse.destroy();
         audio.destroy();
         keyboard.destroy();
+        win.destroy();
 
         // terminate window
         GLFW.glfwDestroyWindow(window);
