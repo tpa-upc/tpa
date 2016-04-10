@@ -13,6 +13,8 @@ import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.*;
+import tpa.input.keyboard.KeyboardAdapter;
+import tpa.input.keyboard.KeyboardListener;
 import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 import tpa.joml.Vector3f;
@@ -50,6 +52,14 @@ public class Tests extends Application {
 
     @Override
     public void onInit(Context context) {
+        // listen to keyboard input
+        context.keyboard.setKeyboardListener(new KeyboardAdapter() {
+            @Override
+            public void onKeyDown(int key) {
+                System.out.println("[KEYBOARD] "+key+" DOWN");
+            }
+        });
+
         // create shadowmap
         shadowmap = new Framebuffer(2048, 2048, new TextureFormat[] {}, true);
         shadowmap.getDepth().setMin(TextureFilter.Linear);
@@ -95,13 +105,6 @@ public class Tests extends Application {
                     .rotate(context.time.getTime() + i, axis);
             cubes.add(mod);
         }
-
-        context.window.setWindowListener(new Window.WindowListener() {
-            @Override
-            public void onResized(int width, int height) {
-                System.out.println("[RESIZED] "+width+"x"+height);
-            }
-        });
     }
 
     @Override
