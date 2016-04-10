@@ -942,7 +942,7 @@ public class Intersectiond {
         double t0 = maxT;
         double A = velX * velX + velY * velY + velZ * velZ;
         double radius2 = radius * radius;
-        // app against v0
+        // test against v0
         double centerV0X = centerX - v0X;
         double centerV0Y = centerY - v0Y;
         double centerV0Z = centerZ - v0Z;
@@ -957,7 +957,7 @@ public class Intersectiond {
             t0 = root0;
             isect = POINT_ON_TRIANGLE_VERTEX;
         }
-        // app against v1
+        // test against v1
         double centerV1X = centerX - v1X;
         double centerV1Y = centerY - v1Y;
         double centerV1Z = centerZ - v1Z;
@@ -973,7 +973,7 @@ public class Intersectiond {
             t0 = root1;
             isect = POINT_ON_TRIANGLE_VERTEX;
         }
-        // app against v2
+        // test against v2
         double centerV2X = centerX - v2X;
         double centerV2Y = centerY - v2Y;
         double centerV2Z = centerZ - v2Z;
@@ -989,7 +989,7 @@ public class Intersectiond {
             isect = POINT_ON_TRIANGLE_VERTEX;
         }
         double velLen = velX * velX + velY * velY + velZ * velZ;
-        // app against edge10
+        // test against edge10
         double len10 = v10X * v10X + v10Y * v10Y + v10Z * v10Z;
         double baseTo0Len = centerV0X * centerV0X + centerV0Y * centerV0Y + centerV0Z * centerV0Z;
         double v10Vel = (v10X * velX + v10Y * velY + v10Z * velZ);
@@ -1008,7 +1008,7 @@ public class Intersectiond {
             t0 = root10;
             isect = POINT_ON_TRIANGLE_EDGE;
         }
-        // app against edge20
+        // test against edge20
         double len20 = v20X * v20X + v20Y * v20Y + v20Z * v20Z;
         double v20Vel = (v20X * velX + v20Y * velY + v20Z * velZ);
         double A20 = len20 * -velLen + v20Vel * v20Vel;
@@ -1025,7 +1025,7 @@ public class Intersectiond {
             t0 = root20;
             isect = POINT_ON_TRIANGLE_EDGE;
         }
-        // app against edge21
+        // test against edge21
         double v21X = v2X - v1X;
         double v21Y = v2Y - v1Y;
         double v21Z = v2Z - v1Z;
@@ -1093,11 +1093,11 @@ public class Intersectiond {
      * Reference: <a href="http://www.peroxide.dk/papers/collision/collision.pdf">Improved Collision detection and Response</a>
      * 
      * @param pX
-     *              the x coordinate of the point to app
+     *              the x coordinate of the point to test
      * @param pY
-     *              the y coordinate of the point to app
+     *              the y coordinate of the point to test
      * @param pZ
-     *              the z coordinate of the point to app
+     *              the z coordinate of the point to test
      * @param v0X
      *              the x coordinate of the first vertex
      * @param v0Y
@@ -1722,7 +1722,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
+     * This test implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
      * winding order assuming a <i>right-handed</i> coordinate system when seen along the ray's direction, even if the ray intersects the triangle.
      * This is in compliance with how OpenGL handles backface culling with default frontface/backface settings.
      * 
@@ -1801,7 +1801,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
+     * This test implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
      * winding order assuming a <i>right-handed</i> coordinate system when seen along the ray's direction, even if the ray intersects the triangle.
      * This is in compliance with how OpenGL handles backface culling with default frontface/backface settings.
      * 
@@ -1832,7 +1832,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
+     * This test does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
      * 
      * @see #testRayTriangle(Vector3d, Vector3d, Vector3d, Vector3d, Vector3d, double)
      * 
@@ -1909,7 +1909,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
+     * This test does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
      * 
      * @see #testRayTriangle(double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double)
      * 
@@ -1939,7 +1939,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
+     * This test implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
      * winding order assuming a <i>right-handed</i> coordinate system when seen along the ray's direction, even if the ray intersects the triangle.
      * This is in compliance with how OpenGL handles backface culling with default frontface/backface settings.
      * 
@@ -2019,7 +2019,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
+     * This test implements backface culling, that is, it will return <code>false</code> when the triangle is in clockwise
      * winding order assuming a <i>right-handed</i> coordinate system when seen along the ray's direction, even if the ray intersects the triangle.
      * This is in compliance with how OpenGL handles backface culling with default frontface/backface settings.
      * 
@@ -2052,7 +2052,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
+     * This test does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
      * 
      * @see #testRayTriangle(Vector3d, Vector3d, Vector3d, Vector3d, Vector3d, double)
      * 
@@ -2130,7 +2130,7 @@ public class Intersectiond {
      * This is an implementation of the <a href="http://www.cs.virginia.edu/~gfx/Courses/2003/ImageSynthesis/papers/Acceleration/Fast%20MinimumStorage%20RayTriangle%20Intersection.pdf">
      * Fast, Minimum Storage Ray/Triangle Intersection</a> method.
      * <p>
-     * This app does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
+     * This test does not take into account the winding order of the triangle, so a ray will intersect a front-facing triangle as well as a back-facing triangle.
      * 
      * @see #intersectRayTriangle(double, double, double, double, double, double, double, double, double, double, double, double, double, double, double, double)
      * 

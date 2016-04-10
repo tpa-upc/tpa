@@ -7833,7 +7833,7 @@ public class Matrix4f implements Externalizable {
      * hold the <tt>(a, b, c, d)</tt> values of the equation.
      * <p>
      * The plane normal, which is <tt>(a, b, c)</tt>, is directed "inwards" of the frustum.
-     * Any plane/point app using <tt>a*x + b*y + c*z + d</tt> therefore will yield a result greater than zero
+     * Any plane/point test using <tt>a*x + b*y + c*z + d</tt> therefore will yield a result greater than zero
      * if the point is within the frustum (i.e. at the <i>positive</i> side of the frustum plane).
      * <p>
      * Reference: <a href="http://gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf">

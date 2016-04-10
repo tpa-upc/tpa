@@ -1,4 +1,4 @@
-package app;
+package test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

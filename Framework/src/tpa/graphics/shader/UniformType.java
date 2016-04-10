@@ -56,7 +56,7 @@ public enum UniformType {
     /**
      * Throw a runtime exception if the passed value doesn't match the type
      * of the uniform type
-     * @param val app value
+     * @param val test value
      */
     void assettValue (Object val) {
         if (val.getClass() != type)

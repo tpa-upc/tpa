@@ -189,7 +189,7 @@ public class FrustumIntersection {
      * Test whether the given point is within the frustum defined by <code>this</code> frustum culler.
      * 
      * @param point
-     *          the point to app
+     *          the point to test
      * @return <code>true</code> if the given point is inside the frustum; <code>false</code> otherwise
      */
     public boolean testPoint(Vector3f point) {
@@ -372,8 +372,8 @@ public class FrustumIntersection {
      */
     public boolean testAab(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         /*
-         * This is an implementation of the "2.4 Basic intersection app" of the mentioned site.
-         * It does not distinguish between partially inside and fully inside, though, so the app with the 'p' vertex is omitted.
+         * This is an implementation of the "2.4 Basic intersection test" of the mentioned site.
+         * It does not distinguish between partially inside and fully inside, though, so the test with the 'p' vertex is omitted.
          */
         return nxX * (nxX < 0 ? minX : maxX) + nxY * (nxY < 0 ? minY : maxY) + nxZ * (nxZ < 0 ? minZ : maxZ) >= -nxW &&
                pxX * (pxX < 0 ? minX : maxX) + pxY * (pxY < 0 ? minY : maxY) + pxZ * (pxZ < 0 ? minZ : maxZ) >= -pxW &&
@@ -433,7 +433,7 @@ public class FrustumIntersection {
      */
     public int intersectAab(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
         /*
-         * This is an implementation of the "2.4 Basic intersection app" of the mentioned site.
+         * This is an implementation of the "2.4 Basic intersection test" of the mentioned site.
          * 
          * In addition to the algorithm in the paper, this method also returns the index of the first plane that culled the box.
          */
@@ -472,8 +472,8 @@ public class FrustumIntersection {
      * The box is specified via its <code>min</code> and <code>max</code> corner coordinates.
      * <p>
      * This method differs from {@link #intersectAab(Vector3f, Vector3f) intersectAab()} in that
-     * it allows to mask-off planes that should not be calculated. For example, in order to only app a box against the
-     * left frustum plane, use a mask of {@link #PLANE_MASK_NX}. Or in order to app all planes <i>except</i> the left plane, use
+     * it allows to mask-off planes that should not be calculated. For example, in order to only test a box against the
+     * left frustum plane, use a mask of {@link #PLANE_MASK_NX}. Or in order to test all planes <i>except</i> the left plane, use
      * a mask of <tt>(~0 ^ PLANE_MASK_NX)</tt>.
      * <p>
      * The algorithm implemented by this method is conservative. This means that in certain circumstances a <i>false positive</i>
@@ -504,8 +504,8 @@ public class FrustumIntersection {
      * The box is specified via its min and max corner coordinates.
      * <p>
      * This method differs from {@link #intersectAab(float, float, float, float, float, float) intersectAab()} in that
-     * it allows to mask-off planes that should not be calculated. For example, in order to only app a box against the
-     * left frustum plane, use a mask of {@link #PLANE_MASK_NX}. Or in order to app all planes <i>except</i> the left plane, use
+     * it allows to mask-off planes that should not be calculated. For example, in order to only test a box against the
+     * left frustum plane, use a mask of {@link #PLANE_MASK_NX}. Or in order to test all planes <i>except</i> the left plane, use
      * a mask of <tt>(~0 ^ PLANE_MASK_NX)</tt>.
      * <p>
      * The algorithm implemented by this method is conservative. This means that in certain circumstances a <i>false positive</i>

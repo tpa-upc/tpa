@@ -252,16 +252,16 @@ public class PolygonsIntersection {
     /**
      * Test whether the given point <tt>(x, y)</tt> lies inside any polygon stored in this {@link PolygonsIntersection} object.
      * <p>
-     * This method is thread-safe and can be used to app many points concurrently.
+     * This method is thread-safe and can be used to test many points concurrently.
      * <p>
      * In order to obtain the index of the polygon the point is inside of, use {@link #testPoint(float, float, BitSet)}
      * 
      * @see #testPoint(float, float, BitSet)
      * 
      * @param x
-     *            the x coordinate of the point to app
+     *            the x coordinate of the point to test
      * @param y
-     *            the y coordinate of the point to app
+     *            the y coordinate of the point to test
      * @return <code>true</code> iff the point lies inside any polygon; <code>false</code> otherwise
      */
     public boolean testPoint(float x, float y) {
@@ -271,12 +271,12 @@ public class PolygonsIntersection {
     /**
      * Test whether the given point <tt>(x, y)</tt> lies inside any polygon stored in this {@link PolygonsIntersection} object.
      * <p>
-     * This method is thread-safe and can be used to app many points concurrently.
+     * This method is thread-safe and can be used to test many points concurrently.
      * 
      * @param x
-     *            the x coordinate of the point to app
+     *            the x coordinate of the point to test
      * @param y
-     *            the y coordinate of the point to app
+     *            the y coordinate of the point to test
      * @param inPolys
      *            if not <code>null</code> then the <i>i</i>-th bit is set if the given point is inside the <i>i</i>-th polygon
      * @return <code>true</code> iff the point lies inside the polygon and not inside a hole; <code>false</code> otherwise

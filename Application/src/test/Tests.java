@@ -1,4 +1,4 @@
-package app;
+package test;
 
 import tpa.application.Application;
 import tpa.application.Context;
