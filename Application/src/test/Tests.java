@@ -86,38 +86,16 @@ public class Tests extends Application {
         manager.load("res/texture.png", Texture.class);
         manager.load("res/texture2.png", Texture.class);
         manager.load("res/cube.json", Mesh.class);
+        manager.load("res/ground.json", Mesh.class);
         manager.finishLoading();
+
+        // grab textures
         debug = manager.get("res/texture.png", Texture.class);
         texture2 = manager.get("res/texture2.png", Texture.class);
 
-        // create models
+        // grab meshes
         cube = manager.get("res/cube.json", Mesh.class);
-        cube.setKeepData(false);
-
-        plane = new Mesh(MeshUsage.Static);
-        plane.setPrimitive(Primitive.TriangleStrp);
-        plane.setData(Attribute.Position, ByteBuffer.allocateDirect(StaticGeometry.PLANE_POSITION.length<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(StaticGeometry.PLANE_POSITION)
-                .flip());
-        plane.setData(Attribute.Uv, ByteBuffer.allocateDirect(StaticGeometry.PLANE_UV.length<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(StaticGeometry.PLANE_UV)
-                .flip());
-        plane.setData(Attribute.Normal, ByteBuffer.allocateDirect(StaticGeometry.PLANE_NORMAL.length<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(StaticGeometry.PLANE_NORMAL)
-                .flip());
-        plane.setIndices(ByteBuffer.allocateDirect(StaticGeometry.PLANE_INDICES.length<<1)
-                .order(ByteOrder.nativeOrder())
-                .asShortBuffer()
-                .put(StaticGeometry.PLANE_INDICES)
-                .flip());
-        plane.setKeepData(false);
-        plane.setLength(6);
+        plane = manager.get("res/ground.json", Mesh.class);
 
         Random rand = new Random(42);
         for (int i = 0; i < 64; ++i) {
