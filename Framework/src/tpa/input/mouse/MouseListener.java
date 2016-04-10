@@ -22,4 +22,11 @@ public interface MouseListener {
      * @param button mouse button
      */
     void onMouseDrag (int button);
+
+    /**
+     * Called when mouse wheel is scrolled
+     * @param xoff
+     * @param yoff
+     */
+    void onMouseScroll (int xoff, int yoff);
 }

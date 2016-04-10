@@ -15,6 +15,7 @@ import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.*;
 import tpa.input.keyboard.KeyboardAdapter;
 import tpa.input.keyboard.KeyboardListener;
+import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 import tpa.joml.Vector3f;
@@ -57,6 +58,19 @@ public class Tests extends Application {
             @Override
             public void onKeyDown(int key) {
                 System.out.println("[KEYBOARD] "+key+" DOWN");
+            }
+        });
+
+        // listen to mouse input
+        context.mouse.setMouseListener(new MouseAdapter() {
+            @Override
+            public void onMouseDown(int button) {
+                System.out.println("[MOUSE] "+button+" DOWN");
+            }
+
+            @Override
+            public void onMouseScroll(int xoff, int yoff) {
+                System.out.println("[SCROLL] dx="+xoff+" dy="+yoff);
             }
         });
 

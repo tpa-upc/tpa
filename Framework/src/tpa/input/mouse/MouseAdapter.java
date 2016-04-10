@@ -16,4 +16,8 @@ public class MouseAdapter implements MouseListener {
     @Override
     public void onMouseDrag(int button) {
     }
+
+    @Override
+    public void onMouseScroll(int xoff, int yoff) {
+    }
 }

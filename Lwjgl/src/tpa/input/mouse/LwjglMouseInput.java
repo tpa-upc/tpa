@@ -1,5 +1,6 @@
 package tpa.input.mouse;
 
+import org.lwjgl.glfw.GLFWScrollCallback;
 import tpa.utils.Destroyable;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -16,6 +17,7 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
     long window;
     GLFWMouseButtonCallback mouseCallback;
     GLFWCursorPosCallback cursorPosCallback;
+    GLFWScrollCallback scrollCallback;
 
     int x, y;
     int lastX, lastY;
@@ -31,6 +33,15 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
         lastY = y = 0;
 
         LwjglMouseInput handle = this;
+
+        glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback() {
+            @Override
+            public void invoke(long l, double x, double y) {
+                if (mouseListener != null) {
+                    mouseListener.onMouseScroll((int) x, (int) y);
+                }
+            }
+        });
 
         glfwSetCursorPosCallback(window, cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
@@ -109,5 +120,6 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
     public void destroy() {
         mouseCallback.free();
         cursorPosCallback.free();
+        scrollCallback.free();
     }
 }
