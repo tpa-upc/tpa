@@ -1,5 +1,7 @@
 package test;
 
+import resources.ResourceManager;
+import resources.SimpleResourceManager;
 import tpa.application.Application;
 import tpa.application.Context;
 import tpa.graphics.geometry.Attribute;
@@ -16,6 +18,7 @@ import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 import tpa.joml.Vector3f;
 
+import javax.xml.soap.Text;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -54,6 +57,8 @@ public class Tests extends Application {
 
     List<Matrix4f> cubes = new ArrayList<>();
 
+    ResourceManager manager = new SimpleResourceManager();
+
     @Override
     public void onInit(Context context) {
         // create shadowmap
@@ -66,28 +71,23 @@ public class Tests extends Application {
         diffuse = new ShaderProgram(StaticPrograms.DIFFUSE_VERT, StaticPrograms.DIFFUSE_FRAG, Attribute.Position, Attribute.Uv, Attribute.Normal);
         depth = new ShaderProgram(StaticPrograms.SHADOWMAP_VERT, StaticPrograms.SHADOWMAP_FRAG, Attribute.Position);
 
-        // create texture
-        debug = new Texture(128, 128, TextureFormat.Rgb);
-        debug.setData((ByteBuffer) ByteBuffer.allocateDirect(128*128*3)
-                .order(ByteOrder.nativeOrder())
-                .put(StaticTextures.TEXTURE).flip());
-        debug.setWrapU(TextureWrap.Repeat);
-        debug.setWrapV(TextureWrap.Repeat);
-        debug.setMin(TextureFilter.MipmapLinear);
-        debug.setMag(TextureFilter.Linear);
-        debug.setGenerateMipmaps(true);
-        debug.setKeepData(false);
+        // load textures
+        manager.setListener(new ResourceManager.ResourceManagerListener() {
+            @Override
+            public void onLoaded(String string, Class<?> type) {
+                System.out.println("[LOADED] "+string+"("+type+")");
+            }
 
-        texture2 = new Texture(128, 128, TextureFormat.Rgb);
-        texture2.setData((ByteBuffer) ByteBuffer.allocateDirect(128*128*3)
-                .order(ByteOrder.nativeOrder())
-                .put(StaticTextures.TEXTURE2).flip());
-        texture2.setWrapU(TextureWrap.Repeat);
-        texture2.setWrapV(TextureWrap.Repeat);
-        texture2.setMin(TextureFilter.MipmapLinear);
-        texture2.setMag(TextureFilter.Linear);
-        texture2.setGenerateMipmaps(true);
-        texture2.setKeepData(false);
+            @Override
+            public void onFailed(String string, Class<?> type, Exception e) {
+                System.out.println("[FAILED] "+string+"("+type+")");
+            }
+        });
+        manager.load("res/texture.png", Texture.class);
+        manager.load("res/texture2.png", Texture.class);
+        manager.finishLoading();
+        debug = manager.get("res/texture.png", Texture.class);
+        texture2 = manager.get("res/texture2.png", Texture.class);
 
         // create models
         cube = new Mesh(MeshUsage.Static);

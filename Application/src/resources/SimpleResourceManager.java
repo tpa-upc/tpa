@@ -43,17 +43,26 @@ public class SimpleResourceManager implements ResourceManager {
 
     @Override
     public <T> T get(String file, Class<T> type) {
-        return (T) loaded.get(file);
+        Object obj = loaded.get(file);
+        if (obj == null)
+            return null;
+
+        return (T) obj;
     }
 
     @Override
     public void update() {
+        if (queued.isEmpty())
+            return;
+
         // load one resource
         Pair p = queued.poll();
         if (p.type == Texture.class) {
             try {
                 Texture tex = ResourceUtils.loadTexture(p.path);
                 loaded.put(p.path, tex);
+                if (listener != null)
+                    listener.onLoaded(p.path, p.type);
             } catch (Exception e) {
                 if (listener != null)
                     listener.onFailed(p.path, p.type, e);
