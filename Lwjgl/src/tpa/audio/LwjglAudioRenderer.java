@@ -1,5 +1,9 @@
 package tpa.audio;
 
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALCCapabilities;
 import tpa.utils.Destroyable;
 
 import java.nio.Buffer;
@@ -12,16 +16,33 @@ import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL10.alGetString;
 
 /**
- * Very WIP
+ * TODO music
  *
  * Created by german on 27/03/2016.
  */
 public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
 
+    /** openAL sound buffers */
     Map<Sound, Integer> buffers = new HashMap<>();
+
+    /** OpenAL sound sources */
     Map<Sound, Integer> sources = new HashMap<>();
 
+    /** Audio device pointer */
+    long device;
+
+    /** OpenAL context pointer */
+    long context;
+
     public LwjglAudioRenderer () {
+        // create OpenAL context
+        device = ALC10.alcOpenDevice((String) null);
+        context = ALC10.alcCreateContext(device, (ByteBuffer) null);
+        ALCCapabilities alcCaps = ALC.createCapabilities(device);
+        ALC10.alcMakeContextCurrent(context);
+        AL.createCapabilities(alcCaps);
+
+        // output info
         System.err.println("AL_VENDOR: " + alGetString(AL_VENDOR));
         System.err.println("AL_RENDERER: " + alGetString(AL_RENDERER));
         System.err.println("AL_VERSION: " + alGetString(AL_VERSION));
@@ -69,7 +90,12 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
 
     @Override
     public void destroy() {
+        // destroy allocated sources & buffers
         sources.forEach((s, source) -> alDeleteSources(source));
         buffers.forEach((s, buffer) -> alDeleteBuffers(buffer));
+
+        // destroy openAL context
+        ALC10.alcDestroyContext(context);
+        ALC10.alcCloseDevice(device);
     }
 }

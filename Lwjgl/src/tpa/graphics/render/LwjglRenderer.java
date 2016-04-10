@@ -1,5 +1,6 @@
 package tpa.graphics.render;
 
+import org.lwjgl.opengl.GL;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.shader.ShaderProgram;
@@ -69,8 +70,9 @@ public class LwjglRenderer implements Renderer, Destroyable {
     // fbo handles
     private Map<Framebuffer, Integer> fbos = new HashMap<>();
 
-    public LwjglRenderer(GLCapabilities caps) {
-        this.caps = caps;
+    public LwjglRenderer() {
+        caps = GL.createCapabilities();
+
         int maxUnits = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS);
         units = new Texture[maxUnits];
 

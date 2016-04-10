@@ -8,11 +8,7 @@ import tpa.input.keyboard.LwjglKeyboardInput;
 import tpa.input.mouse.LwjglMouseInput;
 import tpa.timing.LwjglTime;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.openal.*;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLCapabilities;
 import org.lwjgl.system.MemoryUtil;
-import java.nio.ByteBuffer;
 
 /**
  * Created by german on 26/03/2016.
@@ -21,39 +17,35 @@ public class Launch {
 
     public static void main (String[] argv) {
         GLFW.glfwInit();
-        long window = GLFW.glfwCreateWindow(640, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
 
+        // create a window
+        long window = GLFW.glfwCreateWindow(640, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwSwapInterval(1);
 
-        // create OpenGL context
-        GLCapabilities glcaps = GL.createCapabilities();
-
-        // create OpenAL context
-        long device = ALC10.alcOpenDevice((String) null);
-        long context = ALC10.alcCreateContext(device, (ByteBuffer) null);
-        ALCCapabilities alcCaps = ALC.createCapabilities(device);
-        ALC10.alcMakeContextCurrent(context);
-        AL.createCapabilities(alcCaps);
-
-        LwjglRenderer renderer = new LwjglRenderer(glcaps);
-        LwjglTime time = new LwjglTime(window);
+        // instantiate implementation for input, graphics, audio, etc...
+        LwjglRenderer renderer = new LwjglRenderer();
         LwjglAudioRenderer audio = new LwjglAudioRenderer();
         LwjglMouseInput mouse = new LwjglMouseInput(window);
         LwjglKeyboardInput keyboard = new LwjglKeyboardInput(window);
+        LwjglTime time = new LwjglTime(window);
 
+        // create a context for the application with all the needed stuff
         Context con = new Context();
         con.renderer = renderer;
         con.audioRenderer = audio;
         con.time = time;
         con.keyboard = keyboard;
 
+        // create an application from which to access the context
         Application program = new Tests();
         program.onInit(con);
 
+        // main loop
         while (GLFW.glfwWindowShouldClose(window) == GLFW.GLFW_FALSE) {
+            // update what needs to be updated
             time.update();
             program.onUpdate(con);
 
@@ -61,17 +53,14 @@ public class Launch {
             GLFW.glfwPollEvents();
         }
 
+        // destroy what needs to be destroyed
         program.onDestroy(con);
-
         renderer.destroy();
         mouse.destroy();
         audio.destroy();
         keyboard.destroy();
 
-        // destroy openAL context
-        ALC10.alcDestroyContext(context);
-        ALC10.alcCloseDevice(device);
-
+        // terminate window
         GLFW.glfwDestroyWindow(window);
         GLFW.glfwTerminate();
     }
