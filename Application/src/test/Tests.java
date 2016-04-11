@@ -41,6 +41,7 @@ public class Tests extends Application {
     Mesh cube;
     Mesh plane;
     Mesh dragon;
+    Mesh armadillo;
 
     ShaderProgram wireframe;
     ShaderProgram diffuse;
@@ -104,6 +105,7 @@ public class Tests extends Application {
         manager.load("res/cube.json", Mesh.class);
         manager.load("res/ground.json", Mesh.class);
         manager.load("res/dragon.json", Mesh.class);
+        manager.load("res/armadillo.json", Mesh.class);
         manager.finishLoading();
 
         // grab textures
@@ -114,7 +116,9 @@ public class Tests extends Application {
         cube = manager.get("res/cube.json", Mesh.class);
         plane = manager.get("res/ground.json", Mesh.class);
         dragon = manager.get("res/dragon.json", Mesh.class);
+        armadillo = manager.get("res/armadillo.json", Mesh.class);
         dragon.setKeepData(false);
+        armadillo.setKeepData(false);
 
         Random rand = new Random(42);
         for (int i = 0; i < 16; ++i) {
@@ -140,7 +144,7 @@ public class Tests extends Application {
         float camX = (float) Math.cos(context.time.getTime()/2) * 32;
         float camZ = (float) Math.sin(context.time.getTime()/2) * 32;
         projection.setPerspective(50*3.1415f/180, (float)context.window.getWidth()/context.window.getHeight(), 0.1f, 1000f);
-        view.setLookAt(camX, 16 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 0, 0, 0, 1, 0);
+        view.setLookAt(camX, 16 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 8, 0, 0, 1, 0);
 
         float s = 128;
         shadowProjection.setOrtho(-s, s, -s, s, -s, s);
@@ -176,6 +180,9 @@ public class Tests extends Application {
         });
 
         depth.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f));
+        renderer.renderMesh(armadillo);
+
+        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(8,0,12).scale(1.5f));
         renderer.renderMesh(dragon);
 
         depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
@@ -207,6 +214,9 @@ public class Tests extends Application {
 
         renderer.setTexture(0, texture2);
         diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f));
+        renderer.renderMesh(armadillo);
+
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(8,0,12).scale(1.5f));
         renderer.renderMesh(dragon);
 
         diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, 0, 0));

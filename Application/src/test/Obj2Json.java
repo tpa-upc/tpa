@@ -20,7 +20,7 @@ public class Obj2Json {
         ArrayList<Float> uvData = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
 
-        BufferedReader reader = new BufferedReader(new FileReader("Application/res/dragon.obj"));
+        BufferedReader reader = new BufferedReader(new FileReader("Application/res/armadillo.obj"));
         String line = "";
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("v ")) {
@@ -94,7 +94,7 @@ public class Obj2Json {
         mesh.indices = indJson;
 
         Gson gson = new Gson();
-        BufferedWriter writ = new BufferedWriter(new FileWriter("Application/res/dragon.json"));
+        BufferedWriter writ = new BufferedWriter(new FileWriter("Application/res/armadillo.json"));
         gson.toJson(mesh, writ);
         writ.flush();
         writ.close();
