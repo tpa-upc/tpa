@@ -40,6 +40,7 @@ public class Tests extends Application {
 
     Mesh cube;
     Mesh plane;
+    Mesh dragon;
 
     ShaderProgram wireframe;
     ShaderProgram diffuse;
@@ -93,6 +94,7 @@ public class Tests extends Application {
             @Override
             public void onFailed(String string, Class<?> type, Exception e) {
                 System.out.println("[FAILED] "+string+" ("+type+")");
+                e.printStackTrace(System.out);
             }
         });
 
@@ -101,6 +103,7 @@ public class Tests extends Application {
         manager.load("res/texture2.png", Texture.class);
         manager.load("res/cube.json", Mesh.class);
         manager.load("res/ground.json", Mesh.class);
+        manager.load("res/dragon.json", Mesh.class);
         manager.finishLoading();
 
         // grab textures
@@ -110,9 +113,11 @@ public class Tests extends Application {
         // grab meshes
         cube = manager.get("res/cube.json", Mesh.class);
         plane = manager.get("res/ground.json", Mesh.class);
+        dragon = manager.get("res/dragon.json", Mesh.class);
+        dragon.setKeepData(false);
 
         Random rand = new Random(42);
-        for (int i = 0; i < 64; ++i) {
+        for (int i = 0; i < 16; ++i) {
             Vector3f axis = new Vector3f(rand.nextFloat()*2-1, rand.nextFloat()*2-1, rand.nextFloat()*2-1).normalize();
             Matrix4f mod = new Matrix4f()
                     .translate(rand.nextFloat()*42-21, rand.nextFloat()*16, rand.nextFloat()*42-21)
@@ -135,7 +140,7 @@ public class Tests extends Application {
         float camX = (float) Math.cos(context.time.getTime()/2) * 32;
         float camZ = (float) Math.sin(context.time.getTime()/2) * 32;
         projection.setPerspective(50*3.1415f/180, (float)context.window.getWidth()/context.window.getHeight(), 0.1f, 1000f);
-        view.setLookAt(camX, 12 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 0, 0, 0, 1, 0);
+        view.setLookAt(camX, 16 + 10*(float)Math.sin(context.time.getTime()*0.5), camZ, 0, 0, 0, 0, 1, 0);
 
         float s = 128;
         shadowProjection.setOrtho(-s, s, -s, s, -s, s);
@@ -154,7 +159,7 @@ public class Tests extends Application {
 
         Renderer renderer = context.renderer;
         renderer.beginFrame();
-        renderer.setCulling(Culling.BackFace);
+        //renderer.setCulling(Culling.BackFace);
         renderer.setRenderMode(RenderMode.Fill);
 
         // render shadowmap
@@ -169,6 +174,9 @@ public class Tests extends Application {
             depth.setUniform("u_model", UniformType.Matrix4, mod);
             renderer.renderMesh(cube);
         });
+
+        depth.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f));
+        renderer.renderMesh(dragon);
 
         depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
         renderer.renderMesh(plane);
@@ -198,7 +206,10 @@ public class Tests extends Application {
         });
 
         renderer.setTexture(0, texture2);
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1, 0));
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f));
+        renderer.renderMesh(dragon);
+
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, 0, 0));
         renderer.renderMesh(plane);
 
         renderer.endFrame();

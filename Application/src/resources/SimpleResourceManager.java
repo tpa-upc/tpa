@@ -50,11 +50,7 @@ public class SimpleResourceManager implements ResourceManager {
         return (T) obj;
     }
 
-    @Override
-    public void update() {
-        if (queued.isEmpty())
-            return;
-
+    private void process () {
         // load one resource
         Pair p = queued.poll();
         if (p.type == Texture.class) {
@@ -86,6 +82,14 @@ public class SimpleResourceManager implements ResourceManager {
     }
 
     @Override
+    public void update() {
+        if (queued.isEmpty())
+            return;
+
+       process();
+    }
+
+    @Override
     public boolean isFinishedLoading() {
         return queued.isEmpty();
     }
@@ -93,6 +97,6 @@ public class SimpleResourceManager implements ResourceManager {
     @Override
     public void finishLoading() {
         while (!isFinishedLoading())
-            update();
+            process();
     }
 }
