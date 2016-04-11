@@ -123,6 +123,7 @@ public class StaticPrograms {
             "    float fog = exp(-max(0, length(v_position_view.xyz)-16)*0.0125);" +
             "    frag_color = vec4(texture2D(u_texture, v_uv).rgb*mix(0.25, 1, smoothstep(0, 1, shade) ), 1.0);\n" +
             "    frag_color.rgb = mix(frag_color.rgb, vec3(1.0), 1-fog);" +
+            "    frag_color.rgb = mix(frag_color.rgb, vec3(1.0), smoothstep(32, 64, length(v_position.xz)));" +
             "    frag_color.rgb = pow(frag_color.rgb, vec3(0.7));\n" +
             "}";
 
