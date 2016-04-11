@@ -179,13 +179,13 @@ public class Tests extends Application {
             renderer.renderMesh(cube);
         });
 
-        depth.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f));
+        depth.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f).rotate(-1.75f, 0, 1, 0));
         renderer.renderMesh(armadillo);
 
-        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(8,0,12).scale(1.5f));
+        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(-8,0,12).scale(1.5f));
         renderer.renderMesh(dragon);
 
-        depth.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, -1.5f, 0));
+        depth.setUniform("u_model", UniformType.Matrix4, model.identity());
         renderer.renderMesh(plane);
 
         // render scene
@@ -213,13 +213,13 @@ public class Tests extends Application {
         });
 
         renderer.setTexture(0, texture2);
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f));
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().scale(1.5f).rotate(-1.75f, 0, 1, 0));
         renderer.renderMesh(armadillo);
 
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(8,0,12).scale(1.5f));
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(-8,0,12).scale(1.5f));
         renderer.renderMesh(dragon);
 
-        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity().translate(0, 0, 0));
+        diffuse.setUniform("u_model", UniformType.Matrix4, model.identity());
         renderer.renderMesh(plane);
 
         renderer.endFrame();
