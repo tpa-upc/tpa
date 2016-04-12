@@ -403,8 +403,10 @@ public class LwjglRenderer implements Renderer, Destroyable {
                         }
                     } else {
                         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-                        if (mesh.isDirty())
-                            glBufferSubData(GL_ARRAY_BUFFER, data.position()<<2, (FloatBuffer) data);
+                        if (mesh.isDirty()) {
+                            //System.out.println(data);
+                            glBufferSubData(GL_ARRAY_BUFFER, data.position() << 2, (FloatBuffer) data);
+                        }
                     }
                     break;
                 case Uv:
