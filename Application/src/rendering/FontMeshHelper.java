@@ -71,6 +71,11 @@ public class FontMeshHelper {
         int offY = 0;
         for (int i = 0; i < text.length(); ++i) {
             char c = text.charAt(i);
+            if (c == '\n') {
+                offX = 0;
+                offY += 12;
+                continue;
+            }
             int row = c/16;
             int col = c%16;
 
@@ -98,9 +103,9 @@ public class FontMeshHelper {
             offX += 8;
         }
 
-        position.flip();
-        uv.flip();
-        index.flip();
+        position.rewind();
+        uv.rewind();
+        index.rewind();
 
         mesh.setOffset(0);
         mesh.setLength(6*count);

@@ -24,6 +24,7 @@ public class Game {
 
     /** Game's current activity, if state is set to Activity */
     private GameActivity activity;
+    private boolean activityBegan = false;
 
     /** Game's flahs used by the game logic */
     private HashMap<String, Boolean> flags;
@@ -51,6 +52,10 @@ public class Game {
     public void onUpdate (Context context) {
         switch (state) {
             case Activity:
+                if (!activityBegan) {
+                    activity.getActivity().onBegin(context);
+                    activityBegan = true;
+                }
                 activity.getActivity().onUpdate(context);
         }
     }
@@ -63,6 +68,7 @@ public class Game {
         // set state to activity
         this.state = GameState.Activity;
         this.activity = activity;
+        this.activityBegan = false;
     }
 
     /**

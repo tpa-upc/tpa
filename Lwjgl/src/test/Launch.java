@@ -38,7 +38,7 @@ public class Launch {
         Context con = new Context(win, renderer, audio, time, mouse, keyboard);
 
         // create an application from which to access the context
-        Application program = new TextTest();
+        Application program = new GameTest();
         program.onInit(con);
 
         // main loop

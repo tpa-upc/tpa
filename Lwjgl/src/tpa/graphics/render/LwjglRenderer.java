@@ -404,7 +404,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
                     } else {
                         glBindBuffer(GL_ARRAY_BUFFER, vbo);
                         if (mesh.isDirty()) {
-                            //System.out.println(data);
                             glBufferSubData(GL_ARRAY_BUFFER, data.position() << 2, (FloatBuffer) data);
                         }
                     }
@@ -487,7 +486,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
         } else {
             Buffer indices = mesh.getIndices();
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-
             if (mesh.isDirty()) {
                 if (indices instanceof IntBuffer)
                     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, indices.position() << 2, (IntBuffer) indices);
