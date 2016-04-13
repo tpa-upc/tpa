@@ -3,6 +3,7 @@ package rendering;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
+import tpa.joml.Matrix4f;
 
 /**
  * Created by germangb on 13/04/16.
@@ -26,5 +27,5 @@ public abstract class Material {
      * @param camera projection & view transformation
      * @param actor mesh to be rendered
      */
-    public abstract void render (Renderer renderer, Camera camera, GeometryActor actor);
+    public abstract void render (Renderer renderer, Camera camera, Mesh mesh, Matrix4f model);
 }

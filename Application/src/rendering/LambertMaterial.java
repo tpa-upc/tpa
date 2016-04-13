@@ -1,12 +1,14 @@
 package rendering;
 
 import tpa.graphics.geometry.Attribute;
+import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.Blending;
 import tpa.graphics.render.Culling;
 import tpa.graphics.render.RenderMode;
 import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
+import tpa.joml.Matrix4f;
 import tpa.joml.Vector3f;
 
 /**
@@ -72,7 +74,7 @@ public class LambertMaterial extends Material {
     }
 
     @Override
-    public void render(Renderer renderer, Camera camera, GeometryActor actor) {
+    public void render(Renderer renderer, Camera camera, Mesh mesh, Matrix4f model) {
         // set shader
         renderer.setShaderProgram(program);
 
@@ -85,7 +87,7 @@ public class LambertMaterial extends Material {
         // transform uniforms
         program.setUniform("u_projection", UniformType.Matrix4, camera.projection);
         program.setUniform("u_view", UniformType.Matrix4, camera.view);
-        program.setUniform("u_model", UniformType.Matrix4, actor.model);
+        program.setUniform("u_model", UniformType.Matrix4, model);
 
         // set color uniforms
         program.setUniform("u_ambient", UniformType.Vector3, ambient);
@@ -93,7 +95,7 @@ public class LambertMaterial extends Material {
         program.setUniform("u_specular", UniformType.Vector3, specular);
 
         // render mesh
-        renderer.renderMesh(actor.getMesh());
+        renderer.renderMesh(mesh);
     }
 
     public Vector3f getAmbient() {

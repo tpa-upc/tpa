@@ -71,6 +71,16 @@ public class Game {
         activity.getActivity().onBegin(context);
     }
 
+    public void popActivity () {
+        if (!activities.isEmpty()) {
+            GameActivity activity = activities.pop();
+            activity.getActivity().onEnd(context);
+
+            if (!activities.isEmpty())
+                activities.peek().getActivity().onBegin(context);
+        }
+    }
+
     /**
      * Set a flag value
      * @param name flag name

@@ -12,6 +12,8 @@ import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.geometry.MeshUsage;
 import tpa.graphics.geometry.Primitive;
+import tpa.graphics.render.Culling;
+import tpa.graphics.render.RenderMode;
 import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
@@ -175,6 +177,8 @@ public class ComputerActivity extends Activity implements KeyboardListener {
         idState = 0;
         logged = false;
         failed = false;
+        username = "";
+        password = "";
         System.out.println("onBegin()");
     }
 
@@ -186,6 +190,10 @@ public class ComputerActivity extends Activity implements KeyboardListener {
 
         Matrix4f projection = new Matrix4f()
                 .setOrtho2D(0, monitor.getWidth(), monitor.getHeight(), 0);
+
+        renderer.setRenderMode(RenderMode.Fill);
+        renderer.setDepth(false);
+        renderer.setCulling(Culling.Disabled);
 
         renderer.setFramebuffer(monitor);
         renderer.viewport(0, 0, monitor.getWidth(), monitor.getHeight());
@@ -229,7 +237,7 @@ public class ComputerActivity extends Activity implements KeyboardListener {
     @Override
     public void onEnd(Context context) {
         context.keyboard.setKeyboardListener(null);
-        System.out.println("onBegin()");
+        System.out.println("onEnd()");
     }
 
     @Override
@@ -286,6 +294,9 @@ public class ComputerActivity extends Activity implements KeyboardListener {
                         break;
                     case "email":
                         out = "You have 100000 unread email(s)";
+                        break;
+                    case "exit":
+                        Game.getInstance().popActivity();
                         break;
                     default:
                         con.audioRenderer.playSound(beep);

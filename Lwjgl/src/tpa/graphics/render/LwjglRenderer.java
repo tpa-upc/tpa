@@ -367,6 +367,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
 
         // set render targets
         Texture[] targets = fbo.getTargets();
+        drawBuffers.clear();
         for (int i = 0; i < targets.length; ++i)
             drawBuffers.put(GL_COLOR_ATTACHMENT0+i);
 
