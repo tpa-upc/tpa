@@ -74,7 +74,15 @@ public class SimpleResourceManager implements ResourceManager {
                     listener.onFailed(p.path, p.type, e);
             }
         } else if (p.type == Sound.class) {
-            throw new UnsupportedOperationException();
+            try {
+                Sound sound = ResourceUtils.loadSound(p.path);
+                loaded.put(p.path, sound);
+                if (listener != null)
+                    listener.onLoaded(p.path, p.type);
+            } catch (Exception e) {
+                if (listener != null)
+                    listener.onFailed(p.path, p.type, e);
+            }
         } else {
             if (listener != null)
                 listener.onFailed(p.path, p.type, new IllegalArgumentException("Invalid resource type"));

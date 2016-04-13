@@ -4,6 +4,7 @@ import game.Game;
 import rendering.FontMeshHelper;
 import resources.ResourceManager;
 import resources.ResourceUtils;
+import resources.SimpleResourceManager;
 import tpa.application.Context;
 import tpa.application.Window;
 import tpa.audio.Sound;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 /**
  * Created by germangb on 12/04/16.
  */
-public class ComputerActivity implements Activity, KeyboardListener {
+public class ComputerActivity extends Activity implements KeyboardListener {
 
     private float animation = 0;
 
@@ -55,6 +56,7 @@ public class ComputerActivity implements Activity, KeyboardListener {
     Context con;
 
     HashMap<String, String> users = new HashMap<>();
+    ResourceManager resources = new SimpleResourceManager();
 
     @Override
     public void onInit(Context context) {
@@ -144,7 +146,6 @@ public class ComputerActivity implements Activity, KeyboardListener {
         fullQuad.setLength(6);
 
         // load amiga font
-        ResourceManager resources = Game.getInstance().getResources();
         resources.load("res/font/amiga.png", Texture.class);
         resources.finishLoading();
 

@@ -8,14 +8,14 @@ import tpa.application.Context;
 /**
  * Created by germangb on 12/04/16.
  */
-public class GameTest extends Application {
+public class GameTest implements Application {
 
     @Override
     public void onInit(Context context) {
         Game.getInstance().onInit(context);
 
         // start computer activity
-        Game.getInstance().launchActivity(GameActivity.Computer);
+        Game.getInstance().pushActivity(GameActivity.Monkey, null);
     }
 
     @Override

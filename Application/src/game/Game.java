@@ -1,10 +1,14 @@
 package game;
 
+import activity.Activity;
+import activity.ActivityListener;
 import resources.ResourceManager;
 import resources.SimpleResourceManager;
 import tpa.application.Context;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Created by germangb on 12/04/16.
@@ -16,23 +20,16 @@ public class Game {
         return ourInstance;
     }
 
-    /** Game's resource manager */
-    private ResourceManager resources;
-
-    /** Game state */
-    private GameState state;
-
-    /** Game's current activity, if state is set to Activity */
-    private GameActivity activity;
-    private boolean activityBegan = false;
+    /** Stack of activities */
+    private Stack<GameActivity> activities = new Stack<>();
 
     /** Game's flahs used by the game logic */
-    private HashMap<String, Boolean> flags;
+    private HashMap<String, Boolean> flags = new HashMap<>();
+
+    /** Application context */
+    private Context context;
 
     private Game() {
-        this.state = GameState.Normal;
-        this.resources = new SimpleResourceManager();
-        this.flags = new HashMap<>();
     }
 
     /**
@@ -40,6 +37,8 @@ public class Game {
      * @param context Application context
      */
     public void onInit (Context context) {
+        this.context = context;
+
         // init activities
         for (GameActivity act : GameActivity.values())
             act.getActivity().onInit(context);
@@ -50,25 +49,26 @@ public class Game {
      * @param context application context
      */
     public void onUpdate (Context context) {
-        switch (state) {
-            case Activity:
-                if (!activityBegan) {
-                    activity.getActivity().onBegin(context);
-                    activityBegan = true;
-                }
-                activity.getActivity().onUpdate(context);
-        }
+        if (activities.isEmpty())
+            return;
+
+        // update activity
+        Activity top = activities.peek().getActivity();
+        top.onUpdate(context);
     }
 
     /**
      * Launches an activity
      * @param activity activity to be launched
+     * @param listener activity listener
      */
-    public void launchActivity (GameActivity activity) {
-        // set state to activity
-        this.state = GameState.Activity;
-        this.activity = activity;
-        this.activityBegan = false;
+    public void pushActivity (GameActivity activity, ActivityListener listener) {
+        if (!activities.isEmpty())
+            activities.peek().getActivity().onEnd(context);
+
+        activities.push(activity);
+        activity.getActivity().setListener(listener);
+        activity.getActivity().onBegin(context);
     }
 
     /**
@@ -87,13 +87,5 @@ public class Game {
      */
     public boolean getFlag (String name) {
         return flags.get(name);
-    }
-
-    /**
-     * Get game's resource manager
-     * @return resource manager
-     */
-    public ResourceManager getResources() {
-        return resources;
     }
 }

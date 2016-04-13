@@ -52,7 +52,6 @@ public class Launch {
         }
 
         // destroy what needs to be destroyed
-        program.onDestroy(con);
         renderer.destroy();
         mouse.destroy();
         audio.destroy();

@@ -2,6 +2,7 @@ package game;
 
 import activity.Activity;
 import activity.ComputerActivity;
+import activity.MonkeyLocation;
 
 /**
  * Created by germangb on 12/04/16.
@@ -9,7 +10,10 @@ import activity.ComputerActivity;
 public enum GameActivity {
 
     /** Computer activity */
-    Computer (new ComputerActivity());
+    Computer (new ComputerActivity()),
+
+    /** Monkey location */
+    Monkey (new MonkeyLocation());
 
     /** referenced game activity */
     private activity.Activity activity;

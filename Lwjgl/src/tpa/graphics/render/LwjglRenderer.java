@@ -216,6 +216,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
                         cullEnabled = true;
                     }
                     glCullFace(GL_BACK);
+                    break;
                 case FrontFace:
                     if (!cullEnabled) {
                         glEnable(GL_CULL_FACE);
