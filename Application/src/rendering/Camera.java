@@ -16,4 +16,14 @@ public class Camera {
 
     /** Camera view matrix */
     public final Matrix4f view = new Matrix4f();
+
+    /** view projection matrix */
+    public final Matrix4f viewProjection = new Matrix4f();
+
+    /**
+     * Computes very useful matrices, use cautiously!
+     */
+    public void update () {
+        viewProjection.set(projection).mul(view);
+    }
 }

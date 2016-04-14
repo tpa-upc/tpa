@@ -43,7 +43,6 @@ public class WireframeMaterial extends Material {
     /** Creates a Lambert material */
     public WireframeMaterial() {
         super(PROGRAM);
-
         state.culling = Culling.Disabled;
         state.renderMode = RenderMode.Wireframe;
         state.depthTest = true;

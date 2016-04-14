@@ -111,8 +111,11 @@ public abstract class LocationActivity extends Activity {
     /** box for decals */
     private Mesh box;
 
-    /** load location (load resources or something!) */
-    public abstract void loadLocation (Context context);
+    /** load location specific resources here */
+    public abstract void onLoad (Context context);
+
+    /** Called when resources have ben loaded */
+    public abstract void onFinishLoad (Context context);
 
     /** Called when the scene is entered */
     public abstract void onEntered (Context context);
@@ -140,8 +143,9 @@ public abstract class LocationActivity extends Activity {
         dither.setWrapU(TextureWrap.Repeat);
         dither.setWrapV(TextureWrap.Repeat);
 
-        // location specific stuff
-        loadLocation(context);
+        onLoad(context);
+        resources.finishLoading();
+        onFinishLoad(context);
     }
 
     /**
@@ -176,6 +180,9 @@ public abstract class LocationActivity extends Activity {
     public void onUpdate(Context context) {
         onTick(context);
 
+        // update camera
+        camera.update();
+
         Window window = context.window;
         Renderer renderer = context.renderer;
 
@@ -184,13 +191,11 @@ public abstract class LocationActivity extends Activity {
         renderer.clearDepthBuffer();
         renderer.setViewport(0, 0, zPass.getWidth(), zPass.getHeight());
 
+        // set state for z pass
         RendererState stateZpass = new RendererState();
         stateZpass.depthTest = true;
         stateZpass.redMask = stateZpass.greenMask = stateZpass.blueMask = stateZpass.alphaMask = false;
-
         renderer.setState(stateZpass);
-        //renderer.setDepth(true);
-        //renderer.setColorMask(false, false, false, false);
 
         for (GeometryActor actor : geometry) {
             Material mat = actor.getMaterial();
@@ -198,21 +203,23 @@ public abstract class LocationActivity extends Activity {
         }
 
         // lowres pass
-        RendererState stateLow = new RendererState();
-        stateLow.depthTest = true;
-
         renderer.setFramebuffer(lowresPass);
         renderer.setViewport(0, 0, lowresPass.getWidth(), lowresPass.getHeight());
         renderer.setClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, 1);
-        renderer.setState(stateLow);
-        //renderer.setDepth(true);
         renderer.clearBuffers();
 
+        // set low res state
+        RendererState stateLow = new RendererState();
+        stateLow.depthTest = true;
+        renderer.setState(stateLow);
+
+        // render geometry
         for (GeometryActor actor : geometry) {
             Material mat = actor.getMaterial();
             mat.render(renderer, camera, actor.getMesh(), actor.model);
         }
 
+        // render decaks
         for (DecalActor decal : decals) {
             Material mat = decal.getMaterial();
             mat.render(context.renderer, camera, box, decal.model);
@@ -221,11 +228,6 @@ public abstract class LocationActivity extends Activity {
         // window pass
         renderer.setFramebuffer(null);
         renderer.setViewport(0, 0, window.getWidth(), window.getHeight());
-
-        /*renderer.setDepth(false);
-        renderer.setRenderMode(RenderMode.Fill);
-        renderer.setCulling(Culling.Disabled);
-        renderer.setColorMask(true, true, true, true);*/
         renderer.setState(new RendererState());
 
         renderer.setShaderProgram(quadProgram);
