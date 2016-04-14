@@ -1,16 +1,12 @@
 package game;
 
 import activity.Activity;
-import activity.ComputerActivity;
 import activity.MonkeyLocation;
 
 /**
  * Created by germangb on 12/04/16.
  */
 public enum GameActivity {
-
-    /** Computer activity */
-    Computer (new ComputerActivity()),
 
     /** Monkey location */
     Monkey (new MonkeyLocation());

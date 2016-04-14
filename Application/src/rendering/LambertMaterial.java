@@ -2,9 +2,7 @@ package rendering;
 
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
-import tpa.graphics.render.Blending;
 import tpa.graphics.render.Culling;
-import tpa.graphics.render.RenderMode;
 import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
@@ -60,17 +58,19 @@ public class LambertMaterial extends Material {
     private static ShaderProgram LAMBERT_PROGRAM = new ShaderProgram(VERTEX, FRAGMENT, Attribute.Position, Attribute.Normal);
 
     /** Ambient color */
-    private Vector3f ambient = new Vector3f(0.1f);
+    public final Vector3f ambient = new Vector3f(0.1f);
 
     /** Diffuse color */
-    private Vector3f diffuse = new Vector3f(1);
+    public final Vector3f diffuse = new Vector3f(1);
 
     /** Specular color */
-    private Vector3f specular = new Vector3f(1);
+    public final Vector3f specular = new Vector3f(1);
 
     /** Creates a Lambert material */
     public LambertMaterial() {
         super(LAMBERT_PROGRAM);
+        state.culling = Culling.BackFace;
+        state.depthTest = true;
     }
 
     @Override
@@ -78,11 +78,7 @@ public class LambertMaterial extends Material {
         // set shader
         renderer.setShaderProgram(program);
 
-        renderer.setDepthMask(true);
-        renderer.setColorMask(true, true, true, true);
-        renderer.setRenderMode(RenderMode.Fill);
-        renderer.setCulling(Culling.BackFace);
-        renderer.setBlending(Blending.Disabled);
+        renderer.setState(state);
 
         // transform uniforms
         program.setUniform("u_projection", UniformType.Matrix4, camera.projection);
@@ -98,27 +94,4 @@ public class LambertMaterial extends Material {
         renderer.renderMesh(mesh);
     }
 
-    public Vector3f getAmbient() {
-        return ambient;
-    }
-
-    public void setAmbient(Vector3f ambient) {
-        this.ambient = ambient;
-    }
-
-    public Vector3f getDiffuse() {
-        return diffuse;
-    }
-
-    public void setDiffuse(Vector3f diffuse) {
-        this.diffuse = diffuse;
-    }
-
-    public Vector3f getSpecular() {
-        return specular;
-    }
-
-    public void setSpecular(Vector3f specular) {
-        this.specular = specular;
-    }
 }

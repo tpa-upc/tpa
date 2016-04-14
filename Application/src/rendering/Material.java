@@ -2,6 +2,7 @@ package rendering;
 
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.Renderer;
+import tpa.graphics.render.RendererState;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.joml.Matrix4f;
 
@@ -12,6 +13,9 @@ public abstract class Material {
 
     /** Shader program asociated with this material */
     protected ShaderProgram program;
+
+    /** state of the renderer */
+    protected RendererState state = new RendererState();
 
     /**
      * Create a material asociated with a shader program

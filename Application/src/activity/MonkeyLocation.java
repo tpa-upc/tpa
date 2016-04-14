@@ -1,13 +1,9 @@
 package activity;
 
-import game.Game;
-import game.GameActivity;
 import rendering.*;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
-import tpa.input.keyboard.KeyboardAdapter;
-import tpa.input.keyboard.KeyboardInput;
 
 /**
  * Created by germangb on 13/04/16.
@@ -26,13 +22,6 @@ public class MonkeyLocation extends LocationActivity {
     @Override
     public void onEntered(Context context) {
         System.out.println("onEntered()");
-        context.keyboard.setKeyboardListener(new KeyboardAdapter() {
-            @Override
-            public void onKeyDown(int key) {
-                if (key == KeyboardInput.KEY_C)
-                    Game.getInstance().pushActivity(GameActivity.Computer, null);
-            }
-        });
 
         Material material = new NormalMaterial();
         Material material2 = new LambertMaterial();
@@ -47,7 +36,7 @@ public class MonkeyLocation extends LocationActivity {
         monkey2.model.translate(3, 0, 0);
         plane.model.translate(0,-1,0);
 
-        DecalMaterial decalMat = getDecalMaterial(resources.get("res/corpse.png", Texture.class));
+        DecalMaterial decalMat = new DecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
         DecalActor decal = new DecalActor(decalMat);
         decal.model.translate(0, -1, 0).scale(4, 3, 4);
         addDecal(decal);

@@ -73,6 +73,10 @@ public class DecalMaterial extends Material {
         super(PROGRAM);
         this.diffuse = diffuse;
         this.depth = depth;
+
+        state.culling = Culling.BackFace;
+        state.blending = Blending.Alpha;
+        state.depthMask = false;
     }
 
     private static Matrix4f iMvp = new Matrix4f();
@@ -82,11 +86,7 @@ public class DecalMaterial extends Material {
         // set shader
         renderer.setShaderProgram(program);
 
-        renderer.setDepthMask(true);
-        renderer.setColorMask(true, true, true, true);
-        renderer.setRenderMode(RenderMode.Fill);
-        renderer.setCulling(Culling.BackFace);
-        renderer.setBlending(Blending.Disabled);
+        renderer.setState(state);
 
         // set textures
         program.setUniform("u_diffuse", UniformType.Sampler2D, 0);
@@ -107,13 +107,7 @@ public class DecalMaterial extends Material {
         // send resolution
         program.setUniform("u_resolution", UniformType.Vector2, new Vector2f(depth.getWidth(), depth.getHeight()));
 
-        // blending and depth masking
-        renderer.setBlending(Blending.Alpha);
-        renderer.setDepthMask(false);
-
         // render mesh
         renderer.renderMesh(mesh);
-
-        renderer.setDepthMask(true);
     }
 }

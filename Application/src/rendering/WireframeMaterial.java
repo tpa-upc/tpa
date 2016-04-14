@@ -43,6 +43,10 @@ public class WireframeMaterial extends Material {
     /** Creates a Lambert material */
     public WireframeMaterial() {
         super(PROGRAM);
+
+        state.culling = Culling.Disabled;
+        state.renderMode = RenderMode.Wireframe;
+        state.depthTest = true;
     }
 
     @Override
@@ -50,11 +54,13 @@ public class WireframeMaterial extends Material {
         // set shader
         renderer.setShaderProgram(program);
 
-        renderer.setDepthMask(true);
+        renderer.setState(state);
+
+        /*renderer.setDepthMask(true);
         renderer.setColorMask(true, true, true, true);
         renderer.setRenderMode(RenderMode.Wireframe);
         renderer.setCulling(Culling.BackFace);
-        renderer.setBlending(Blending.Disabled);
+        renderer.setBlending(Blending.Disabled);*/
 
         // transform uniforms
         program.setUniform("u_projection", UniformType.Matrix4, camera.projection);

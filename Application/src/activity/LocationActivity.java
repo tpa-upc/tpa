@@ -9,9 +9,7 @@ import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.geometry.MeshUsage;
 import tpa.graphics.geometry.Primitive;
-import tpa.graphics.render.Culling;
-import tpa.graphics.render.RenderMode;
-import tpa.graphics.render.Renderer;
+import tpa.graphics.render.*;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.*;
@@ -27,7 +25,7 @@ import java.util.Set;
  */
 public abstract class LocationActivity extends Activity {
 
-    private static int SCALE = 2;
+    private static int SCALE = 4;
 
     private static String quadVert = "#version 130\n" +
             "\n" +
@@ -57,10 +55,10 @@ public abstract class LocationActivity extends Activity {
             "\n" +
             "void main () {\n" +
             "    float noise = rand(floor(gl_FragCoord.xy/2));\n" +
-            "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*2)).rrr;\n" +
+            "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*4)).rrr;\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    vec3 dithered = step(dither, color);\n" +
-            "    frag_color = vec4(mix(color, dithered, 0.05), 1.0);\n" +
+            "    frag_color = vec4(mix(color, dithered, 0.0), 1.0);\n" +
             "}";
 
     private static Mesh quadMesh = new Mesh(MeshUsage.Static);
@@ -101,6 +99,9 @@ public abstract class LocationActivity extends Activity {
     /** Framebuffer for early Z pass */
     private Framebuffer zPass;
 
+    /** depth texture from early z pass */
+    protected Texture depth;
+
     /** framebuffer half as small as the window */
     private Framebuffer lowresPass;
 
@@ -127,6 +128,7 @@ public abstract class LocationActivity extends Activity {
         // create needed resources
         Window win = context.window;
         zPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{}, true);
+        depth = zPass.getDepth();
         lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb}, true);
         lowresPass.getTargets()[0].setMag(TextureFilter.Nearest);
         resources.load("res/dither.png", Texture.class);
@@ -180,9 +182,15 @@ public abstract class LocationActivity extends Activity {
         // perfom z pass
         renderer.setFramebuffer(zPass);
         renderer.clearDepthBuffer();
-        renderer.viewport(0, 0, zPass.getWidth(), zPass.getHeight());
-        renderer.setDepth(true);
-        renderer.setColorMask(false, false, false, false);
+        renderer.setViewport(0, 0, zPass.getWidth(), zPass.getHeight());
+
+        RendererState stateZpass = new RendererState();
+        stateZpass.depthTest = true;
+        stateZpass.redMask = stateZpass.greenMask = stateZpass.blueMask = stateZpass.alphaMask = false;
+
+        renderer.setState(stateZpass);
+        //renderer.setDepth(true);
+        //renderer.setColorMask(false, false, false, false);
 
         for (GeometryActor actor : geometry) {
             Material mat = actor.getMaterial();
@@ -190,10 +198,14 @@ public abstract class LocationActivity extends Activity {
         }
 
         // lowres pass
+        RendererState stateLow = new RendererState();
+        stateLow.depthTest = true;
+
         renderer.setFramebuffer(lowresPass);
-        renderer.viewport(0, 0, lowresPass.getWidth(), lowresPass.getHeight());
-        renderer.clearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, 1);
-        renderer.setDepth(true);
+        renderer.setViewport(0, 0, lowresPass.getWidth(), lowresPass.getHeight());
+        renderer.setClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, 1);
+        renderer.setState(stateLow);
+        //renderer.setDepth(true);
         renderer.clearBuffers();
 
         for (GeometryActor actor : geometry) {
@@ -208,11 +220,14 @@ public abstract class LocationActivity extends Activity {
 
         // window pass
         renderer.setFramebuffer(null);
-        renderer.viewport(0, 0, window.getWidth(), window.getHeight());
-        renderer.setDepth(false);
+        renderer.setViewport(0, 0, window.getWidth(), window.getHeight());
+
+        /*renderer.setDepth(false);
         renderer.setRenderMode(RenderMode.Fill);
         renderer.setCulling(Culling.Disabled);
-        renderer.setColorMask(true, true, true, true);
+        renderer.setColorMask(true, true, true, true);*/
+        renderer.setState(new RendererState());
+
         renderer.setShaderProgram(quadProgram);
         quadProgram.setUniform("u_texture", UniformType.Sampler2D, 0);
         quadProgram.setUniform("u_dither", UniformType.Sampler2D, 1);
@@ -220,16 +235,6 @@ public abstract class LocationActivity extends Activity {
         renderer.setTexture(0, lowresPass.getTargets()[0]);
         renderer.setTexture(1, dither);
         renderer.renderMesh(quadMesh);
-    }
-
-    /**
-     * Returns a decal material. This requires a depth texture
-     * @param diffuse diffuse texture map
-     * @return decal material ready to use
-     */
-    public DecalMaterial getDecalMaterial (Texture diffuse) {
-        DecalMaterial mat = new DecalMaterial(diffuse, zPass.getDepth());
-        return mat;
     }
 
 }

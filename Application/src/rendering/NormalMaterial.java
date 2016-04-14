@@ -50,6 +50,8 @@ public class NormalMaterial extends Material {
     /** Creates a Lambert material */
     public NormalMaterial() {
         super(PROGRAM);
+        state.culling = Culling.BackFace;
+        state.depthTest = true;
     }
 
     @Override
@@ -57,11 +59,13 @@ public class NormalMaterial extends Material {
         // set shader
         renderer.setShaderProgram(program);
 
-        renderer.setDepthMask(true);
+        /*renderer.setDepthMask(true);
         renderer.setColorMask(true, true, true, true);
         renderer.setRenderMode(RenderMode.Fill);
         renderer.setCulling(Culling.BackFace);
-        renderer.setBlending(Blending.Disabled);
+        renderer.setBlending(Blending.Disabled);*/
+
+        renderer.setState(state);
 
         // transform uniforms
         program.setUniform("u_projection", UniformType.Matrix4, camera.projection);

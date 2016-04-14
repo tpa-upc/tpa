@@ -110,7 +110,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
     }
 
     @Override
-    public void clearColor(float r, float g, float b, float a) {
+    public void setClearColor(float r, float g, float b, float a) {
         glClearColor(r, g, b, a);
     }
 
@@ -130,12 +130,21 @@ public class LwjglRenderer implements Renderer, Destroyable {
     }
 
     @Override
-    public void viewport(int x, int y, int with, int height) {
+    public void setViewport(int x, int y, int with, int height) {
         glViewport(x, y, with, height);
     }
 
     @Override
-    public void setBlending(Blending blend) {
+    public void setState(RendererState state) {
+        setBlending(state.blending);
+        setDepth(state.depthTest);
+        setCulling(state.culling);
+        setRenderMode(state.renderMode);
+        setDepthMask(state.depthMask);
+        setColorMask(state.redMask, state.greenMask, state.blueMask, state.alphaMask);
+    }
+
+    private void setBlending(Blending blend) {
         if (blendMode == blend)
             return;
 
@@ -164,7 +173,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
     }
 
-    @Override
     public void setDepth(boolean flag) {
         if (flag)
             glEnable(GL_DEPTH_TEST);
@@ -172,17 +180,14 @@ public class LwjglRenderer implements Renderer, Destroyable {
             glDisable(GL_DEPTH_TEST);
     }
 
-    @Override
     public void setColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
         glColorMask(red, green, blue, alpha);
     }
 
-    @Override
     public void setDepthMask(boolean depth) {
         glDepthMask(depth);
     }
 
-    @Override
     public void setRenderMode(RenderMode mode) {
         if (mode != renderMode) {
             renderMode = mode;
@@ -198,7 +203,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
     }
 
-    @Override
     public void setCulling(Culling cull) {
         if (cull != cullMode) {
             cullMode = cull;
