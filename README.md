@@ -1,3 +1,3 @@
 # tpa
 
-Estic treballant en la branca [https://github.com/germangb/tpa/tree/begin_test](begin_test)!!
+Estic treballant en la branca [begin_test](https://github.com/germangb/tpa/tree/begin_test)!!
