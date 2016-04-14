@@ -59,12 +59,6 @@ public class NormalMaterial extends Material {
         // set shader
         renderer.setShaderProgram(program);
 
-        /*renderer.setDepthMask(true);
-        renderer.setColorMask(true, true, true, true);
-        renderer.setRenderMode(RenderMode.Fill);
-        renderer.setCulling(Culling.BackFace);
-        renderer.setBlending(Blending.Disabled);*/
-
         renderer.setState(state);
 
         // transform uniforms

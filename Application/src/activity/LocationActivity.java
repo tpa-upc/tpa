@@ -13,6 +13,7 @@ import tpa.graphics.render.*;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.*;
+import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 
 import java.nio.ByteBuffer;
@@ -25,64 +26,8 @@ import java.util.Set;
  */
 public abstract class LocationActivity extends Activity {
 
-    private static int SCALE = 4;
-
-    private static String quadVert = "#version 130\n" +
-            "\n" +
-            "in vec3 a_position;\n" +
-            "\n" +
-            "out vec2 v_uv;\n" +
-            "\n" +
-            "void main () {\n" +
-            "    gl_Position = vec4(a_position, 1.0);\n" +
-            "    v_uv = a_position.xy*0.5+0.5;\n" +
-            "}";
-
-    private static String quadFrag = "#version 130\n" +
-            "\n" +
-            "in vec2 v_uv;\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
-            "\n" +
-            "uniform sampler2D u_texture;\n" +
-            "uniform sampler2D u_dither;\n" +
-            "\n" +
-            "uniform vec2 u_resolution;\n" +
-            "\n" +
-            "float rand(vec2 co){\n" +
-            "    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +
-            "}\n" +
-            "\n" +
-            "void main () {\n" +
-            "    float noise = rand(floor(gl_FragCoord.xy/2));\n" +
-            "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*4)).rrr;\n" +
-            "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
-            "    vec3 dithered = step(dither, color);\n" +
-            "    frag_color = vec4(mix(color, dithered, 0.0), 1.0);\n" +
-            "}";
-
-    private static Mesh quadMesh = new Mesh(MeshUsage.Static);
-    private static ShaderProgram quadProgram = new ShaderProgram(quadVert, quadFrag, Attribute.Position);
-    static {
-        float[] quadPos = {-1, -1, 0, +1, -1, 0, +1, +1, 0, -1, +1, 0};
-        int[] quadInd = {0, 1, 2, 0, 2, 3};
-
-        quadMesh.setData(Attribute.Position, ByteBuffer.allocateDirect(12<<2)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer()
-                .put(quadPos)
-                .flip());
-
-        quadMesh.setIndices(ByteBuffer.allocateDirect(6<<2)
-                .order(ByteOrder.nativeOrder())
-                .asIntBuffer()
-                .put(quadInd)
-                .flip());
-
-        quadMesh.setLength(6);
-        quadMesh.setKeepData(false);
-        quadMesh.setPrimitive(Primitive.Triangles);
-    }
+    /** low res scale */
+    private static int SCALE = 1;
 
     /** resource manager for the location, to load textures, meshes, sound, etc */
     protected ResourceManager resources = new SimpleResourceManager();
@@ -111,6 +56,12 @@ public abstract class LocationActivity extends Activity {
     /** box for decals */
     private Mesh box;
 
+    /** quad for rendering framebuffers */
+    private Mesh quad;
+
+    /** material for rendering framebuffer */
+    private CompositeMaterial composite;
+
     /** load location specific resources here */
     public abstract void onLoad (Context context);
 
@@ -136,12 +87,16 @@ public abstract class LocationActivity extends Activity {
         lowresPass.getTargets()[0].setMag(TextureFilter.Nearest);
         resources.load("res/dither.png", Texture.class);
         resources.load("res/box.json", Mesh.class);
+        resources.load("res/quad.json", Mesh.class);
         resources.finishLoading();
         box = resources.get("res/box.json", Mesh.class);
+        quad = resources.get("res/quad.json", Mesh.class);
         dither = resources.get("res/dither.png", Texture.class);
         dither.setMag(TextureFilter.Nearest);
         dither.setWrapU(TextureWrap.Repeat);
         dither.setWrapV(TextureWrap.Repeat);
+
+        composite = new CompositeMaterial(lowresPass.getTargets()[0], dither, new Vector2f(context.window.getWidth(), context.window.getHeight()));
 
         onLoad(context);
         resources.finishLoading();
@@ -228,15 +183,6 @@ public abstract class LocationActivity extends Activity {
         // window pass
         renderer.setFramebuffer(null);
         renderer.setViewport(0, 0, window.getWidth(), window.getHeight());
-        renderer.setState(new RendererState());
-
-        renderer.setShaderProgram(quadProgram);
-        quadProgram.setUniform("u_texture", UniformType.Sampler2D, 0);
-        quadProgram.setUniform("u_dither", UniformType.Sampler2D, 1);
-        quadProgram.setUniform("u_resolution", UniformType.Vector2, new Vector2f(window.getWidth(), window.getHeight()));
-        renderer.setTexture(0, lowresPass.getTargets()[0]);
-        renderer.setTexture(1, dither);
-        renderer.renderMesh(quadMesh);
+        composite.render(context.renderer, null, quad, null);
     }
-
 }

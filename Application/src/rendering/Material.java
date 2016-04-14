@@ -29,7 +29,6 @@ public abstract class Material {
      * Use material to render specific mesh
      * @param renderer renderer implementation
      * @param camera projection & view transformation
-     * @param actor mesh to be rendered
      */
     public abstract void render (Renderer renderer, Camera camera, Mesh mesh, Matrix4f model);
 }
