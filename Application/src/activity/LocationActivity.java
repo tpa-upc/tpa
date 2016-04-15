@@ -2,6 +2,7 @@ package activity;
 
 import rendering.*;
 import rendering.materials.CompositeMaterial;
+import rendering.materials.DepthMaterial;
 import rendering.materials.Material;
 import resources.ResourceManager;
 import resources.SimpleResourceManager;
@@ -29,6 +30,9 @@ public abstract class LocationActivity extends Activity {
     /** Camera of the location */
     protected Camera camera = new Camera();
 
+    /** Fps input controller */
+    private FpsInput fps = new FpsInput(camera);
+
     /** Geometry visible on the scene */
     private Set<GeometryActor> geometry = new HashSet<>();
 
@@ -40,6 +44,9 @@ public abstract class LocationActivity extends Activity {
 
     /** depth texture from early z pass */
     protected Texture depth;
+
+    /** material used to render geometry */
+    private DepthMaterial depthMaterial = new DepthMaterial();
 
     /** framebuffer half as small as the window */
     private Framebuffer lowresPass;
@@ -130,7 +137,8 @@ public abstract class LocationActivity extends Activity {
         onTick(context);
 
         // update camera
-        camera.update();
+        //camera.update();
+        fps.update(context);
 
         Window window = context.window;
         Renderer renderer = context.renderer;
@@ -147,8 +155,7 @@ public abstract class LocationActivity extends Activity {
         renderer.setState(stateZpass);
 
         for (GeometryActor actor : geometry) {
-            Material mat = actor.getMaterial();
-            mat.render(renderer, camera, actor.getMesh(), actor.model);
+            depthMaterial.render(renderer, camera, actor.getMesh(), actor.model);
         }
 
         // lowres pass

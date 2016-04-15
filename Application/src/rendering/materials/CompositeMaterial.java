@@ -43,10 +43,11 @@ public class CompositeMaterial extends Material {
             "\n" +
             "void main () {\n" +
             "    float noise = rand(floor(gl_FragCoord.xy/2));\n" +
-            "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*4)).rrr;\n" +
+            "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*1)).rrr;\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    vec3 dithered = step(dither, color);\n" +
             "    frag_color = vec4(mix(color, dithered, 0.0), 1.0);\n" +
+            "    frag_color.rgb = pow(frag_color.rgb, vec3(0.77));" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);

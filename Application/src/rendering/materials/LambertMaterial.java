@@ -50,6 +50,7 @@ public class LambertMaterial extends Material {
             "uniform vec3 u_diffuse;\n" +
             "uniform vec3 u_specular;\n" +
             "uniform float u_hardness;\n" +
+            "uniform float u_reflective;\n" +
             "\n" +
             "void main () {\n" +
             "    vec3 surf2eye = normalize(-v_position);\n" +
@@ -59,7 +60,7 @@ public class LambertMaterial extends Material {
             "    \n" +
             "    vec3 reflected = reflect(surf2eye, v_normal);\n" +
             "    float spec = clamp(dot(-reflected, surf2light), 0.0, 1.0);\n" +
-            "    spec = pow(spec, u_hardness);\n" +
+            "    spec = pow(spec, u_hardness)*u_reflective;\n" +
             "    \n" +
             "    frag_color = vec4(u_ambient + u_diffuse*diff_comp + u_specular*spec, 1.0);\n" +
             "}";
@@ -82,6 +83,9 @@ public class LambertMaterial extends Material {
     /** surface hardness */
     public float hardness = 32f;
 
+    /** reflective scalar factor */
+    public float reflective = 1f;
+
     /** Creates a Lambert material */
     public LambertMaterial() {
         super(LAMBERT_PROGRAM);
@@ -102,6 +106,7 @@ public class LambertMaterial extends Material {
         program.setUniform("u_model", UniformType.Matrix4, model);
         program.setUniform("u_light", UniformType.Vector3, light);
         program.setUniform("u_hardness", UniformType.Float, hardness);
+        program.setUniform("u_reflective", UniformType.Float, reflective);
 
         // set color uniforms
         program.setUniform("u_ambient", UniformType.Vector3, ambient);

@@ -46,6 +46,7 @@ public class Launch {
             // update what needs to be updated
             time.update();
             program.onUpdate(con);
+            mouse.update();
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();

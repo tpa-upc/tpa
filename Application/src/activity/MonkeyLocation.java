@@ -5,11 +5,14 @@ import rendering.materials.*;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
+import tpa.joml.Vector4f;
 
 /**
  * Created by germangb on 13/04/16.
  */
 public class MonkeyLocation extends LocationActivity {
+
+    LambertMaterial monkeyMaterial;
 
     GeometryActor monkey;
     GeometryActor solid;
@@ -25,21 +28,23 @@ public class MonkeyLocation extends LocationActivity {
         resources.load("res/plane.json", Mesh.class);
         resources.load("res/sphere.json", Mesh.class);
         resources.load("res/corpse.png", Texture.class);
+        resources.load("res/floor.jpg", Texture.class);
     }
 
     @Override
     public void onFinishLoad(Context context) {
-        LambertMaterial monkeyMaterial = new LambertMaterial();
+        monkeyMaterial = new LambertMaterial();
         OutlineMaterial sphereMaterial = new OutlineMaterial();
-        Material floorMaterial = new NormalMaterial();
+        Material floorMaterial = new TexturedMaterial(resources.get("res/floor.jpg", Texture.class));
         Material solidMaterial = new WireframeMaterial();
-        DecalMaterial decalMaterial = new DecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
+        Material decalMaterial = new DebugDecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
 
-        monkeyMaterial.hardness= 8;
+        monkeyMaterial.reflective = 1;
+        monkeyMaterial.hardness = 4;
         monkeyMaterial.ambient.set(0.25f, 0, 0);
         monkeyMaterial.diffuse.set(1,0,0);
         monkeyMaterial.specular.set(1);
-        monkeyMaterial.light.set(0, 4, 0);
+        monkeyMaterial.light.set(0, 1, 3);
 
         // create geometry of the "room"
         sphere = new GeometryActor(resources.get("res/monkey.json", Mesh.class), sphereMaterial);
@@ -58,11 +63,11 @@ public class MonkeyLocation extends LocationActivity {
         addDecal(decal);
 
         // set positions, rotations and stuff
-        monkey.model.identity().translate(-3, -1, 1).scale(2).rotate(0.7f, 0, 1, 0);
-        solid.model.identity().translate(3, 0, 0);
-        sphere.model.identity().translate(3, 0.5f, 3);
-        plane.model.identity().translate(0,-1,0);
-        decal.model.identity().translate(0, -1, 0).scale(4, 3, 4);
+        monkey.model.identity().translate(-6, 0, 1).scale(2).rotate(0.7f, 0, 1, 0);
+        solid.model.identity().translate(6, 1, 0);
+        sphere.model.identity().translate(3, 0.5f, 6);
+        plane.model.identity().scale(0.5f, 1, 0.5f);
+        decal.model.identity().translate(0, 0.2f, 0).rotate(0.125f, 1, 0, 0).rotate(0.25f, 0, 1, 0).scale(2,0.75f,2);
 
         // create camera projection
         camera.projection.setPerspective(50*3.14f/180, 4f/3f, 0.1f, 1000f);
@@ -71,11 +76,14 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-        // animate camera
-        float t = context.time.getTime()/2;
-        float x = (float) Math.sin(t)*8;
-        float z = (float) Math.cos(t)*8;
-        camera.view.setLookAt(x, 3 + 3*(((float) Math.sin(t*2))*0.5f+0.5f), z, 0, 0, 0, 0, 1, 0);
+        Vector4f cam = camera.view.getColumn(3, new Vector4f());
+        monkeyMaterial.light.set(0, 0, 3);
+
+        decal.model.identity()
+                .translate(0, 0.2f, 0)
+                .rotate(0.5f*(float)Math.sin(context.time.getTime() * 1.715f), 1, 0, 0)
+                .rotate(0.5f*(float) Math.cos(context.time.getTime()*1.167f), 0, 1, 0)
+                .scale(2,1.5f,2);
     }
 
     @Override

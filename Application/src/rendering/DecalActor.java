@@ -1,18 +1,21 @@
 package rendering;
 
+import rendering.materials.DecalMaterial;
+import rendering.materials.Material;
+
 /**
  * Created by german on 13/04/2016.
  */
 public class DecalActor extends Actor {
 
     /** Decal material */
-    private DecalMaterial material;
+    private Material material;
 
-    public DecalActor (DecalMaterial material) {
+    public DecalActor (Material material) {
         this.material = material;
     }
 
-    public DecalMaterial getMaterial() {
+    public Material getMaterial() {
         return material;
     }
 

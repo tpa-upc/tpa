@@ -79,6 +79,11 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
         });
     }
 
+    public void update () {
+        lastX = x;
+        lastY = y;
+    }
+
     @Override
     public MouseListener getMouseListener() {
         return mouseListener;

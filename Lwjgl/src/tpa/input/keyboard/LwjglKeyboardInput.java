@@ -61,7 +61,7 @@ public class LwjglKeyboardInput implements KeyboardInput, Destroyable {
 
     @Override
     public boolean isKeyDown(int key) {
-        return false;
+        return glfwGetKey(windown, key) == GLFW_PRESS;
     }
 
     @Override
