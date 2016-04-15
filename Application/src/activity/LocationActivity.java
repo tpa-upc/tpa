@@ -1,23 +1,17 @@
 package activity;
 
 import rendering.*;
+import rendering.materials.CompositeMaterial;
+import rendering.materials.Material;
 import resources.ResourceManager;
 import resources.SimpleResourceManager;
 import tpa.application.Context;
 import tpa.application.Window;
-import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
-import tpa.graphics.geometry.MeshUsage;
-import tpa.graphics.geometry.Primitive;
 import tpa.graphics.render.*;
-import tpa.graphics.shader.ShaderProgram;
-import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.*;
-import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -174,7 +168,7 @@ public abstract class LocationActivity extends Activity {
             mat.render(renderer, camera, actor.getMesh(), actor.model);
         }
 
-        // render decaks
+        // render decals
         for (DecalActor decal : decals) {
             Material mat = decal.getMaterial();
             mat.render(context.renderer, camera, box, decal.model);

@@ -1,10 +1,10 @@
 package rendering;
 
+import rendering.materials.Material;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.Blending;
 import tpa.graphics.render.Culling;
-import tpa.graphics.render.RenderMode;
 import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;

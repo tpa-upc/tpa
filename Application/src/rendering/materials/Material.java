@@ -1,5 +1,6 @@
-package rendering;
+package rendering.materials;
 
+import rendering.Camera;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.Renderer;
 import tpa.graphics.render.RendererState;

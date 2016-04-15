@@ -1,5 +1,6 @@
 package rendering;
 
+import rendering.materials.Material;
 import tpa.graphics.geometry.Mesh;
 
 /**

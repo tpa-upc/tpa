@@ -1,8 +1,8 @@
-package rendering;
+package rendering.materials;
 
+import rendering.Camera;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
-import tpa.graphics.render.Blending;
 import tpa.graphics.render.Culling;
 import tpa.graphics.render.RenderMode;
 import tpa.graphics.render.Renderer;

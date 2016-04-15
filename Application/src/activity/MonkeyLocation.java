@@ -1,6 +1,7 @@
 package activity;
 
 import rendering.*;
+import rendering.materials.*;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -13,6 +14,7 @@ public class MonkeyLocation extends LocationActivity {
     GeometryActor monkey;
     GeometryActor solid;
     GeometryActor plane;
+    GeometryActor sphere;
     DecalActor decal;
 
     @Override
@@ -21,17 +23,26 @@ public class MonkeyLocation extends LocationActivity {
         resources.load("res/monkey.json", Mesh.class);
         resources.load("res/thing.json", Mesh.class);
         resources.load("res/plane.json", Mesh.class);
+        resources.load("res/sphere.json", Mesh.class);
         resources.load("res/corpse.png", Texture.class);
     }
 
     @Override
     public void onFinishLoad(Context context) {
-        Material monkeyMaterial = new NormalMaterial();
+        LambertMaterial monkeyMaterial = new LambertMaterial();
+        OutlineMaterial sphereMaterial = new OutlineMaterial();
         Material floorMaterial = new NormalMaterial();
         Material solidMaterial = new WireframeMaterial();
         DecalMaterial decalMaterial = new DecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
 
+        monkeyMaterial.hardness= 8;
+        monkeyMaterial.ambient.set(0.25f, 0, 0);
+        monkeyMaterial.diffuse.set(1,0,0);
+        monkeyMaterial.specular.set(1);
+        monkeyMaterial.light.set(0, 4, 0);
+
         // create geometry of the "room"
+        sphere = new GeometryActor(resources.get("res/monkey.json", Mesh.class), sphereMaterial);
         monkey = new GeometryActor(resources.get("res/monkey.json", Mesh.class), monkeyMaterial);
         plane = new GeometryActor(resources.get("res/plane.json", Mesh.class), floorMaterial);
         solid = new GeometryActor(resources.get("res/thing.json", Mesh.class), solidMaterial);
@@ -43,16 +54,19 @@ public class MonkeyLocation extends LocationActivity {
         addGeometry(monkey);
         addGeometry(plane);
         addGeometry(solid);
+        addGeometry(sphere);
         addDecal(decal);
 
         // set positions, rotations and stuff
-        monkey.model.identity().translate(-3, 0, 1).rotate(0.7f, 0, 1, 0);
+        monkey.model.identity().translate(-3, -1, 1).scale(2).rotate(0.7f, 0, 1, 0);
         solid.model.identity().translate(3, 0, 0);
+        sphere.model.identity().translate(3, 0.5f, 3);
         plane.model.identity().translate(0,-1,0);
         decal.model.identity().translate(0, -1, 0).scale(4, 3, 4);
 
         // create camera projection
         camera.projection.setPerspective(50*3.14f/180, 4f/3f, 0.1f, 1000f);
+        camera.clearColor.set(0.25f);
     }
 
     @Override
