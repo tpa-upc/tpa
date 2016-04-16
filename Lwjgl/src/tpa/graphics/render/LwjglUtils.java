@@ -61,7 +61,8 @@ public class LwjglUtils {
         GL20.glCompileShader(shader);
         String log = GL20.glGetShaderInfoLog(shader);
 
-        if (!log.isEmpty())
+        int status = GL20.glGetShaderi(shader, GL20.GL_COMPILE_STATUS);
+        if (status == GL11.GL_FALSE)
             throw new RuntimeException(log);
 
         return shader;
