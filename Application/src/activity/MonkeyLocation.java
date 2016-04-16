@@ -9,11 +9,11 @@ import tpa.graphics.texture.TextureFilter;
 import tpa.joml.Vector4f;
 
 /**
+ * Test room
+ *
  * Created by germangb on 13/04/16.
  */
 public class MonkeyLocation extends LocationActivity {
-
-    LambertMaterial monkeyMaterial;
 
     GeometryActor monkey;
     GeometryActor solid;
@@ -23,7 +23,7 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onLoad(Context context) {
-        // load resources of the location
+        // load resources
         resources.load("res/monkey.json", Mesh.class);
         resources.load("res/thing.json", Mesh.class);
         resources.load("res/plane.json", Mesh.class);
@@ -34,16 +34,19 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onFinishLoad(Context context) {
-        Texture floorTes = resources.get("res/floor.jpg", Texture.class);
-        floorTes.setGenerateMipmaps(true);
-        floorTes.setMin(TextureFilter.MipmapLinear);
+        // set resource attributes
+        Texture floorTex = resources.get("res/floor.jpg", Texture.class);
+        floorTex.setGenerateMipmaps(true);
+        floorTex.setMin(TextureFilter.MipmapLinear);
 
-        monkeyMaterial = new LambertMaterial();
+        // materials define how geometry is renderer
+        LambertMaterial monkeyMaterial = new LambertMaterial();
         OutlineMaterial sphereMaterial = new OutlineMaterial();
-        Material floorMaterial = new TexturedMaterial(floorTes);
+        Material floorMaterial = new TexturedMaterial(floorTex);
         Material solidMaterial = new WireframeMaterial();
         Material decalMaterial = new DecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
 
+        // set material parameters
         monkeyMaterial.reflective = 1;
         monkeyMaterial.hardness = 4;
         monkeyMaterial.ambient.set(0.25f, 0, 0);
@@ -61,6 +64,7 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        // when room is entered, put geometry on it
         addGeometry(monkey);
         addGeometry(plane);
         addGeometry(solid);
@@ -81,9 +85,7 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-        Vector4f cam = camera.view.getColumn(3, new Vector4f());
-        monkeyMaterial.light.set(0, 0, 3);
-
+        // update position & rotation of one of the objects
         decal.model.identity()
                 .translate(0, 0.2f, 0)
                 .rotate(0.5f*(float)Math.sin(context.time.getTime() * 1.715f), 1, 0, 0)
