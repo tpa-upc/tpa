@@ -5,6 +5,7 @@ import rendering.materials.*;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
+import tpa.graphics.texture.TextureFilter;
 import tpa.joml.Vector4f;
 
 /**
@@ -33,11 +34,15 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onFinishLoad(Context context) {
+        Texture floorTes = resources.get("res/floor.jpg", Texture.class);
+        floorTes.setGenerateMipmaps(true);
+        floorTes.setMin(TextureFilter.MipmapLinear);
+
         monkeyMaterial = new LambertMaterial();
         OutlineMaterial sphereMaterial = new OutlineMaterial();
-        Material floorMaterial = new TexturedMaterial(resources.get("res/floor.jpg", Texture.class));
+        Material floorMaterial = new TexturedMaterial(floorTes);
         Material solidMaterial = new WireframeMaterial();
-        Material decalMaterial = new DebugDecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
+        Material decalMaterial = new DecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
 
         monkeyMaterial.reflective = 1;
         monkeyMaterial.hardness = 4;

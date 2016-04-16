@@ -61,5 +61,7 @@ public class FpsInput {
                 .rotate(pitch, 1, 0, 0)
                 .rotate(yaw, 0, 1, 0)
                 .translate(-position.x, -position.y, -position.z);
+
+        camera.update();
     }
 }

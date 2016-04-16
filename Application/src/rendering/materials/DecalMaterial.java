@@ -103,8 +103,7 @@ public class DecalMaterial extends Material {
         program.setUniform("u_model", UniformType.Matrix4, model);
 
         // compute mvp and invert
-        iMvp.set(camera.projection).mul(camera.view).mul(model).invert();
-        program.setUniform("u_inv_mvp", UniformType.Matrix4, iMvp);
+        program.setUniform("u_inv_mvp", UniformType.Matrix4, iMvp.set(camera.viewProjection).mul(model).invert());
 
         // send resolution
         program.setUniform("u_resolution", UniformType.Vector2, new Vector2f(depth.getWidth(), depth.getHeight()));
