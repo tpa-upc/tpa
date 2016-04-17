@@ -22,6 +22,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
 
 /**
  * TODO - limit number of gl objects (reuse the least common ones or something)
@@ -34,6 +35,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class LwjglRenderer implements Renderer, Destroyable {
 
     private GLCapabilities caps;
+    private boolean FBO_EXT = false;
     private static boolean debug = true;
 
     private RendererListener listener = null;
@@ -323,8 +325,17 @@ public class LwjglRenderer implements Renderer, Destroyable {
 
     @Override
     public void setFramebuffer(Framebuffer fbo) {
+        boolean ext = false;
+        if (!this.caps.OpenGL30) {
+            ext = caps.GL_EXT_framebuffer_object;
+            if (!ext)
+                throw new RuntimeException("Unsupported GL_VERSION. Cannot fall back to EXT :(");
+            FBO_EXT = ext;
+        }
+
         if (fbo == null) {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            if (ext) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+            else glBindFramebuffer(GL_FRAMEBUFFER, 0);
             return;
         }
 
@@ -332,24 +343,29 @@ public class LwjglRenderer implements Renderer, Destroyable {
         if (handle == null) {
             fbo.setDirty(true);
             // create fbo
-            handle = glGenFramebuffers();
+            if (ext) handle = glGenFramebuffersEXT();
+            else handle = glGenFramebuffers();
             fbos.put(fbo, handle);
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, handle);
+        if (ext) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, handle);
+        else glBindFramebuffer(GL_FRAMEBUFFER, handle);
+
         stats.fboSwitch++;
         if (fbo.isDirty()) {
             // rebuild fbo and textures
             Texture[] targets = fbo.getTargets();
             for (int i = 0; i < targets.length; ++i) {
                 setTexture(0, targets[i]);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, textures.get(targets[i]), 0);
+                if (ext) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT+i, GL_TEXTURE_2D, textures.get(targets[i]), 0);
+                else glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, textures.get(targets[i]), 0);
             }
 
             if (fbo.hasDepth()) {
                 Texture depth = fbo.getDepth();
                 setTexture(0, depth);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textures.get(depth), 0);
+                if (ext) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, textures.get(depth), 0);
+                else glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textures.get(depth), 0);
             }
 
             if (targets.length == 0 && fbo.hasDepth()) {
@@ -357,17 +373,26 @@ public class LwjglRenderer implements Renderer, Destroyable {
                 glReadBuffer(GL_NONE);
             }
 
-            int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-            if (status != GL_FRAMEBUFFER_COMPLETE)
-                throw new RuntimeException("fbo not complete");
+            if (ext) {
+                int status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+                if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+                    throw new RuntimeException("fbo not complete");
+            } else {
+                int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                if (status != GL_FRAMEBUFFER_COMPLETE)
+                    throw new RuntimeException("fbo not complete");
+            }
 
             fbo.setDirty(false);
         }
 
         // set render targets
         Texture[] targets = fbo.getTargets();
-        for (int i = 0; i < targets.length; ++i)
-            drawBuffers.put(GL_COLOR_ATTACHMENT0+i);
+        drawBuffers.clear();
+        for (int i = 0; i < targets.length; ++i) {
+            int b = ext ? GL_COLOR_ATTACHMENT0_EXT : GL_COLOR_ATTACHMENT0;
+            drawBuffers.put(b + i);
+        }
 
         drawBuffers.flip();
         glDrawBuffers(drawBuffers);
@@ -606,6 +631,9 @@ public class LwjglRenderer implements Renderer, Destroyable {
         verts.forEach((vert, id) -> glDeleteShader(id));
         frags.forEach((frag, id) -> glDeleteShader(id));
 
-        fbos.forEach((fbo, id) -> glDeleteFramebuffers(id));
+        if (caps.OpenGL30)
+            fbos.forEach((fbo, id) -> glDeleteFramebuffers(id));
+        else if (FBO_EXT)
+            fbos.forEach((fbo, id) -> glDeleteFramebuffersEXT(id));
     }
 }
