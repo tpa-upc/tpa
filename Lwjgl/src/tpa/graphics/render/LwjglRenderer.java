@@ -1,6 +1,6 @@
 package tpa.graphics.render;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.*;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.shader.ShaderProgram;
@@ -9,8 +9,6 @@ import tpa.graphics.texture.Framebuffer;
 import tpa.graphics.texture.Texture;
 import tpa.joml.*;
 import tpa.utils.Destroyable;
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GLUtil;
 
 import java.nio.*;
 import java.util.HashMap;
@@ -22,6 +20,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
 
 /**
  * TODO - limit number of gl objects (reuse the least common ones or something)
@@ -34,6 +33,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class LwjglRenderer implements Renderer, Destroyable {
 
     private GLCapabilities caps;
+    private boolean FBO_EXT = false;
     private static boolean debug = true;
 
     private RendererListener listener = null;
@@ -263,8 +263,36 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
 
         if (texture.isParamsDirty()) {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, LwjglUtils.filter2int(texture.getMag()));
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, LwjglUtils.filter2int(texture.getMin()));
+            int mag = LwjglUtils.filter2int(texture.getMag());
+            int min = LwjglUtils.filter2int(texture.getMin());
+
+            if (!caps.OpenGL30) {
+                // fallback to regular filters
+                switch (mag) {
+                    case GL_LINEAR_MIPMAP_LINEAR:
+                    case GL_LINEAR_MIPMAP_NEAREST:
+                        mag = GL_LINEAR;
+                        break;
+                    case GL_NEAREST_MIPMAP_LINEAR:
+                    case GL_NEAREST_MIPMAP_NEAREST:
+                        mag = GL_NEAREST;
+                        break;
+                }
+
+                switch (min) {
+                    case GL_LINEAR_MIPMAP_LINEAR:
+                    case GL_LINEAR_MIPMAP_NEAREST:
+                        min = GL_LINEAR;
+                        break;
+                    case GL_NEAREST_MIPMAP_LINEAR:
+                    case GL_NEAREST_MIPMAP_NEAREST:
+                        min = GL_NEAREST;
+                        break;
+                }
+            }
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, LwjglUtils.wrap2int(texture.getWrapU()));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, LwjglUtils.wrap2int(texture.getWrapV()));
             texture.setParamsDirty(false);
@@ -328,8 +356,17 @@ public class LwjglRenderer implements Renderer, Destroyable {
 
     @Override
     public void setFramebuffer(Framebuffer fbo) {
+        boolean ext = false;
+        if (!this.caps.OpenGL30) {
+            ext = caps.GL_EXT_framebuffer_object;
+            if (!ext)
+                throw new RuntimeException("Unsupported GL_VERSION. Cannot fall back to EXT :(");
+            FBO_EXT = ext;
+        }
+
         if (fbo == null) {
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            if (ext) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+            else glBindFramebuffer(GL_FRAMEBUFFER, 0);
             return;
         }
 
@@ -337,24 +374,29 @@ public class LwjglRenderer implements Renderer, Destroyable {
         if (handle == null) {
             fbo.setDirty(true);
             // create fbo
-            handle = glGenFramebuffers();
+            if (ext) handle = EXTFramebufferObject.glGenFramebuffersEXT();
+            else handle = glGenFramebuffers();
             fbos.put(fbo, handle);
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, handle);
+        if (ext) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, handle);
+        else glBindFramebuffer(GL_FRAMEBUFFER, handle);
+
         stats.fboSwitch++;
         if (fbo.isDirty()) {
             // rebuild fbo and textures
             Texture[] targets = fbo.getTargets();
             for (int i = 0; i < targets.length; ++i) {
                 setTexture(0, targets[i]);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, textures.get(targets[i]), 0);
+                if (ext) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT+i, GL_TEXTURE_2D, textures.get(targets[i]), 0);
+                else glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+i, GL_TEXTURE_2D, textures.get(targets[i]), 0);
             }
 
             if (fbo.hasDepth()) {
                 Texture depth = fbo.getDepth();
                 setTexture(0, depth);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textures.get(depth), 0);
+                if (ext) glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, textures.get(depth), 0);
+                else glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textures.get(depth), 0);
             }
 
             if (targets.length == 0 && fbo.hasDepth()) {
@@ -362,9 +404,15 @@ public class LwjglRenderer implements Renderer, Destroyable {
                 glReadBuffer(GL_NONE);
             }
 
-            int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-            if (status != GL_FRAMEBUFFER_COMPLETE)
-                throw new RuntimeException("fbo not complete");
+            if (ext) {
+                int status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+                if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+                    throw new RuntimeException("fbo not complete");
+            } else {
+                int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+                if (status != GL_FRAMEBUFFER_COMPLETE)
+                    throw new RuntimeException("fbo not complete");
+            }
 
             fbo.setDirty(false);
         }
@@ -372,8 +420,10 @@ public class LwjglRenderer implements Renderer, Destroyable {
         // set render targets
         Texture[] targets = fbo.getTargets();
         drawBuffers.clear();
-        for (int i = 0; i < targets.length; ++i)
-            drawBuffers.put(GL_COLOR_ATTACHMENT0+i);
+        for (int i = 0; i < targets.length; ++i) {
+            int b = ext ? GL_COLOR_ATTACHMENT0_EXT : GL_COLOR_ATTACHMENT0;
+            drawBuffers.put(b + i);
+        }
 
         drawBuffers.flip();
         glDrawBuffers(drawBuffers);
@@ -612,6 +662,9 @@ public class LwjglRenderer implements Renderer, Destroyable {
         verts.forEach((vert, id) -> glDeleteShader(id));
         frags.forEach((frag, id) -> glDeleteShader(id));
 
-        fbos.forEach((fbo, id) -> glDeleteFramebuffers(id));
+        if (caps.OpenGL30)
+            fbos.forEach((fbo, id) -> glDeleteFramebuffers(id));
+        else if (FBO_EXT)
+            fbos.forEach((fbo, id) -> glDeleteFramebuffersEXT(id));
     }
 }

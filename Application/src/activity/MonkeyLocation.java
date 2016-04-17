@@ -2,6 +2,7 @@ package activity;
 
 import rendering.*;
 import rendering.materials.*;
+import resources.ResourceManager;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
