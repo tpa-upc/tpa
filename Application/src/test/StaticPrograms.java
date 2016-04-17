@@ -6,9 +6,9 @@ package test;
 public class StaticPrograms {
 
     //language=GLSL
-    public static final String SHADOWMAP_VERT = "#version 130\n" +
+    public static final String SHADOWMAP_VERT = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
+            "attribute vec3 a_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -19,16 +19,16 @@ public class StaticPrograms {
             "}";
 
     //language=GLSL
-    public static final String SHADOWMAP_FRAG = "#version 130\n" +
+    public static final String SHADOWMAP_FRAG = "#version 120\n" +
             "void main () {\n" +
             "}";
 
     // -----------------------------------------------------------------------------------------------------------------
 
     //language=GLSL
-    public static final String WIRE_VERT = "#version 130\n" +
+    public static final String WIRE_VERT = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
+            "attribute vec3 a_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -39,9 +39,9 @@ public class StaticPrograms {
             "}";
 
     //language=GLSL
-    public static final String WIRE_FRAG = "#version 130\n" +
+    public static final String WIRE_FRAG = "#version 120\n" +
             "\n" +
-            "out vec4 frag_color;\n" +
+            "varying vec4 frag_color;\n" +
             "\n" +
             "void main () {\n" +
             "    frag_color = vec4(1.0);\n" +
@@ -50,17 +50,17 @@ public class StaticPrograms {
     // -----------------------------------------------------------------------------------------------------------------
 
     //language=GLSL
-    public static final String DIFFUSE_VERT = "#version 130\n" +
+    public static final String DIFFUSE_VERT = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
-            "in vec3 a_normal;\n" +
-            "in vec2 a_uv;\n" +
+            "attribute vec3 a_position;\n" +
+            "attribute vec3 a_normal;\n" +
+            "attribute vec2 a_uv;\n" +
             "\n" +
-            "out vec2 v_uv;\n" +
-            "out vec4 v_position;\n" +
-            "out vec4 v_position_view;\n" +
-            "out vec3 v_normal;\n" +
-            "out vec4 v_shadow_position;\n" +
+            "varying vec2 v_uv;\n" +
+            "varying vec4 v_position;\n" +
+            "varying vec4 v_position_view;\n" +
+            "varying vec3 v_normal;\n" +
+            "varying vec4 v_shadow_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -80,16 +80,14 @@ public class StaticPrograms {
             "}";
 
     //language=GLSL
-    public static final String DIFFUSE_FRAG = "#version 130\n" +
+    public static final String DIFFUSE_FRAG = "#version 120\n" +
             "\n" +
-            "in vec2 v_uv;\n" +
-            "in vec4 v_position;\n" +
-            "in vec4 v_position_view;\n" +
-            "in vec3 v_normal;\n" +
-            "in vec4 v_shadow_position;\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
-            "\n" +
+            "varying vec2 v_uv;\n" +
+            "varying vec4 v_position;\n" +
+            "varying vec4 v_position_view;\n" +
+            "varying vec3 v_normal;\n" +
+            "varying vec4 v_shadow_position;\n" +
+
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_shadowmap;\n" +
             "\n" +
@@ -121,10 +119,10 @@ public class StaticPrograms {
             "    shade = min(shade, light);\n" +
             "    \n" +
             "    float fog = exp(-max(0, length(v_position_view.xyz)-16)*0.0125);" +
-            "    frag_color = vec4(texture2D(u_texture, v_uv).rgb*mix(0.25, 1, smoothstep(0, 1, shade) ), 1.0);\n" +
-            "    frag_color.rgb = mix(frag_color.rgb, vec3(1.0), 1-fog);" +
-            "    frag_color.rgb = mix(frag_color.rgb, vec3(1.0), smoothstep(32, 64, length(v_position.xz)));" +
-            "    frag_color.rgb = pow(frag_color.rgb, vec3(0.7));\n" +
+            "    gl_FragColor = vec4(texture2D(u_texture, v_uv).rgb*mix(0.25, 1, smoothstep(0, 1, shade) ), 1.0);\n" +
+            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0), 1-fog);" +
+            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0), smoothstep(32, 64, length(v_position.xz)));" +
+            "    gl_FragColor.rgb = pow(gl_FragColor.rgb, vec3(0.7));\n" +
             "}";
 
     private StaticPrograms () {
