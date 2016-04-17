@@ -44,9 +44,14 @@ public class Launch {
         // main loop
         while (GLFW.glfwWindowShouldClose(window) == GLFW.GLFW_FALSE) {
             // update what needs to be updated
-            time.update();
-            program.onUpdate(con);
-            mouse.update();
+            try {
+                time.update();
+                program.onUpdate(con);
+                mouse.update();
+            } catch (Exception e) {
+                e.printStackTrace();
+                GLFW.glfwSetWindowShouldClose(window, GLFW.GLFW_TRUE);
+            }
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
