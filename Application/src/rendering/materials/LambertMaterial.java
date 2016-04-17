@@ -16,14 +16,14 @@ import tpa.joml.Vector3f;
 public class LambertMaterial extends Material {
 
     /** vertex shader */
-    private static String VERTEX = "#version 130\n" +
+    private static String VERTEX = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
-            "in vec3 a_normal;\n" +
+            "attribute vec3 a_position;\n" +
+            "attribute vec3 a_normal;\n" +
             "\n" +
-            "out vec3 v_position;\n" +
-            "out vec3 v_normal;\n" +
-            "out vec3 v_light;\n" +
+            "varying vec3 v_position;\n" +
+            "varying vec3 v_normal;\n" +
+            "varying vec3 v_light;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -38,13 +38,11 @@ public class LambertMaterial extends Material {
             "}";
 
     /** fragment shader */
-    private static String FRAGMENT = "#version 130\n" +
+    private static String FRAGMENT = "#version 120\n" +
             "\n" +
-            "in vec3 v_position;\n" +
-            "in vec3 v_normal;\n" +
-            "in vec3 v_light;\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
+            "varying vec3 v_position;\n" +
+            "varying vec3 v_normal;\n" +
+            "varying vec3 v_light;\n" +
             "\n" +
             "uniform vec3 u_ambient;\n" +
             "uniform vec3 u_diffuse;\n" +
@@ -62,7 +60,7 @@ public class LambertMaterial extends Material {
             "    float spec = clamp(dot(-reflected, surf2light), 0.0, 1.0);\n" +
             "    spec = pow(spec, u_hardness)*u_reflective;\n" +
             "    \n" +
-            "    frag_color = vec4(u_ambient + u_diffuse*diff_comp + u_specular*spec, 1.0);\n" +
+            "    gl_FragColor = vec4(u_ambient + u_diffuse*diff_comp + u_specular*spec, 1.0);\n" +
             "}";
 
     /** shader program */

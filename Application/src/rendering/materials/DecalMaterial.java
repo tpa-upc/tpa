@@ -19,9 +19,9 @@ import tpa.joml.Vector2f;
 public class DecalMaterial extends Material {
 
     /** vertex shader */
-    private static String VERTEX = "#version 130\n" +
+    private static String VERTEX = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
+            "attribute vec3 a_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -32,9 +32,7 @@ public class DecalMaterial extends Material {
             "}";
 
     /** fragment shader */
-    private static String FRAGMENT = "#version 130\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
+    private static String FRAGMENT = "#version 120\n" +
             "\n" +
             "uniform sampler2D u_diffuse;\n" +
             "uniform sampler2D u_depth;\n" +
@@ -56,8 +54,7 @@ public class DecalMaterial extends Material {
             "    vec2 tex_uv = model.xz*0.5+0.5;\n" +
             "    vec4 diff = texture2D(u_diffuse, tex_uv).rgba;\n" +
             "\n" +
-            "    frag_color = vec4(diff.rgb, diff.a);\n" +
-            "    //frag_color = vec4(1,0,1,1);\n" +
+            "    gl_FragColor = vec4(diff.rgb, diff.a);\n" +
             "}";
 
     /** shader program */

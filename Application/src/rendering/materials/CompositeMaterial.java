@@ -15,22 +15,20 @@ import tpa.joml.Vector2f;
  */
 public class CompositeMaterial extends Material {
 
-    private static String VERT = "#version 130\n" +
+    private static String VERT = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
+            "attribute vec3 a_position;\n" +
             "\n" +
-            "out vec2 v_uv;\n" +
+            "varying vec2 v_uv;\n" +
             "\n" +
             "void main () {\n" +
             "    gl_Position = vec4(a_position, 1.0);\n" +
             "    v_uv = a_position.xy*0.5+0.5;\n" +
             "}";
 
-    private static String FRAG = "#version 130\n" +
+    private static String FRAG = "#version 120\n" +
             "\n" +
-            "in vec2 v_uv;\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
+            "varying vec2 v_uv;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_dither;\n" +
@@ -46,8 +44,8 @@ public class CompositeMaterial extends Material {
             "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*1)).rrr;\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    vec3 dithered = step(dither, color);\n" +
-            "    frag_color = vec4(mix(color, dithered, 0.0), 1.0);\n" +
-            "    frag_color.rgb = pow(frag_color.rgb, vec3(0.77));" +
+            "    gl_FragColor = vec4(mix(color, dithered, 0.0), 1.0);\n" +
+            "    gl_FragColor.rgb = pow(gl_FragColor.rgb, vec3(0.77));" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);

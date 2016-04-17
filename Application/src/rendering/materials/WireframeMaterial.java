@@ -16,9 +16,9 @@ import tpa.joml.Matrix4f;
 public class WireframeMaterial extends Material {
 
     /** vertex shader */
-    private static String VERTEX = "#version 130\n" +
+    private static String VERTEX = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
+            "attribute vec3 a_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -29,12 +29,10 @@ public class WireframeMaterial extends Material {
             "}";
 
     /** fragment shader */
-    private static String FRAGMENT = "#version 130\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
+    private static String FRAGMENT = "#version 120\n" +
             "\n" +
             "void main () {\n" +
-            "    frag_color = vec4(1.0);\n" +
+            "    gl_FragColor = vec4(1.0);\n" +
             "}";
 
     /** shader program */

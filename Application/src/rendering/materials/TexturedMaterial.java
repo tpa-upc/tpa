@@ -16,14 +16,14 @@ import tpa.joml.Matrix4f;
 public class TexturedMaterial extends Material {
 
     /** vertex shader */
-    private static String VERTEX = "#version 130\n" +
+    private static String VERTEX = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
-            "in vec2 a_uv;\n" +
-            "in vec3 a_normal;\n" +
+            "attribute vec3 a_position;\n" +
+            "attribute vec2 a_uv;\n" +
+            "attribute vec3 a_normal;\n" +
             "\n" +
-            "out vec3 v_normal;\n" +
-            "out vec2 v_uv;\n" +
+            "varying vec3 v_normal;\n" +
+            "varying vec2 v_uv;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -36,18 +36,16 @@ public class TexturedMaterial extends Material {
             "}";
 
     /** fragment shader */
-    private static String FRAGMENT = "#version 130\n" +
+    private static String FRAGMENT = "#version 120\n" +
             "\n" +
-            "in vec3 v_normal;\n" +
-            "in vec2 v_uv;\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
+            "varying vec3 v_normal;\n" +
+            "varying vec2 v_uv;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "\n" +
             "void main () {\n" +
-            "    vec3 color = texture(u_texture, v_uv).rgb;\n" +
-            "    frag_color = vec4(color, 1.0);\n" +
+            "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
+            "    gl_FragColor = vec4(color, 1.0);\n" +
             "}";
 
     /** shader program */

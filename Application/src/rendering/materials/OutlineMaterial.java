@@ -15,10 +15,10 @@ import tpa.joml.Matrix4f;
 public class OutlineMaterial extends Material {
 
     /** vertex shader */
-    private static String VERTEX = "#version 130\n" +
+    private static String VERTEX = "#version 120\n" +
             "\n" +
-            "in vec3 a_position;\n" +
-            "in vec3 v_normal;\n" +
+            "attribute vec3 a_position;\n" +
+            "attribute vec3 v_normal;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -34,18 +34,16 @@ public class OutlineMaterial extends Material {
             "}";
 
     /** fragment shader */
-    private static String FRAGMENT = "#version 130\n" +
-            "\n" +
-            "out vec4 frag_color;\n" +
+    private static String FRAGMENT = "#version 120\n" +
             "\n" +
             "uniform int u_outline;\n" +
             "\n" +
             "void main () {\n" +
             "\n" +
             "    if (u_outline == 1) {\n" +
-            "        frag_color = vec4(0, 0, 0, 1);\n" +
+            "        gl_FragColor = vec4(0, 0, 0, 1);\n" +
             "    } else {\n" +
-            "        frag_color = vec4(1.0);\n" +
+            "        gl_FragColor = vec4(1.0);\n" +
             "    }\n" +
             "}";
 
