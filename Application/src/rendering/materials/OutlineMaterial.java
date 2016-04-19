@@ -28,7 +28,7 @@ public class OutlineMaterial extends Material {
             "void main () {\n" +
             "    vec3 pos = a_position;\n" +
             "    if (u_outline == 1)\n" +
-            "        pos += v_normal*0.025;\n" +
+            "        pos += v_normal*0.05;\n" +
             "    \n" +
             "    gl_Position = u_projection * u_view * u_model * vec4(pos, 1.0);\n" +
             "}";

@@ -25,6 +25,7 @@ public class MonkeyLocation extends LocationActivity {
     @Override
     public void onLoad(Context context) {
         // load resources
+        resources.load("res/dragon.json", Mesh.class);
         resources.load("res/monkey.json", Mesh.class);
         resources.load("res/thing.json", Mesh.class);
         resources.load("res/plane.json", Mesh.class);
@@ -56,7 +57,7 @@ public class MonkeyLocation extends LocationActivity {
         monkeyMaterial.light.set(0, 1, 3);
 
         // create geometry of the "room"
-        sphere = new GeometryActor(resources.get("res/monkey.json", Mesh.class), sphereMaterial);
+        sphere = new GeometryActor(resources.get("res/dragon.json", Mesh.class), sphereMaterial);
         monkey = new GeometryActor(resources.get("res/monkey.json", Mesh.class), monkeyMaterial);
         plane = new GeometryActor(resources.get("res/plane.json", Mesh.class), floorMaterial);
         solid = new GeometryActor(resources.get("res/thing.json", Mesh.class), solidMaterial);
