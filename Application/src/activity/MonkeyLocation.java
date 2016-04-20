@@ -7,6 +7,7 @@ import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureFilter;
+import tpa.joml.Vector3f;
 import tpa.joml.Vector4f;
 
 /**
@@ -44,7 +45,7 @@ public class MonkeyLocation extends LocationActivity {
         // materials define how geometry is renderer
         LambertMaterial monkeyMaterial = new LambertMaterial();
         OutlineMaterial sphereMaterial = new OutlineMaterial();
-        Material floorMaterial = new TexturedMaterial(floorTex);
+        Material floorMaterial = new GridMaterial();
         Material solidMaterial = new WireframeMaterial();
         Material decalMaterial = new DecalMaterial(resources.get("res/corpse.png", Texture.class), depth);
 
@@ -66,9 +67,26 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        addSensor(new Sensor(new Vector3f(), 4, null, new Sensor.SensorListener() {
+            @Override
+            public void onEntered(Sensor sensor) {
+                System.out.println("[SENSOR IN]");
+            }
+
+            @Override
+            public void onAction(Sensor sensor) {
+
+            }
+
+            @Override
+            public void onLeft(Sensor sensor) {
+                System.out.println("[SENSOR OUT]");
+            }
+        }));
+
         // when room is entered, put geometry on it
-        addGeometry(monkey);
         addGeometry(plane);
+        addGeometry(monkey);
         addGeometry(solid);
         addGeometry(sphere);
         addDecal(decal);
@@ -79,10 +97,11 @@ public class MonkeyLocation extends LocationActivity {
         sphere.model.identity().translate(3, 0.5f, 6);
         plane.model.identity().scale(0.5f, 1, 0.5f);
         decal.model.identity().translate(0, 0.2f, 0).rotate(0.125f, 1, 0, 0).rotate(0.25f, 0, 1, 0).scale(2,0.75f,2);
+        plane.model.identity().scale(64, 1, 64);
 
         // create camera projection
         camera.projection.setPerspective(50*3.14f/180, 4f/3f, 0.1f, 1000f);
-        camera.clearColor.set(0.25f);
+        camera.clearColor.set(41/255f, 79/255f, 122/255f);
     }
 
     @Override

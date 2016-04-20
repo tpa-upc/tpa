@@ -10,7 +10,7 @@ import tpa.joml.Vector3f;
 public class FpsInput {
 
     private Camera camera;
-    private Vector3f position = new Vector3f();
+    public Vector3f position = new Vector3f();
 
     private float pitch = 0;
     private float yaw = 0;

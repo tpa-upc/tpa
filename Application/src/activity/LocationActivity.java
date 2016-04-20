@@ -12,8 +12,11 @@ import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.*;
 import tpa.graphics.texture.*;
 import tpa.joml.Vector2f;
+import tpa.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,10 +37,10 @@ public abstract class LocationActivity extends Activity {
     private FpsInput fps = new FpsInput(camera);
 
     /** Geometry visible on the scene */
-    private Set<GeometryActor> geometry = new HashSet<>();
+    private List<GeometryActor> geometry = new ArrayList<>();
 
     /** Decals visible on the screen */
-    private Set<DecalActor> decals = new HashSet<>();
+    private List<DecalActor> decals = new ArrayList<>();
 
     /** Framebuffer for early Z pass */
     private Framebuffer zPass;
@@ -62,6 +65,44 @@ public abstract class LocationActivity extends Activity {
 
     /** material for rendering framebuffer */
     private CompositeMaterial composite;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /** Sensors in the scene */
+    private List<Sensor> sensors = new ArrayList<>();
+
+    /** current sensor you're standing in */
+    private Sensor currentSensor = null;
+
+    /** current position of the position */
+    protected final Vector3f position = new Vector3f();
+
+    /**
+     * Add a new sensor
+     * @param s sensor to be added
+     */
+    void addSensor (Sensor s) {
+        sensors.add(s);
+    }
+
+    private void updateSensors () {
+        Sensor newSensor = null;
+        for (Sensor s : sensors)
+            if (s.position.distanceSquared(position) < s.radius*s.radius)
+                newSensor = s;
+
+        if (newSensor != currentSensor) {
+            if (currentSensor != null && currentSensor.listener != null)
+                currentSensor.listener.onLeft(currentSensor);
+
+            // new sensor
+            currentSensor = newSensor;
+            if (currentSensor != null && currentSensor.listener != null)
+                currentSensor.listener.onEntered(currentSensor);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** load location specific resources here */
     public abstract void onLoad (Context context);
@@ -108,7 +149,7 @@ public abstract class LocationActivity extends Activity {
      * Add a geometry actor to the scene
      * @param actor geometry actor
      */
-    public void addGeometry (GeometryActor actor) {
+    void addGeometry (GeometryActor actor) {
         this.geometry.add(actor);
     }
 
@@ -116,7 +157,7 @@ public abstract class LocationActivity extends Activity {
      * Add a decal to the scene
      * @param actor decal actor
      */
-    public void addDecal (DecalActor actor) {
+    void addDecal (DecalActor actor) {
         this.decals.add(actor);
     }
 
@@ -130,15 +171,19 @@ public abstract class LocationActivity extends Activity {
         onLeft(context);
         geometry.clear();
         decals.clear();
+        sensors.clear();
     }
 
     @Override
     public void onUpdate(Context context) {
         onTick(context);
 
+        updateSensors();
+
         // update camera
         //camera.update();
         fps.update(context);
+        position.set(fps.position);
 
         Window window = context.window;
         Renderer renderer = context.renderer;
