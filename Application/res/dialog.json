@@ -16,7 +16,7 @@
     {
       "questions": [
         {"text": "ok :(", "answer": 0},
-        {"text": "Rude", "answer": 0}
+        {"text": "Rude!", "answer": 0}
       ],
       "answers": [
         {"text": "Go away!", "data": null, "jump": 0}
