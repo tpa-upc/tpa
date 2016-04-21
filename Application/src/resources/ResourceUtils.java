@@ -1,6 +1,7 @@
 package resources;
 
 import com.google.gson.Gson;
+import tpa.audio.Sound;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.geometry.MeshUsage;
@@ -9,12 +10,17 @@ import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureFormat;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 
 /**
  * Created by germangb on 10/04/16.
@@ -145,8 +151,10 @@ public class ResourceUtils {
         FileInputStream is = new FileInputStream(path);
         BufferedImage img = ImageIO.read(is);
 
-        Texture texture = new Texture(img.getWidth(), img.getHeight(), TextureFormat.Rgb);
-        ByteBuffer data = ByteBuffer.allocateDirect(img.getWidth()*img.getHeight()*3).order(ByteOrder.nativeOrder());
+        int cmp = 3;
+        if (img.getTransparency() == Transparency.TRANSLUCENT) cmp = 4;
+        Texture texture = new Texture(img.getWidth(), img.getHeight(), cmp==3?TextureFormat.Rgb:TextureFormat.Rgba);
+        ByteBuffer data = ByteBuffer.allocateDirect(img.getWidth()*img.getHeight()*cmp).order(ByteOrder.nativeOrder());
 
         // read pixel data
         for (int x = 0; x < img.getWidth(); ++x)
@@ -157,6 +165,9 @@ public class ResourceUtils {
                         (byte) ((argb >> 8) & 0xff),
                         (byte) (argb & 0xff)
                 });
+                if (cmp == 4) {
+                    data.put((byte)((argb >> 24)&0xff));
+                }
             }
 
         // set texture data
@@ -166,5 +177,30 @@ public class ResourceUtils {
         // close file and return texture
         is.close();
         return texture;
+    }
+
+    public static Sound loadSound (String path) throws Exception {
+        BufferedInputStream is = new BufferedInputStream(new FileInputStream(path));
+        AudioInputStream audio = AudioSystem.getAudioInputStream(is);
+
+        ByteBuffer samples = ByteBuffer.allocateDirect(audio.available())
+                .order(ByteOrder.nativeOrder());
+
+        byte[] bytes = new byte[32<<1]; // 32 samples mono
+        while (true) {
+            int read = audio.read(bytes);
+            if (read <= 0) break;
+            samples.put(bytes, 0, read);
+        }
+
+        samples.flip();
+
+        Sound sound = new Sound();
+        sound.setSamplingRate((int)audio.getFormat().getSampleRate());
+        sound.setStereo(audio.getFormat().getChannels()==2);
+        sound.setSamples(samples.asShortBuffer());
+
+        is.close();
+        return sound;
     }
 }

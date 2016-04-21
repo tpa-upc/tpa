@@ -3,22 +3,17 @@ package tpa.application;
 /**
  * Created by german on 28/03/2016.
  */
-public abstract class Application {
+public interface Application {
 
     /**
      * Called at the beginning of the program
+     * @param context
      */
-    public abstract void onInit (Context context);
+    void onInit (Context context);
 
     /**
      * Called once per frame
+     * @param context
      */
-    public void onUpdate (Context context) {
-    }
-
-    /**
-     * Called at the end of the program
-     */
-    public void onDestroy (Context context) {
-    }
+    void onUpdate (Context context);
 }

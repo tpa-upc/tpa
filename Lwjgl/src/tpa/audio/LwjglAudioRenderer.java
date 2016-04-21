@@ -8,6 +8,7 @@ import tpa.utils.Destroyable;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     public LwjglAudioRenderer () {
         // create OpenAL context
         device = ALC10.alcOpenDevice((String) null);
-        context = ALC10.alcCreateContext(device, (ByteBuffer) null);
+        context = ALC10.alcCreateContext(device, null);
         ALCCapabilities alcCaps = ALC.createCapabilities(device);
         ALC10.alcMakeContextCurrent(context);
         AL.createCapabilities(alcCaps);

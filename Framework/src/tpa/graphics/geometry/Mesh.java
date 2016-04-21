@@ -31,7 +31,7 @@ public class Mesh {
     private Primitive primitive = Primitive.Triangles;
 
     /** If set to false, data will be removed once it's uploaded to the GPU */
-    private boolean keepData = false;
+    private boolean keepData = true;
 
     public Mesh (MeshUsage usage) {
         offset = 0;

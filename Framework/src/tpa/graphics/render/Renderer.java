@@ -55,9 +55,12 @@ public interface Renderer {
 
     /**
      * Clear framebuffer color
-     * @param color rgba color
+     * @param r
+     * @param g
+     * @param b
+     * @param a
      */
-    void clearColor (float r, float g, float b, float a);
+    void setClearColor(float r, float g, float b, float a);
 
     /**
      * Clear framebuffer buffers
@@ -75,53 +78,19 @@ public interface Renderer {
     void clearDepthBuffer ();
 
     /**
-     * Set viewport
+     * Set the renderer state
+     * @param state new state to be applied
+     */
+    void setState (RendererState state);
+
+    /**
+     * Set setViewport
      * @param x position x
      * @param y position y
-     * @param with viewport width
-     * @param height viewport height
+     * @param with setViewport width
+     * @param height setViewport height
      */
-    void viewport (int x, int y, int with, int height);
-
-    /**
-     * Set blending mode
-     * @param blend blend mode
-     */
-    void setBlending (Blending blend);
-
-    /**
-     * Enable/disable depth testing
-     * @param flag true to enable, false to disable
-     */
-    void setDepth (boolean flag);
-
-    /**
-     * Set color mask flags
-     * @param red red color flag
-     * @param green green color flag
-     * @param blue blue color flag
-     * @param alpha alpha color flag
-     */
-    void setColorMask (boolean red, boolean green, boolean blue, boolean alpha);
-
-    /**
-     * Set depth mask. If set to true, fragments wont be written to the depth buffer
-     * Useful for deferred decals.
-     * @param depth depth mash flag
-     */
-    void setDepthMask (boolean depth);
-
-    /**
-     * Set the mesh rendering mode
-     * @param mode render mode to be set
-     */
-    void setRenderMode (RenderMode mode);
-
-    /**
-     * Set the culling stuff
-     * @param cull new culling mode
-     */
-    void setCulling (Culling cull);
+    void setViewport(int x, int y, int with, int height);
 
     /**
      * Bind a texture to a specific unit. If the texture is dirty, upload it

@@ -20,9 +20,9 @@ public class Launch {
         GLFW.glfwInit();
 
         // create a window
-        long window = GLFW.glfwCreateWindow(720, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
+        long window = GLFW.glfwCreateWindow(640, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
         GLFW.glfwDefaultWindowHints();
-        //GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwSwapInterval(1);
 
@@ -38,21 +38,26 @@ public class Launch {
         Context con = new Context(win, renderer, audio, time, mouse, keyboard);
 
         // create an application from which to access the context
-        Application program = new Tests();
+        Application program = new GameTest();
         program.onInit(con);
 
         // main loop
         while (GLFW.glfwWindowShouldClose(window) == GLFW.GLFW_FALSE) {
             // update what needs to be updated
-            time.update();
-            program.onUpdate(con);
+            try {
+                time.update();
+                program.onUpdate(con);
+                mouse.update();
+            } catch (Exception e) {
+                e.printStackTrace();
+                GLFW.glfwSetWindowShouldClose(window, GLFW.GLFW_TRUE);
+            }
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
         }
 
         // destroy what needs to be destroyed
-        program.onDestroy(con);
         renderer.destroy();
         mouse.destroy();
         audio.destroy();

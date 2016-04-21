@@ -1,6 +1,6 @@
 package tpa.graphics.render;
 
-import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.*;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.shader.ShaderProgram;
@@ -9,8 +9,6 @@ import tpa.graphics.texture.Framebuffer;
 import tpa.graphics.texture.Texture;
 import tpa.joml.*;
 import tpa.utils.Destroyable;
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.GLUtil;
 
 import java.nio.*;
 import java.util.HashMap;
@@ -112,7 +110,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
     }
 
     @Override
-    public void clearColor(float r, float g, float b, float a) {
+    public void setClearColor(float r, float g, float b, float a) {
         glClearColor(r, g, b, a);
     }
 
@@ -132,12 +130,21 @@ public class LwjglRenderer implements Renderer, Destroyable {
     }
 
     @Override
-    public void viewport(int x, int y, int with, int height) {
+    public void setViewport(int x, int y, int with, int height) {
         glViewport(x, y, with, height);
     }
 
     @Override
-    public void setBlending(Blending blend) {
+    public void setState(RendererState state) {
+        setBlending(state.blending);
+        setDepth(state.depthTest);
+        setCulling(state.culling);
+        setRenderMode(state.renderMode);
+        setDepthMask(state.depthMask);
+        setColorMask(state.redMask, state.greenMask, state.blueMask, state.alphaMask);
+    }
+
+    private void setBlending(Blending blend) {
         if (blendMode == blend)
             return;
 
@@ -166,7 +173,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
     }
 
-    @Override
     public void setDepth(boolean flag) {
         if (flag)
             glEnable(GL_DEPTH_TEST);
@@ -174,17 +180,14 @@ public class LwjglRenderer implements Renderer, Destroyable {
             glDisable(GL_DEPTH_TEST);
     }
 
-    @Override
     public void setColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
         glColorMask(red, green, blue, alpha);
     }
 
-    @Override
     public void setDepthMask(boolean depth) {
         glDepthMask(depth);
     }
 
-    @Override
     public void setRenderMode(RenderMode mode) {
         if (mode != renderMode) {
             renderMode = mode;
@@ -200,7 +203,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
     }
 
-    @Override
     public void setCulling(Culling cull) {
         if (cull != cullMode) {
             cullMode = cull;
@@ -218,6 +220,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
                         cullEnabled = true;
                     }
                     glCullFace(GL_BACK);
+                    break;
                 case FrontFace:
                     if (!cullEnabled) {
                         glEnable(GL_CULL_FACE);
@@ -260,8 +263,36 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
 
         if (texture.isParamsDirty()) {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, LwjglUtils.filter2int(texture.getMag()));
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, LwjglUtils.filter2int(texture.getMin()));
+            int mag = LwjglUtils.filter2int(texture.getMag());
+            int min = LwjglUtils.filter2int(texture.getMin());
+
+            if (!caps.OpenGL30) {
+                // fallback to regular filters
+                switch (mag) {
+                    case GL_LINEAR_MIPMAP_LINEAR:
+                    case GL_LINEAR_MIPMAP_NEAREST:
+                        mag = GL_LINEAR;
+                        break;
+                    case GL_NEAREST_MIPMAP_LINEAR:
+                    case GL_NEAREST_MIPMAP_NEAREST:
+                        mag = GL_NEAREST;
+                        break;
+                }
+
+                switch (min) {
+                    case GL_LINEAR_MIPMAP_LINEAR:
+                    case GL_LINEAR_MIPMAP_NEAREST:
+                        min = GL_LINEAR;
+                        break;
+                    case GL_NEAREST_MIPMAP_LINEAR:
+                    case GL_NEAREST_MIPMAP_NEAREST:
+                        min = GL_NEAREST;
+                        break;
+                }
+            }
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, LwjglUtils.wrap2int(texture.getWrapU()));
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, LwjglUtils.wrap2int(texture.getWrapV()));
             texture.setParamsDirty(false);
@@ -343,7 +374,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
         if (handle == null) {
             fbo.setDirty(true);
             // create fbo
-            if (ext) handle = glGenFramebuffersEXT();
+            if (ext) handle = EXTFramebufferObject.glGenFramebuffersEXT();
             else handle = glGenFramebuffers();
             fbos.put(fbo, handle);
         }
@@ -428,8 +459,9 @@ public class LwjglRenderer implements Renderer, Destroyable {
                         }
                     } else {
                         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-                        if (mesh.isDirty())
-                            glBufferSubData(GL_ARRAY_BUFFER, data.position()<<2, (FloatBuffer) data);
+                        if (mesh.isDirty()) {
+                            glBufferSubData(GL_ARRAY_BUFFER, data.position() << 2, (FloatBuffer) data);
+                        }
                     }
                     break;
                 case Uv:
@@ -510,7 +542,6 @@ public class LwjglRenderer implements Renderer, Destroyable {
         } else {
             Buffer indices = mesh.getIndices();
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-
             if (mesh.isDirty()) {
                 if (indices instanceof IntBuffer)
                     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, indices.position() << 2, (IntBuffer) indices);

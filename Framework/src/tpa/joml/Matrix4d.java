@@ -5588,7 +5588,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method first converts the given window coordinates to normalized device coordinates in the range <tt>[-1..1]</tt>
      * and then transforms those NDC coordinates by the inverse of <code>this</code> matrix.  
@@ -5609,7 +5609,7 @@ public class Matrix4d implements Externalizable {
      * @param winZ
      *          the z-coordinate, which is the depth value in <tt>[0..1]</tt>
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5657,7 +5657,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method first converts the given window coordinates to normalized device coordinates in the range <tt>[-1..1]</tt>
      * and then transforms those NDC coordinates by the inverse of <code>this</code> matrix.  
@@ -5678,7 +5678,7 @@ public class Matrix4d implements Externalizable {
      * @param winZ
      *          the z-coordinate, which is the depth value in <tt>[0..1]</tt>
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5726,7 +5726,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method first converts the given window coordinates to normalized device coordinates in the range <tt>[-1..1]</tt>
      * and then transforms those NDC coordinates by the inverse of <code>this</code> matrix.  
@@ -5744,7 +5744,7 @@ public class Matrix4d implements Externalizable {
      * @param winCoords
      *          the window coordinates to unproject
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5754,7 +5754,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method first converts the given window coordinates to normalized device coordinates in the range <tt>[-1..1]</tt>
      * and then transforms those NDC coordinates by the inverse of <code>this</code> matrix.  
@@ -5772,7 +5772,7 @@ public class Matrix4d implements Externalizable {
      * @param winCoords
      *          the window coordinates to unproject
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5782,7 +5782,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method differs from {@link #unproject(Vector3d, int[], Vector4d) unproject()} 
      * in that it assumes that <code>this</code> is already the inverse matrix of the original projection matrix.
@@ -5798,7 +5798,7 @@ public class Matrix4d implements Externalizable {
      * @param winCoords
      *          the window coordinates to unproject
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5808,7 +5808,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method differs from {@link #unproject(double, double, double, int[], Vector4d) unproject()} 
      * in that it assumes that <code>this</code> is already the inverse matrix of the original projection matrix.
@@ -5828,7 +5828,7 @@ public class Matrix4d implements Externalizable {
      * @param winZ
      *          the z-coordinate, which is the depth value in <tt>[0..1]</tt>
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5846,7 +5846,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <code>winCoords</code> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method differs from {@link #unproject(Vector3d, int[], Vector3d) unproject()} 
      * in that it assumes that <code>this</code> is already the inverse matrix of the original projection matrix.
@@ -5862,7 +5862,7 @@ public class Matrix4d implements Externalizable {
      * @param winCoords
      *          the window coordinates to unproject
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5872,7 +5872,7 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified viewport.
+     * Unproject the given window coordinates <tt>(winX, winY, winZ)</tt> by <code>this</code> matrix using the specified setViewport.
      * <p>
      * This method differs from {@link #unproject(double, double, double, int[], Vector3d) unproject()} 
      * in that it assumes that <code>this</code> is already the inverse matrix of the original projection matrix.
@@ -5892,7 +5892,7 @@ public class Matrix4d implements Externalizable {
      * @param winZ
      *          the z-coordinate, which is the depth value in <tt>[0..1]</tt>
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          will hold the unprojected position
      * @return dest
@@ -5910,12 +5910,12 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Project the given <tt>(x, y, z)</tt> position via <code>this</code> matrix using the specified viewport
+     * Project the given <tt>(x, y, z)</tt> position via <code>this</code> matrix using the specified setViewport
      * and store the resulting window coordinates in <code>winCoordsDest</code>.
      * <p>
      * This method transforms the given coordinates by <code>this</code> matrix including perspective division to 
      * obtain normalized device coordinates, and then translates these into window coordinates by using the
-     * given <code>viewport</code> settings <tt>[x, y, width, height]</tt>.
+     * given <code>setViewport</code> settings <tt>[x, y, width, height]</tt>.
      * <p>
      * The depth range of the returned <code>winCoordsDest.z</code> will be <tt>[0..1]</tt>, which is also the OpenGL default.  
      * 
@@ -5926,7 +5926,7 @@ public class Matrix4d implements Externalizable {
      * @param z
      *          the z-coordinate of the position to project
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param winCoordsDest
      *          will hold the projected window coordinates
      * @return winCoordsDest
@@ -5944,12 +5944,12 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Project the given <tt>(x, y, z)</tt> position via <code>this</code> matrix using the specified viewport
+     * Project the given <tt>(x, y, z)</tt> position via <code>this</code> matrix using the specified setViewport
      * and store the resulting window coordinates in <code>winCoordsDest</code>.
      * <p>
      * This method transforms the given coordinates by <code>this</code> matrix including perspective division to 
      * obtain normalized device coordinates, and then translates these into window coordinates by using the
-     * given <code>viewport</code> settings <tt>[x, y, width, height]</tt>.
+     * given <code>setViewport</code> settings <tt>[x, y, width, height]</tt>.
      * <p>
      * The depth range of the returned <code>winCoordsDest.z</code> will be <tt>[0..1]</tt>, which is also the OpenGL default.  
      * 
@@ -5960,7 +5960,7 @@ public class Matrix4d implements Externalizable {
      * @param z
      *          the z-coordinate of the position to project
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param winCoordsDest
      *          will hold the projected window coordinates
      * @return winCoordsDest
@@ -5978,12 +5978,12 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Project the given <code>position</code> via <code>this</code> matrix using the specified viewport
+     * Project the given <code>position</code> via <code>this</code> matrix using the specified setViewport
      * and store the resulting window coordinates in <code>winCoordsDest</code>.
      * <p>
      * This method transforms the given coordinates by <code>this</code> matrix including perspective division to 
      * obtain normalized device coordinates, and then translates these into window coordinates by using the
-     * given <code>viewport</code> settings <tt>[x, y, width, height]</tt>.
+     * given <code>setViewport</code> settings <tt>[x, y, width, height]</tt>.
      * <p>
      * The depth range of the returned <code>winCoordsDest.z</code> will be <tt>[0..1]</tt>, which is also the OpenGL default.  
      * 
@@ -5992,7 +5992,7 @@ public class Matrix4d implements Externalizable {
      * @param position
      *          the position to project into window coordinates
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param winCoordsDest
      *          will hold the projected window coordinates
      * @return winCoordsDest
@@ -6002,12 +6002,12 @@ public class Matrix4d implements Externalizable {
     }
 
     /**
-     * Project the given <code>position</code> via <code>this</code> matrix using the specified viewport
+     * Project the given <code>position</code> via <code>this</code> matrix using the specified setViewport
      * and store the resulting window coordinates in <code>winCoordsDest</code>.
      * <p>
      * This method transforms the given coordinates by <code>this</code> matrix including perspective division to 
      * obtain normalized device coordinates, and then translates these into window coordinates by using the
-     * given <code>viewport</code> settings <tt>[x, y, width, height]</tt>.
+     * given <code>setViewport</code> settings <tt>[x, y, width, height]</tt>.
      * <p>
      * The depth range of the returned <code>winCoordsDest.z</code> will be <tt>[0..1]</tt>, which is also the OpenGL default.  
      * 
@@ -6016,7 +6016,7 @@ public class Matrix4d implements Externalizable {
      * @param position
      *          the position to project into window coordinates
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param winCoordsDest
      *          will hold the projected window coordinates
      * @return winCoordsDest
@@ -9225,7 +9225,7 @@ public class Matrix4d implements Externalizable {
      * @param height
      *          the height of the picking region in window coordinates
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @param dest
      *          the destination matrix, which will hold the result
      * @return dest
@@ -9263,7 +9263,7 @@ public class Matrix4d implements Externalizable {
      * @param height
      *          the height of the picking region in window coordinates
      * @param viewport
-     *          the viewport described by <tt>[x, y, width, height]</tt>
+     *          the setViewport described by <tt>[x, y, width, height]</tt>
      * @return this
      */
     public Matrix4d pick(double x, double y, double width, double height, int[] viewport) {
