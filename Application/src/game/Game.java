@@ -24,7 +24,7 @@ public class Game {
     private Stack<GameActivity> activities = new Stack<>();
 
     /** Game's flahs used by the game logic */
-    private HashMap<String, Boolean> flags = new HashMap<>();
+    private HashMap<String, Object> flags = new HashMap<>();
 
     /** Application context */
     private Context context;
@@ -86,7 +86,7 @@ public class Game {
      * @param name flag name
      * @param value flag value
      */
-    public void setFlag (String name, boolean value) {
+    public void putBool (String name, boolean value) {
         flags.put(name, value);
     }
 
@@ -95,7 +95,10 @@ public class Game {
      * @param name name of the flag
      * @return if the flag is set, returns it's value or false otherwise
      */
-    public boolean getFlag (String name) {
-        return flags.get(name);
+    public boolean getBool (String name) {
+        Object val = flags.get(name);
+        if (val == null || !(val instanceof Boolean))
+            return false;
+        return (boolean) val;
     }
 }

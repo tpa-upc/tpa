@@ -1,6 +1,7 @@
 package game;
 
 import activity.Activity;
+import activity.DialogActivity;
 import activity.MonkeyLocation;
 
 /**
@@ -9,7 +10,10 @@ import activity.MonkeyLocation;
 public enum GameActivity {
 
     /** Monkey location */
-    Monkey (new MonkeyLocation());
+    Monkey (new MonkeyLocation()),
+
+    /** Test dialog */
+    Dialog (new DialogActivity("res/dialog.json"));
 
     /** referenced game activity */
     private activity.Activity activity;

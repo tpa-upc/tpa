@@ -1,5 +1,7 @@
 package activity;
 
+import game.Game;
+import game.GameActivity;
 import rendering.*;
 import rendering.materials.*;
 import resources.ResourceManager;
@@ -7,6 +9,8 @@ import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureFilter;
+import tpa.input.keyboard.KeyboardAdapter;
+import tpa.input.keyboard.KeyboardInput;
 import tpa.joml.Vector3f;
 import tpa.joml.Vector4f;
 
@@ -17,6 +21,8 @@ import tpa.joml.Vector4f;
  */
 public class MonkeyLocation extends LocationActivity {
 
+
+    FpsInput fps = new FpsInput(camera);
     GeometryActor monkey;
     GeometryActor solid;
     GeometryActor plane;
@@ -67,29 +73,42 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        context.keyboard.setKeyboardListener(new KeyboardAdapter() {
+            @Override
+            public void onKeyDown(int key) {
+                if (key == KeyboardInput.KEY_ENTER)
+                    Game.getInstance().pushActivity(GameActivity.Dialog, new ActivityListener() {
+                        @Override
+                        public void onResult(Activity act, Object data) {
+                            System.out.println("[REPORT] " + data);
+                            if (data.equals("ans0")) Game.getInstance().putBool("option_1", true);
+                            if (data.equals("ans1")) Game.getInstance().putBool("option_2", true);
+                        }
+                    });
+            }
+        });
+
         addSensor(new Sensor(new Vector3f(), 4, null, new Sensor.SensorListener() {
             @Override
             public void onEntered(Sensor sensor) {
-                System.out.println("[SENSOR IN]");
             }
 
             @Override
             public void onAction(Sensor sensor) {
-
             }
 
             @Override
             public void onLeft(Sensor sensor) {
-                System.out.println("[SENSOR OUT]");
             }
         }));
 
         // when room is entered, put geometry on it
         addGeometry(plane);
-        addGeometry(monkey);
         addGeometry(solid);
-        addGeometry(sphere);
         addDecal(decal);
+
+        if (!Game.getInstance().getBool("option_1")) addGeometry(monkey);
+        if (!Game.getInstance().getBool("option_2")) addGeometry(sphere);
 
         // set positions, rotations and stuff
         monkey.model.identity().translate(-6, 0, 1).scale(2).rotate(0.7f, 0, 1, 0);
@@ -106,16 +125,11 @@ public class MonkeyLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-        // update position & rotation of one of the objects
-        decal.model.identity()
-                .translate(0, 0.2f, 0)
-                .rotate(0.5f*(float)Math.sin(context.time.getTime() * 1.715f), 1, 0, 0)
-                .rotate(0.5f*(float) Math.cos(context.time.getTime()*1.167f), 0, 1, 0)
-                .scale(2,1.5f,2);
+        fps.update(context);
     }
 
     @Override
     public void onLeft(Context context) {
-        // room is left, do something here right before it is left
+        // do something when room is left
     }
 }

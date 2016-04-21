@@ -15,9 +15,7 @@ import tpa.joml.Vector2f;
 import tpa.joml.Vector3f;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by germangb on 13/04/16.
@@ -32,9 +30,6 @@ public abstract class LocationActivity extends Activity {
 
     /** Camera of the location */
     protected Camera camera = new Camera();
-
-    /** Fps input controller */
-    private FpsInput fps = new FpsInput(camera);
 
     /** Geometry visible on the scene */
     private List<GeometryActor> geometry = new ArrayList<>();
@@ -177,13 +172,10 @@ public abstract class LocationActivity extends Activity {
     @Override
     public void onUpdate(Context context) {
         onTick(context);
-
         updateSensors();
 
         // update camera
-        //camera.update();
-        fps.update(context);
-        position.set(fps.position);
+        camera.update();
 
         Window window = context.window;
         Renderer renderer = context.renderer;
