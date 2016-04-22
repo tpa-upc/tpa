@@ -7,9 +7,9 @@
         {"text": "Do you want to be my friend?", "answer": 2}
       ],
       "answers": [
-        {"text": "What the <beep> do you care?", "data": null, "jump": 0},
+        {"text": "What", "data": null, "jump": 0},
         {"text": "Fine, thanks. How about you?", "data": null, "jump": 2},
-        {"text": "No. Piss off", "data": "ans0", "jump": 1}
+        {"text": "No.", "data": "ans0", "jump": 1}
       ]
     },
 

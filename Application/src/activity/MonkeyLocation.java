@@ -77,30 +77,12 @@ public class MonkeyLocation extends LocationActivity {
             @Override
             public void onKeyDown(int key) {
                 if (key == KeyboardInput.KEY_ENTER)
-                    Game.getInstance().pushActivity(GameActivity.Dialog, new ActivityListener() {
-                        @Override
-                        public void onResult(Activity act, Object data) {
-                            System.out.println("[REPORT] " + data);
-                            if (data.equals("ans0")) Game.getInstance().putBool("option_1", true);
-                            if (data.equals("ans1")) Game.getInstance().putBool("option_2", true);
-                        }
+                    Game.getInstance().pushActivity(GameActivity.Dialog, (act, data) -> {
+                        if (data.equals("ans0")) Game.getInstance().putBool("option_1", true);
+                        if (data.equals("ans1")) Game.getInstance().putBool("option_2", true);
                     });
             }
         });
-
-        addSensor(new Sensor(new Vector3f(), 4, null, new Sensor.SensorListener() {
-            @Override
-            public void onEntered(Sensor sensor) {
-            }
-
-            @Override
-            public void onAction(Sensor sensor) {
-            }
-
-            @Override
-            public void onLeft(Sensor sensor) {
-            }
-        }));
 
         // when room is entered, put geometry on it
         addGeometry(plane);

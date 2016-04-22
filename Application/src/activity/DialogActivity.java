@@ -95,7 +95,7 @@ public class DialogActivity extends Activity {
     @Override
     public void onUpdate(Context context) {
         context.renderer.setClearColor(0, 0, 0, 1);
-        //context.renderer.clearBuffers();
+        context.renderer.clearBuffers();
     }
 
     @Override
