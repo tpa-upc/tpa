@@ -6,10 +6,6 @@ import tpa.graphics.texture.Framebuffer;
 import tpa.graphics.texture.Texture;
 
 /**
- * Renderer is a low level rendering wrapper that handles the rendering commands without you dealing
- * with annoying binding dependencies such as LWJGL. The class is a working progress and is very likely
- * that it'll change constantly.
- *
  * Created by german on 26/03/2016.
  */
 public interface Renderer {
