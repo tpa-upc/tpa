@@ -1,13 +1,9 @@
 package game;
 
 import activity.Activity;
-import activity.ActivityListener;
-import resources.ResourceManager;
-import resources.SimpleResourceManager;
 import tpa.application.Context;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Stack;
 
 /**
@@ -62,7 +58,7 @@ public class Game {
      * @param activity activity to be launched
      * @param listener activity listener
      */
-    public void pushActivity (GameActivity activity, ActivityListener listener) {
+    public void pushActivity (GameActivity activity, Activity.ActivityListener listener) {
         if (!activities.isEmpty())
             activities.peek().getActivity().onEnd(context);
 
