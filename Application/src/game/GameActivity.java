@@ -2,7 +2,7 @@ package game;
 
 import activity.Activity;
 import activity.DialogActivity;
-import activity.MonkeyLocation;
+import activity.RoomLocation;
 
 /**
  * Created by germangb on 12/04/16.
@@ -10,7 +10,7 @@ import activity.MonkeyLocation;
 public enum GameActivity {
 
     /** Monkey location */
-    Monkey (new MonkeyLocation()),
+    Monkey (new RoomLocation()),
 
     /** Test dialog */
     Dialog (new DialogActivity("res/dialog.json"));
