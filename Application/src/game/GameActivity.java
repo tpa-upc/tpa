@@ -9,8 +9,8 @@ import activity.RoomLocation;
  */
 public enum GameActivity {
 
-    /** Monkey location */
-    Monkey (new RoomLocation()),
+    /** Room location */
+    Room(new RoomLocation()),
 
     /** Test dialog */
     Dialog (new DialogActivity("res/dialog.json"));

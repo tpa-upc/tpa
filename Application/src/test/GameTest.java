@@ -15,7 +15,7 @@ public class GameTest implements Application {
         Game.getInstance().onInit(context);
 
         // start computer activity
-        Game.getInstance().pushActivity(GameActivity.Monkey, null);
+        Game.getInstance().pushActivity(GameActivity.Room, null);
     }
 
     @Override
