@@ -12,6 +12,9 @@ public enum GameActivity {
     /** Room location */
     Room(new RoomLocation()),
 
+    /** Pub location */
+    Pub(new RoomLocation()),
+
     /** Test dialog */
     Dialog (new DialogActivity("res/dialog.json"));
 

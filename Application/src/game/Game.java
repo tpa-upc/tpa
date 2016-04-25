@@ -53,6 +53,10 @@ public class Game {
         top.onUpdate(context);
     }
 
+    public void pushActivity (GameActivity activity) {
+        pushActivity(activity, null);
+    }
+
     /**
      * Launches an activity
      * @param activity activity to be launched

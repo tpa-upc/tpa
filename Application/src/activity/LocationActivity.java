@@ -52,6 +52,9 @@ public abstract class LocationActivity extends Activity {
     /** dithering texture */
     private Texture dither;
 
+    /** RGB texture */
+    private Texture rgb;
+
     /** box for decals */
     private Mesh box;
 
@@ -122,18 +125,45 @@ public abstract class LocationActivity extends Activity {
         depth = zPass.getDepth();
         lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb}, true);
         lowresPass.getTargets()[0].setMag(TextureFilter.Nearest);
+
+        // load stuff
+        resources.setListener(new ResourceManager.ResourceManagerListener() {
+            @Override
+            public void onLoaded(String string, Class<?> type) {
+                System.out.println("[OK] "+string);
+            }
+
+            @Override
+            public void onFailed(String string, Class<?> type, Exception e) {
+                System.out.println("[ERR] "+string);
+                if (e != null) e.printStackTrace();
+            }
+        });
+
         resources.load("res/dither.png", Texture.class);
+        resources.load("res/rgb.png", Texture.class);
+        resources.load("res/noise.png", Texture.class);
         resources.load("res/box.json", Mesh.class);
         resources.load("res/quad.json", Mesh.class);
         resources.finishLoading();
+
         box = resources.get("res/box.json", Mesh.class);
         quad = resources.get("res/quad.json", Mesh.class);
         dither = resources.get("res/dither.png", Texture.class);
+        rgb = resources.get("res/rgb.png", Texture.class);
+        Texture noise = resources.get("res/noise.png", Texture.class);
+
         dither.setMag(TextureFilter.Nearest);
         dither.setWrapU(TextureWrap.Repeat);
         dither.setWrapV(TextureWrap.Repeat);
+        noise.setWrapU(TextureWrap.Repeat);
+        noise.setWrapV(TextureWrap.Repeat);
+        rgb.setMin(TextureFilter.Nearest);
+        rgb.setMag(TextureFilter.Nearest);
+        rgb.setWrapU(TextureWrap.Repeat);
+        rgb.setWrapV(TextureWrap.Repeat);
 
-        composite = new CompositeMaterial(lowresPass.getTargets()[0], dither, new Vector2f(context.window.getWidth(), context.window.getHeight()));
+        composite = new CompositeMaterial(lowresPass.getTargets()[0], dither, rgb, noise, new Vector2f(context.window.getWidth(), context.window.getHeight()), context.time);
 
         onLoad(context);
         resources.finishLoading();

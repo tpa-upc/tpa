@@ -9,6 +9,7 @@ import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.Texture;
 import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
+import tpa.timing.Time;
 
 /**
  * Created by germangb on 14/04/16.
@@ -32,32 +33,34 @@ public class CompositeMaterial extends Material {
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_dither;\n" +
-            "\n" +
+            "uniform sampler2D u_rgb;\n" +
+            "uniform sampler2D u_noise;\n" +
+            "uniform float u_time;\n" +
             "uniform vec2 u_resolution;\n" +
             "\n" +
-            "float rand(vec2 co){\n" +
-            "    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +
-            "}\n" +
-            "\n" +
             "void main () {\n" +
-            "    float noise = rand(floor(gl_FragCoord.xy/2));\n" +
-            "    vec3 dither = texture2D(u_dither, gl_FragCoord.xy/vec2(8.0*1)).rrr;\n" +
-            "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
-            "    vec3 dithered = step(dither, color);\n" +
-            "    gl_FragColor = vec4(mix(color, dithered, 0.0), 1.0);\n" +
-            "    gl_FragColor.rgb = pow(gl_FragColor.rgb, vec3(0.77));" +
+            "    vec3 rgb = texture2D(u_rgb, gl_FragCoord.xy/3).rgb;\n" +
+            "    vec2 uv = v_uv;\n" +
+            "    \n" +
+            "    vec3 color = texture2D(u_texture, uv).rgb;\n" +
+            "   \n" +
+            "    gl_FragColor.rgb = pow(color, vec3(0.7));\n" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);
 
-    private Texture diffuse, dither;
+    private Texture diffuse, dither, rgb, noise;
     public Vector2f resolution;
+    private Time time;
 
-    public CompositeMaterial (Texture diffuse, Texture dither, Vector2f resolution) {
+    public CompositeMaterial (Texture diffuse, Texture dither, Texture rgb, Texture noise, Vector2f resolution, Time time) {
         super(PROGRAM);
         this.diffuse = diffuse;
         this.dither = dither;
+        this.rgb = rgb;
         this.resolution = resolution;
+        this.time = time;
+        this.noise = noise;
     }
 
     @Override
@@ -66,9 +69,14 @@ public class CompositeMaterial extends Material {
         renderer.setShaderProgram(program);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
         program.setUniform("u_dither", UniformType.Sampler2D, 1);
+        program.setUniform("u_rgb", UniformType.Sampler2D, 2);
+        program.setUniform("u_noise", UniformType.Sampler2D, 3);
         program.setUniform("u_resolution", UniformType.Vector2, resolution);
+        program.setUniform("u_time", UniformType.Float, time.getTime());
         renderer.setTexture(0, diffuse);
         renderer.setTexture(1, dither);
+        renderer.setTexture(2, rgb);
+        renderer.setTexture(3, noise);
         renderer.renderMesh(mesh);
     }
 }

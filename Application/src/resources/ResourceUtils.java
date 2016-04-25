@@ -159,7 +159,7 @@ public class ResourceUtils {
         // read pixel data
         for (int x = 0; x < img.getWidth(); ++x)
             for (int y = 0; y < img.getHeight(); ++y) {
-                int argb = img.getRGB(y, x);
+                int argb = img.getRGB(x, y);
                 data.put(new byte[] {
                         (byte) ((argb >> 16) & 0xff),
                         (byte) ((argb >> 8) & 0xff),
