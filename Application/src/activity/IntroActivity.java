@@ -21,7 +21,7 @@ public class IntroActivity extends Activity {
     String text = "";
     TaskManager tasks;
     Texture mono;
-    Sound type;
+    Sound type, typeLow;
 
     @Override
     public void onPreLoad(Context context) {
@@ -31,11 +31,13 @@ public class IntroActivity extends Activity {
         // load resources
         Game.getInstance().getResources().load("res/mono.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/type_writer.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/type_writer_low.wav", Sound.class);
     }
 
     @Override
     public void onPostLoad(Context context) {
         type = Game.getInstance().getResources().get("res/sfx/type_writer.wav", Sound.class);
+        typeLow = Game.getInstance().getResources().get("res/sfx/type_writer_low.wav", Sound.class);
         mono = Game.getInstance().getResources().get("res/mono.png", Texture.class);
         mono.setMag(TextureFilter.Linear);
         mono.setMin(TextureFilter.Linear);
@@ -51,7 +53,7 @@ public class IntroActivity extends Activity {
         text = "";
         String show = "Some_location\n10:20AM\nHello_world...";
         //tasks.add(new DelayTask(1, context.time));
-        for (int i = 0; i < 13; ++i) {
+        for (int i = 0; i < 7; ++i) {
             int ind = i;
             tasks.add(new Task() {
                 @Override
@@ -83,12 +85,12 @@ public class IntroActivity extends Activity {
             });
 
             if (show.charAt(ind) != '\n')
-                tasks.add(new DelayTask(0.075f + 0.075f*(float)Math.random(), context.time));
+                tasks.add(new DelayTask(0.1f + 0.5f*(float)(Math.random()*Math.random()), context.time));
             else
-                tasks.add(new DelayTask(0.25f, context.time));
+                tasks.add(new DelayTask(0.9f, context.time));
         }
 
-        for (int i = 0; i < 32; ++i) {
+        for (int i = 0; i < 5; ++i) {
             int ind = i;
             tasks.add(new Task() {
                 @Override
@@ -103,6 +105,18 @@ public class IntroActivity extends Activity {
             });
             tasks.add(new DelayTask(0.25f, context.time));
         }
+        tasks.add(new Task() {
+            @Override
+            public void onBegin() {
+                context.audioRenderer.playSound(typeLow);
+                blink = false;
+            }
+
+            @Override
+            public boolean onUpdate() {
+                return true;
+            }
+        });
     }
 
     private boolean blink = true;
