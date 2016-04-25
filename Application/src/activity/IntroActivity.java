@@ -50,7 +50,23 @@ public class IntroActivity extends Activity {
 
         text = "";
         String show = "Some_location\n10:20AM\nHello_world...";
-        tasks.add(new DelayTask(1, context.time));
+        //tasks.add(new DelayTask(1, context.time));
+        for (int i = 0; i < 13; ++i) {
+            int ind = i;
+            tasks.add(new Task() {
+                @Override
+                public void onBegin() {
+                    blink = (ind&1)==0;
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    return true;
+                }
+            });
+            tasks.add(new DelayTask(0.25f, context.time));
+        }
+
         for (int i = 0; i < show.length(); ++i) {
             int ind = i;
             tasks.add(new Task() {
@@ -67,11 +83,29 @@ public class IntroActivity extends Activity {
             });
 
             if (show.charAt(ind) != '\n')
-                tasks.add(new DelayTask(0.075f, context.time));
+                tasks.add(new DelayTask(0.075f + 0.075f*(float)Math.random(), context.time));
             else
                 tasks.add(new DelayTask(0.25f, context.time));
         }
+
+        for (int i = 0; i < 32; ++i) {
+            int ind = i;
+            tasks.add(new Task() {
+                @Override
+                public void onBegin() {
+                    blink = (ind&1)==0;
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    return true;
+                }
+            });
+            tasks.add(new DelayTask(0.25f, context.time));
+        }
     }
+
+    private boolean blink = true;
 
     @Override
     public void onUpdate(Context context) {
@@ -79,7 +113,7 @@ public class IntroActivity extends Activity {
         context.renderer.clearColorBuffer();
         context.renderer.setClearColor(0, 0, 0, 1);
         batch.begin();
-        batch.addText(mono, 32, 256+64, text, 24);
+        batch.addText(mono, 32, 256+64, text+(blink?'_':""), 24);
         //batch.add(mono, 0, 0, 512, 512, 0, 0, 1, 1);
         batch.end();
     }
