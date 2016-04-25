@@ -80,25 +80,4 @@ public class Game {
                 activities.peek().getActivity().onBegin(context);
         }
     }
-
-    /**
-     * Set a flag value
-     * @param name flag name
-     * @param value flag value
-     */
-    public void putBool (String name, boolean value) {
-        flags.put(name, value);
-    }
-
-    /**
-     * Get the value of a particular flag.
-     * @param name name of the flag
-     * @return if the flag is set, returns it's value or false otherwise
-     */
-    public boolean getBool (String name) {
-        Object val = flags.get(name);
-        if (val == null || !(val instanceof Boolean))
-            return false;
-        return (boolean) val;
-    }
 }
