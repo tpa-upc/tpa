@@ -78,7 +78,10 @@ public class IntroActivity extends Activity {
                 @Override
                 public void onBegin() {
                     text += show.charAt(ind);
-                    context.audioRenderer.playSound(type);
+                    if (show.charAt(ind) != '\n')
+                        context.audioRenderer.playSound(type);
+                    else
+                        context.audioRenderer.playSound(typeLow);
                 }
 
                 @Override

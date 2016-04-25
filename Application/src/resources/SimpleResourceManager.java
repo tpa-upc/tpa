@@ -25,6 +25,10 @@ public class SimpleResourceManager implements ResourceManager {
     Map<String, Object> loaded = new HashMap<>();
     Map<String, Boolean> lol = new HashMap<>();
 
+    public SimpleResourceManager () {
+        last = System.currentTimeMillis();
+    }
+
     @Override
     public void setListener(ResourceManagerListener listener) {
         this.listener = listener;
@@ -108,12 +112,15 @@ public class SimpleResourceManager implements ResourceManager {
         }
     }
 
+    private long last = 0;
+
     @Override
     public void update() {
-        if (queued.isEmpty())
+        if (queued.isEmpty() || System.currentTimeMillis() - last < 250)
             return;
 
-       process();
+        last = System.currentTimeMillis();
+        process();
     }
 
     @Override
