@@ -11,6 +11,7 @@ import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.Texture;
 import tpa.joml.Matrix4f;
+import tpa.joml.Vector3f;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,12 +30,15 @@ public class SpriteBatch {
     private Texture used;
 
     private FloatBuffer position;
+    private FloatBuffer color;
     private FloatBuffer uv;
     private IntBuffer indices;
 
     private boolean drawing = false;
     private Matrix4f projection = new Matrix4f();
     private int quads = 0;
+
+    private Vector3f tint = new Vector3f(1, 1, 1);
 
     public SpriteBatch (Renderer renderer) {
         this.renderer = renderer;
@@ -46,6 +50,10 @@ public class SpriteBatch {
     public void setProjection (Matrix4f prj) {
         if (drawing) flush();
         program.setUniform("u_projection", UniformType.Matrix4, projection.set(prj));
+    }
+
+    public void setColor (float r, float g, float b) {
+        tint.set(r, g, b);
     }
 
     public void begin () {
@@ -95,7 +103,7 @@ public class SpriteBatch {
             flush();
 
         // don't overflow the nio buffers!
-        if (position.remaining() < 12 || uv.remaining() < 8 || indices.remaining() < 6)
+        if (position.remaining() < 12 || color.remaining() < 12 || uv.remaining() < 8 || indices.remaining() < 6)
             flush();
 
         used = texture;
@@ -104,6 +112,12 @@ public class SpriteBatch {
                 x+width, y, 0,
                 x+width, y+height, 0,
                 x, y+height, 0
+        });
+        color.put(new float[] {
+                tint.x, tint.y, tint.z,
+                tint.x, tint.y, tint.z,
+                tint.x, tint.y, tint.z,
+                tint.x, tint.y, tint.z
         });
         uv.put(new float[]{
                 u, v,
@@ -124,11 +138,13 @@ public class SpriteBatch {
         if (quads == 0) return;
 
         position.rewind();
+        color.rewind();
         uv.rewind();
         indices.rewind();
 
         // update mesh
         mesh.setData(Attribute.Position, position);
+        mesh.setData(Attribute.Color, color);
         mesh.setData(Attribute.Uv, uv);
         mesh.setIndices(indices);
         mesh.setLength(6*quads);
@@ -160,12 +176,14 @@ public class SpriteBatch {
     private void createMesh() {
         // create buffers
         position = ByteBuffer.allocateDirect(1000<<2).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        color = ByteBuffer.allocateDirect(1000<<2).order(ByteOrder.nativeOrder()).asFloatBuffer();
         uv = ByteBuffer.allocateDirect(1000<<2).order(ByteOrder.nativeOrder()).asFloatBuffer();
         indices = ByteBuffer.allocateDirect(1000<<2).order(ByteOrder.nativeOrder()).asIntBuffer();
 
         // create mesh
         mesh = new Mesh(MeshUsage.Stream);
         mesh.setData(Attribute.Position, position);
+        mesh.setData(Attribute.Color, color);
         mesh.setData(Attribute.Uv, position);
         mesh.setIndices(indices);
         mesh.setKeepData(true);
@@ -178,27 +196,31 @@ public class SpriteBatch {
         String vert = "#version 120\n" +
                 "\n" +
                 "attribute vec3 a_position;\n" +
+                "attribute vec3 a_color;\n" +
                 "attribute vec2 a_uv;\n" +
                 "\n" +
                 "varying vec2 v_uv;\n" +
+                "varying vec3 v_color;\n" +
                 "\n" +
                 "uniform mat4 u_projection;\n" +
                 "\n" +
                 "void main () {\n" +
                 "    gl_Position = u_projection * vec4(a_position, 1.0);\n" +
                 "    v_uv = a_uv;\n" +
+                "    v_color = a_color;\n" +
                 "}";
         //language=GLSL
         String frag = "#version 120\n" +
                 "\n" +
                 "varying vec2 v_uv;\n" +
+                "varying vec3 v_color;\n" +
                 "\n" +
                 "uniform sampler2D u_texture;\n" +
                 "\n" +
                 "void main () {\n" +
                 "    vec4 text = texture2D(u_texture, v_uv);\n" +
-                "    gl_FragColor = text;\n" +
+                "    gl_FragColor = text * vec4(v_color, 1.0);\n" +
                 "}";
-        program = new ShaderProgram(vert, frag, Attribute.Position, Attribute.Uv);
+        program = new ShaderProgram(vert, frag, Attribute.Position, Attribute.Uv, Attribute.Color);
     }
 }

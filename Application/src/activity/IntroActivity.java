@@ -22,6 +22,7 @@ public class IntroActivity extends Activity {
     TaskManager tasks;
     Texture mono;
     Sound type, typeLow;
+    float alpha = 1;
 
     @Override
     public void onPreLoad(Context context) {
@@ -50,9 +51,11 @@ public class IntroActivity extends Activity {
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
         tasks.clear();
 
+        alpha = 1;
         text = "";
         String show = "Some_location\n10:20AM\nHello_world...";
-        //tasks.add(new DelayTask(1, context.time));
+        blink = false;
+        tasks.add(new DelayTask(2, context.time));
         for (int i = 0; i < 7; ++i) {
             int ind = i;
             tasks.add(new Task() {
@@ -117,6 +120,35 @@ public class IntroActivity extends Activity {
                 return true;
             }
         });
+
+        tasks.add(new Task() {
+            @Override
+            public void onBegin() {
+                alpha = 1;
+            }
+
+            @Override
+            public boolean onUpdate() {
+                alpha -= context.time.getFrameTime();
+                if (alpha < 0) {
+                    alpha = 0;
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        tasks.add(new Task() {
+            @Override
+            public void onBegin() {
+                Game.getInstance().popActivity();
+            }
+
+            @Override
+            public boolean onUpdate() {
+                return true;
+            }
+        });
     }
 
     private boolean blink = true;
@@ -127,8 +159,8 @@ public class IntroActivity extends Activity {
         context.renderer.clearColorBuffer();
         context.renderer.setClearColor(0, 0, 0, 1);
         batch.begin();
+        batch.setColor(alpha, alpha, alpha);
         batch.addText(mono, 32, 256+64, text+(blink?'_':""), 24);
-        //batch.add(mono, 0, 0, 512, 512, 0, 0, 1, 1);
         batch.end();
     }
 
