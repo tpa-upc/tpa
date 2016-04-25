@@ -22,24 +22,18 @@ import tpa.joml.Vector4f;
 public class RoomLocation extends LocationActivity {
 
     @Override
-    public void onLoad(Context context) {
-        resources.load("res/plane.json", Mesh.class);
+    public void onRoomPreLoad(Context context) {
+        Game.getInstance().getResources().load("res/plane.json", Mesh.class);
     }
 
     @Override
-    public void onFinishLoad(Context context) {
+    public void onRoomPostLoad(Context context) {
+        // loaded things
     }
 
     @Override
     public void onEntered(Context context) {
-        context.keyboard.setKeyboardListener(new KeyboardAdapter() {
-            @Override
-            public void onKeyDown(int key) {
-                if (key == KeyboardInput.KEY_ENTER) {
-                    Game.getInstance().pushActivity(GameActivity.Dialog);
-                }
-            }
-        });
+        context.keyboard.setKeyboardListener(null);
     }
 
     @Override

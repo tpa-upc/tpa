@@ -1,6 +1,8 @@
 package game;
 
 import activity.Activity;
+import resources.ResourceManager;
+import resources.SimpleResourceManager;
 import tpa.application.Context;
 
 import java.util.HashMap;
@@ -22,22 +24,17 @@ public class Game {
     /** Game's flahs used by the game logic */
     private HashMap<String, Object> flags = new HashMap<>();
 
+    /** Resource manager */
+    private ResourceManager resources = new SimpleResourceManager();
+
     /** Application context */
     private Context context;
 
     private Game() {
     }
 
-    /**
-     * Called to init game
-     * @param context Application context
-     */
-    public void onInit (Context context) {
+    public void setContext (Context context) {
         this.context = context;
-
-        // init activities
-        for (GameActivity act : GameActivity.values())
-            act.getActivity().onInit(context);
     }
 
     /**
@@ -53,6 +50,10 @@ public class Game {
         top.onUpdate(context);
     }
 
+    /**
+     * Push an activity to the stack
+     * @param activity activity to be stacked
+     */
     public void pushActivity (GameActivity activity) {
         pushActivity(activity, null);
     }
@@ -71,6 +72,9 @@ public class Game {
         activity.getActivity().onBegin(context);
     }
 
+    /**
+     * Pop activity from the stack
+     */
     public void popActivity () {
         if (!activities.isEmpty()) {
             GameActivity activity = activities.pop();
@@ -79,5 +83,13 @@ public class Game {
             if (!activities.isEmpty())
                 activities.peek().getActivity().onBegin(context);
         }
+    }
+
+    /**
+     * Get resource manager
+     * @return resource manager
+     */
+    public ResourceManager getResources () {
+        return resources;
     }
 }

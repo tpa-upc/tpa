@@ -1,5 +1,6 @@
 package resources;
 
+import activity.Dialog;
 import com.google.gson.Gson;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Attribute;
@@ -20,7 +21,6 @@ import java.io.FileReader;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
 
 /**
  * Created by germangb on 10/04/16.
@@ -43,6 +43,13 @@ public class ResourceUtils {
         String primitive;
         AttributeJson[] attributes;
         IndicesJson indices;
+    }
+
+    public static Dialog loadDialog (String path) throws Exception {
+        FileReader reader = new FileReader(path);
+        Dialog dialog = gson.fromJson(reader, Dialog.class);
+        reader.close();
+        return dialog;
     }
 
     /**

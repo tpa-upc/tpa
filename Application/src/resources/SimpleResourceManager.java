@@ -1,5 +1,6 @@
 package resources;
 
+import activity.Dialog;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -22,6 +23,7 @@ public class SimpleResourceManager implements ResourceManager {
     ResourceManagerListener listener = null;
     Queue<Pair> queued = new LinkedList<>();
     Map<String, Object> loaded = new HashMap<>();
+    Map<String, Boolean> lol = new HashMap<>();
 
     @Override
     public void setListener(ResourceManagerListener listener) {
@@ -35,6 +37,9 @@ public class SimpleResourceManager implements ResourceManager {
 
     @Override
     public void load(String file, Class<?> type) {
+        if (lol.containsKey(file)) return;
+        lol.put(file, true);
+
         Pair p = new Pair();
         p.path = file;
         p.type = type;
@@ -60,6 +65,7 @@ public class SimpleResourceManager implements ResourceManager {
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
             } catch (Exception e) {
+                lol.remove(p.path);
                 if (listener != null)
                     listener.onFailed(p.path, p.type, e);
             }
@@ -70,6 +76,7 @@ public class SimpleResourceManager implements ResourceManager {
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
             } catch (Exception e) {
+                lol.remove(p.path);
                 if (listener != null)
                     listener.onFailed(p.path, p.type, e);
             }
@@ -80,6 +87,18 @@ public class SimpleResourceManager implements ResourceManager {
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
             } catch (Exception e) {
+                lol.remove(p.path);
+                if (listener != null)
+                    listener.onFailed(p.path, p.type, e);
+            }
+        } else if (p.type == Dialog.class) {
+            try {
+                Dialog dialog = ResourceUtils.loadDialog(p.path);
+                loaded.put(p.path, dialog);
+                if (listener != null)
+                    listener.onLoaded(p.path, p.type);
+            } catch (Exception e) {
+                lol.remove(p.path);
                 if (listener != null)
                     listener.onFailed(p.path, p.type, e);
             }

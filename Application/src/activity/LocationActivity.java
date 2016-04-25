@@ -1,11 +1,10 @@
 package activity;
 
+import game.Game;
 import rendering.*;
 import rendering.materials.CompositeMaterial;
 import rendering.materials.DepthMaterial;
 import rendering.materials.Material;
-import resources.ResourceManager;
-import resources.SimpleResourceManager;
 import tpa.application.Context;
 import tpa.application.Window;
 import tpa.graphics.geometry.Mesh;
@@ -25,8 +24,8 @@ public abstract class LocationActivity extends Activity {
     /** low res scale */
     private static int SCALE = 1;
 
-    /** resource manager for the location, to load textures, meshes, sound, etc */
-    protected ResourceManager resources = new SimpleResourceManager();
+    ///** resource manager for the location, to load textures, meshes, sound, etc */
+    //protected ResourceManager resources = new SimpleResourceManager();
 
     /** Camera of the location */
     protected Camera camera = new Camera();
@@ -48,12 +47,6 @@ public abstract class LocationActivity extends Activity {
 
     /** framebuffer half as small as the window */
     private Framebuffer lowresPass;
-
-    /** dithering texture */
-    private Texture dither;
-
-    /** RGB texture */
-    private Texture rgb;
 
     /** box for decals */
     private Mesh box;
@@ -103,10 +96,10 @@ public abstract class LocationActivity extends Activity {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** load location specific resources here */
-    public abstract void onLoad (Context context);
+    public abstract void onRoomPreLoad(Context context);
 
-    /** Called when resources have ben loaded */
-    public abstract void onFinishLoad (Context context);
+    /** loaded stuff */
+    public abstract void onRoomPostLoad(Context context);
 
     /** Called when the scene is entered */
     public abstract void onEntered (Context context);
@@ -118,7 +111,7 @@ public abstract class LocationActivity extends Activity {
     public abstract void onLeft (Context context);
 
     @Override
-    public void onInit(Context context) {
+    public void onPreLoad(Context context) {
         // create needed resources
         Window win = context.window;
         zPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{}, true);
@@ -126,32 +119,22 @@ public abstract class LocationActivity extends Activity {
         lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb}, true);
         lowresPass.getTargets()[0].setMag(TextureFilter.Nearest);
 
-        // load stuff
-        resources.setListener(new ResourceManager.ResourceManagerListener() {
-            @Override
-            public void onLoaded(String string, Class<?> type) {
-                System.out.println("[OK] "+string);
-            }
+        Game.getInstance().getResources().load("res/dither.png", Texture.class);
+        Game.getInstance().getResources().load("res/rgb.png", Texture.class);
+        Game.getInstance().getResources().load("res/noise.png", Texture.class);
+        Game.getInstance().getResources().load("res/box.json", Mesh.class);
+        Game.getInstance().getResources().load("res/quad.json", Mesh.class);
 
-            @Override
-            public void onFailed(String string, Class<?> type, Exception e) {
-                System.out.println("[ERR] "+string);
-                if (e != null) e.printStackTrace();
-            }
-        });
+        onRoomPreLoad(context);
+    }
 
-        resources.load("res/dither.png", Texture.class);
-        resources.load("res/rgb.png", Texture.class);
-        resources.load("res/noise.png", Texture.class);
-        resources.load("res/box.json", Mesh.class);
-        resources.load("res/quad.json", Mesh.class);
-        resources.finishLoading();
-
-        box = resources.get("res/box.json", Mesh.class);
-        quad = resources.get("res/quad.json", Mesh.class);
-        dither = resources.get("res/dither.png", Texture.class);
-        rgb = resources.get("res/rgb.png", Texture.class);
-        Texture noise = resources.get("res/noise.png", Texture.class);
+    @Override
+    public void onPostLoad(Context context) {
+        box = Game.getInstance().getResources().get("res/box.json", Mesh.class);
+        quad = Game.getInstance().getResources().get("res/quad.json", Mesh.class);
+        Texture dither = Game.getInstance().getResources().get("res/dither.png", Texture.class);
+        Texture rgb = Game.getInstance().getResources().get("res/rgb.png", Texture.class);
+        Texture noise = Game.getInstance().getResources().get("res/noise.png", Texture.class);
 
         dither.setMag(TextureFilter.Nearest);
         dither.setWrapU(TextureWrap.Repeat);
@@ -162,12 +145,8 @@ public abstract class LocationActivity extends Activity {
         rgb.setMag(TextureFilter.Nearest);
         rgb.setWrapU(TextureWrap.Repeat);
         rgb.setWrapV(TextureWrap.Repeat);
-
         composite = new CompositeMaterial(lowresPass.getTargets()[0], dither, rgb, noise, new Vector2f(context.window.getWidth(), context.window.getHeight()), context.time);
-
-        onLoad(context);
-        resources.finishLoading();
-        onFinishLoad(context);
+        onRoomPostLoad(context);
     }
 
     /**

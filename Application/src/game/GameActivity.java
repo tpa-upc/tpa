@@ -2,6 +2,7 @@ package game;
 
 import activity.Activity;
 import activity.DialogActivity;
+import activity.IntroActivity;
 import activity.RoomLocation;
 
 /**
@@ -12,11 +13,11 @@ public enum GameActivity {
     /** Room location */
     Room(new RoomLocation()),
 
-    /** Pub location */
-    Pub(new RoomLocation()),
-
     /** Test dialog */
-    Dialog (new DialogActivity("res/dialog.json"));
+    Dialog (new DialogActivity("res/dialog.json")),
+
+    /** Intro activity */
+    Intro (new IntroActivity());
 
     /** referenced game activity */
     private activity.Activity activity;

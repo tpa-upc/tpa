@@ -1,101 +1,77 @@
 package activity;
 
-import com.google.gson.Gson;
+import activity.tasks.DelayTask;
+import activity.tasks.PrintTask;
+import activity.tasks.TaskManager;
 import game.Game;
+import rendering.SpriteBatch;
 import tpa.application.Context;
-import tpa.input.keyboard.KeyboardAdapter;
-import tpa.input.keyboard.KeyboardInput;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import tpa.graphics.texture.Texture;
 
 /**
  * Created by germangb on 20/04/16.
  */
 public class DialogActivity extends Activity {
 
-    private class QuestionJson {
-        String text;
-        int answer;
-    }
-
-    private class AnswerJson {
-        String text;
-        Object data;
-        int jump;
-    }
-
-    private class NodeJson {
-        QuestionJson[] questions;
-        AnswerJson[] answers;
-    }
-
-    private class DialogJson {
-        NodeJson[] dialog;
-    }
+    private static SpriteBatch batch = null;
 
     /** Dialog file */
     private String file;
 
     /** Dialog */
-    private DialogJson dialog;
+    private Dialog dialog;
 
     /** Current dialog node */
-    private NodeJson node;
+    private Dialog.Node node;
+
+    /** task manager */
+    private TaskManager tasks;
+
+    Texture tex;
 
     public DialogActivity (String file) {
         this.file = file;
     }
 
     @Override
-    public void onInit(Context context) {
-        // load file
-        Gson gson = new Gson();
-        try {
-            dialog = gson.fromJson(new FileReader(file), DialogJson.class);
-            node = dialog.dialog[0];
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            dialog = null;
+    public void onPreLoad(Context context) {
+        if (batch == null) {
+            batch = new SpriteBatch(context.renderer);
         }
+
+        tasks = new TaskManager();
+        tasks.add(new PrintTask("Hello world 0"));
+        tasks.add(new DelayTask(2, context.time));
+        tasks.add(new PrintTask("Hello world 1"));
+        tasks.add(new DelayTask(2, context.time));
+        tasks.add(new PrintTask("Hello world 2"));
+
+        Game.getInstance().getResources().load(file, Dialog.class);
+        Game.getInstance().getResources().load("res/floor.jpg", Texture.class);
     }
 
-    private void display () {
-        for (int i = 1; i <= node.questions.length; ++i) {
-            System.out.println("["+i+"] "+node.questions[i-1].text);
-        }
+    @Override
+    public void onPostLoad(Context context) {
+        dialog = Game.getInstance().getResources().get(file, Dialog.class);
+        tex = Game.getInstance().getResources().get("res/floor.jpg", Texture.class);
     }
 
     @Override
     public void onBegin(Context context) {
-        System.out.println("---------- BEGIN ----------");
-        context.keyboard.setKeyboardListener(new KeyboardAdapter() {
-            @Override
-            public void onKeyDown(int key) {
-                if (key == KeyboardInput.KEY_ESCAPE) {
-                    System.out.println("----------  END  ----------");
-                    Game.getInstance().popActivity();
-                } else {
-                    key = key - KeyboardInput.KEY_1;
-                    if (key >= 0 && key < node.questions.length) {
-                        int ansId = node.questions[key].answer;
-                        AnswerJson ans = node.answers[ansId];
-                        if (ans.data != null) report(ans.data);
-                        System.out.println("\n[ANSWER] "+ans.text+"\n");
-                        node = dialog.dialog[ans.jump];
-                        display();
-                    }
-                }
-            }
-        });
-
-        display();
+        context.keyboard.setKeyboardListener(null);
     }
 
     @Override
     public void onUpdate(Context context) {
+        tasks.update();
+
         context.renderer.setClearColor(0, 0, 0, 1);
         context.renderer.clearBuffers();
+
+        // render dialog
+        batch.begin();
+        batch.add(tex, 0, 0, 1, 1, 0, 0, 1, 1);
+        batch.end();
     }
 
     @Override

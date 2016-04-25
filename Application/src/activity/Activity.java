@@ -42,7 +42,13 @@ public abstract class Activity {
      * Caled to initialize resources for activity
      * @param context
      */
-    public abstract void onInit (Context context);
+    public abstract void onPreLoad (Context context);
+
+    /**
+     * Called when resources are loaded
+     * @param context
+     */
+    public abstract void onPostLoad (Context context);
 
     /**
      * Called when the activity is begun
@@ -60,5 +66,5 @@ public abstract class Activity {
      * Called when the activity is ended
      * @param context application context
      */
-    public abstract void onEnd(Context context);
+    public abstract void onEnd (Context context);
 }
