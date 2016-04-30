@@ -30,7 +30,7 @@ public class IntroActivity extends Activity {
         batch = new SpriteBatch(context.renderer);
 
         // load resources
-        Game.getInstance().getResources().load("res/mono.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/mono.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/type_writer.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/type_writer_low.wav", Sound.class);
     }
@@ -39,7 +39,7 @@ public class IntroActivity extends Activity {
     public void onPostLoad(Context context) {
         type = Game.getInstance().getResources().get("res/sfx/type_writer.wav", Sound.class);
         typeLow = Game.getInstance().getResources().get("res/sfx/type_writer_low.wav", Sound.class);
-        mono = Game.getInstance().getResources().get("res/mono.png", Texture.class);
+        mono = Game.getInstance().getResources().get("res/textures/mono.png", Texture.class);
         mono.setMag(TextureFilter.Linear);
         mono.setMin(TextureFilter.Linear);
     }

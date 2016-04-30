@@ -1,9 +1,6 @@
 package game;
 
-import activity.Activity;
-import activity.DialogActivity;
-import activity.IntroActivity;
-import activity.RoomLocation;
+import activity.*;
 
 /**
  * Created by germangb on 12/04/16.
@@ -12,6 +9,9 @@ public enum GameActivity {
 
     /** Room location */
     Room(new RoomLocation()),
+
+    /** Interrogation location */
+    Interrogation(new InterrogationLocation()),
 
     /** Test dialog */
     Dialog (new DialogActivity("res/dialog.json")),

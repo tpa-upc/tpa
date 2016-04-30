@@ -27,8 +27,6 @@ public class DialogActivity extends Activity {
     /** task manager */
     private TaskManager tasks;
 
-    Texture tex;
-
     public DialogActivity (String file) {
         this.file = file;
     }
@@ -47,13 +45,11 @@ public class DialogActivity extends Activity {
         tasks.add(new PrintTask("Hello world 2"));
 
         Game.getInstance().getResources().load(file, Dialog.class);
-        Game.getInstance().getResources().load("res/floor.jpg", Texture.class);
     }
 
     @Override
     public void onPostLoad(Context context) {
         dialog = Game.getInstance().getResources().get(file, Dialog.class);
-        tex = Game.getInstance().getResources().get("res/floor.jpg", Texture.class);
     }
 
     @Override
@@ -70,7 +66,6 @@ public class DialogActivity extends Activity {
 
         // render dialog
         batch.begin();
-        batch.add(tex, 0, 0, 1, 1, 0, 0, 1, 1);
         batch.end();
     }
 

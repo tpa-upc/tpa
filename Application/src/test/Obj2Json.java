@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 public class Obj2Json {
 
+    static String model = "window";
+
     public static void main (String[] args) throws IOException {
         ArrayList<Float> position = new ArrayList<>();
         ArrayList<Float> normal = new ArrayList<>();
@@ -20,7 +22,7 @@ public class Obj2Json {
         ArrayList<Float> uvData = new ArrayList<>();
         ArrayList<Integer> indices = new ArrayList<>();
 
-        BufferedReader reader = new BufferedReader(new FileReader("Application/res/plane.obj"));
+        BufferedReader reader = new BufferedReader(new FileReader("Application/res/models/"+model+".obj"));
         String line = "";
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("v ")) {
@@ -35,8 +37,8 @@ public class Obj2Json {
                 normal.add(Float.parseFloat(spl[3]));
             } else if (line.startsWith("vt ")) {
                 String[] spl = line.split(" ");
+                uv.add(1-Float.parseFloat(spl[2]));
                 uv.add(Float.parseFloat(spl[1]));
-                uv.add(Float.parseFloat(spl[2]));
             } else if (line.startsWith("f ")) {
                 String[] spl = line.split(" ");
                 for (int i = 0; i < 3; ++i) {
@@ -94,7 +96,7 @@ public class Obj2Json {
         mesh.indices = indJson;
 
         Gson gson = new Gson();
-        BufferedWriter writ = new BufferedWriter(new FileWriter("Application/res/plane.json"));
+        BufferedWriter writ = new BufferedWriter(new FileWriter("Application/res/models/"+model+".json"));
         gson.toJson(mesh, writ);
         writ.flush();
         writ.close();

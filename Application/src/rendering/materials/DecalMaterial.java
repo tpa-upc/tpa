@@ -54,7 +54,8 @@ public class DecalMaterial extends Material {
             "    vec2 tex_uv = model.xz*0.5+0.5;\n" +
             "    vec4 diff = texture2D(u_diffuse, tex_uv).rgba;\n" +
             "\n" +
-            "    gl_FragColor = vec4(diff.rgb, diff.a);\n" +
+            "    gl_FragData[0] = vec4(diff.rgb, diff.a);\n" +
+            "    gl_FragData[1] = vec4(0.0);\n" +
             "}";
 
     /** shader program */

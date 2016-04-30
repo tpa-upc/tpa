@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class LocationActivity extends Activity {
 
     /** low res scale */
-    private static int SCALE = 1;
+    private static int SCALE = 2;
 
     ///** resource manager for the location, to load textures, meshes, sound, etc */
     //protected ResourceManager resources = new SimpleResourceManager();
@@ -57,44 +57,6 @@ public abstract class LocationActivity extends Activity {
     /** material for rendering framebuffer */
     private CompositeMaterial composite;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /** Sensors in the scene */
-    private List<Sensor> sensors = new ArrayList<>();
-
-    /** current sensor you're standing in */
-    private Sensor currentSensor = null;
-
-    /** current position of the position */
-    protected final Vector3f position = new Vector3f();
-
-    /**
-     * Add a new sensor
-     * @param s sensor to be added
-     */
-    void addSensor (Sensor s) {
-        sensors.add(s);
-    }
-
-    private void updateSensors () {
-        Sensor newSensor = null;
-        for (Sensor s : sensors)
-            if (s.position.distanceSquared(position) < s.radius*s.radius)
-                newSensor = s;
-
-        if (newSensor != currentSensor) {
-            if (currentSensor != null && currentSensor.listener != null)
-                currentSensor.listener.onLeft(currentSensor);
-
-            // new sensor
-            currentSensor = newSensor;
-            if (currentSensor != null && currentSensor.listener != null)
-                currentSensor.listener.onEntered(currentSensor);
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /** load location specific resources here */
     public abstract void onRoomPreLoad(Context context);
 
@@ -116,36 +78,19 @@ public abstract class LocationActivity extends Activity {
         Window win = context.window;
         zPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{}, true);
         depth = zPass.getDepth();
-        lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb}, true);
-        lowresPass.getTargets()[0].setMag(TextureFilter.Nearest);
+        lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
 
-        Game.getInstance().getResources().load("res/dither.png", Texture.class);
-        Game.getInstance().getResources().load("res/rgb.png", Texture.class);
-        Game.getInstance().getResources().load("res/noise.png", Texture.class);
-        Game.getInstance().getResources().load("res/box.json", Mesh.class);
-        Game.getInstance().getResources().load("res/quad.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
 
         onRoomPreLoad(context);
     }
 
     @Override
     public void onPostLoad(Context context) {
-        box = Game.getInstance().getResources().get("res/box.json", Mesh.class);
-        quad = Game.getInstance().getResources().get("res/quad.json", Mesh.class);
-        Texture dither = Game.getInstance().getResources().get("res/dither.png", Texture.class);
-        Texture rgb = Game.getInstance().getResources().get("res/rgb.png", Texture.class);
-        Texture noise = Game.getInstance().getResources().get("res/noise.png", Texture.class);
-
-        dither.setMag(TextureFilter.Nearest);
-        dither.setWrapU(TextureWrap.Repeat);
-        dither.setWrapV(TextureWrap.Repeat);
-        noise.setWrapU(TextureWrap.Repeat);
-        noise.setWrapV(TextureWrap.Repeat);
-        rgb.setMin(TextureFilter.Nearest);
-        rgb.setMag(TextureFilter.Nearest);
-        rgb.setWrapU(TextureWrap.Repeat);
-        rgb.setWrapV(TextureWrap.Repeat);
-        composite = new CompositeMaterial(lowresPass.getTargets()[0], dither, rgb, noise, new Vector2f(context.window.getWidth(), context.window.getHeight()), context.time);
+        box = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
+        quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
+        composite = new CompositeMaterial(lowresPass.getTargets()[0], lowresPass.getTargets()[1], context.time);
         onRoomPostLoad(context);
     }
 
@@ -167,21 +112,21 @@ public abstract class LocationActivity extends Activity {
 
     @Override
     public void onBegin(Context context) {
+        context.keyboard.setKeyboardListener(null);
         onEntered(context);
     }
 
     @Override
     public void onEnd(Context context) {
         onLeft(context);
+        context.keyboard.setKeyboardListener(null);
         geometry.clear();
         decals.clear();
-        sensors.clear();
     }
 
     @Override
     public void onUpdate(Context context) {
         onTick(context);
-        updateSensors();
 
         // update camera
         camera.update();
@@ -189,7 +134,7 @@ public abstract class LocationActivity extends Activity {
         Window window = context.window;
         Renderer renderer = context.renderer;
 
-        // perfom z pass
+        // perfom early z pass
         renderer.setFramebuffer(zPass);
         renderer.clearDepthBuffer();
         renderer.setViewport(0, 0, zPass.getWidth(), zPass.getHeight());

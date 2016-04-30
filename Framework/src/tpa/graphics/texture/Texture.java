@@ -11,10 +11,10 @@ public class Texture {
     private TextureFormat format;
 
     /** Min filter */
-    private TextureFilter min = TextureFilter.Linear;
+    private TextureFilter min = TextureFilter.Nearest;
 
     /** Mag filter */
-    private TextureFilter mag = TextureFilter.Linear;
+    private TextureFilter mag = TextureFilter.Nearest;
 
     /** wrap on U coordinate */
     private TextureWrap wrapU = TextureWrap.Clamp;

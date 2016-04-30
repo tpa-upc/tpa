@@ -7,9 +7,16 @@ import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.Texture;
+import tpa.graphics.texture.TextureFormat;
+import tpa.graphics.texture.TextureWrap;
+import tpa.joml.Interpolationf;
 import tpa.joml.Matrix4f;
 import tpa.joml.Vector2f;
 import tpa.timing.Time;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Random;
 
 /**
  * Created by germangb on 14/04/16.
@@ -27,56 +34,82 @@ public class CompositeMaterial extends Material {
             "    v_uv = a_position.xy*0.5+0.5;\n" +
             "}";
 
-    private static String FRAG = "#version 120\n" +
+    private static String FRAG = "#version 130\n" +
             "\n" +
             "varying vec2 v_uv;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
-            "uniform sampler2D u_dither;\n" +
-            "uniform sampler2D u_rgb;\n" +
-            "uniform sampler2D u_noise;\n" +
-            "uniform float u_time;\n" +
-            "uniform vec2 u_resolution;\n" +
+            "uniform sampler2D u_normal;\n" +
+            "uniform sampler2D u_random;\n" +
             "\n" +
             "void main () {\n" +
-            "    vec3 rgb = texture2D(u_rgb, gl_FragCoord.xy/3).rgb;\n" +
-            "    vec2 uv = v_uv;\n" +
+            "    float rand0 = texture2D(u_random, v_uv*vec2(640, 480)/4/vec2(64)).r;\n" +
+            "    float rand1 = 0;//texture2D(u_random, -v_uv*vec2(640, 480)/4/vec2(64)).r * 0.125;\n" +
             "    \n" +
-            "    vec3 color = texture2D(u_texture, uv).rgb;\n" +
-            "   \n" +
-            "    gl_FragColor.rgb = pow(color, vec3(0.7));\n" +
+            "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
+            "    vec3 normal = texture2D(u_normal, v_uv).rgb * 2.0 - 1.0;\n" +
+            "    \n" +
+            "    float diff = clamp(dot(normal, normalize(vec3(-1, 3, 2))), 0.0, 1.0);\n" +
+            "    diff = mix(0.5, 1.0, diff);\n" +
+            "    \n" +
+            "    vec3 final_color = mix(color, color*0.85, rand0 + rand1);\n" +
+            "    float vignet = smoothstep(1.5, 0.25, length(v_uv*2-1));\n" +
+            "    \n" +
+            "    float bars = smoothstep(0.8+0.01, 0.8, abs(v_uv.y*2-1));\n" +
+            "    \n" +
+            "    gl_FragColor = vec4(pow(final_color*vignet*diff*bars, vec3(0.87)), 1.0);\n" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);
 
-    private Texture diffuse, dither, rgb, noise;
-    public Vector2f resolution;
+    private Texture diffuse;
+    private Texture normal;
     private Time time;
+    private Texture randTex;
 
-    public CompositeMaterial (Texture diffuse, Texture dither, Texture rgb, Texture noise, Vector2f resolution, Time time) {
+    public CompositeMaterial (Texture diffuse, Texture normal, Time time) {
         super(PROGRAM);
         this.diffuse = diffuse;
-        this.dither = dither;
-        this.rgb = rgb;
-        this.resolution = resolution;
+        this.normal = normal;
         this.time = time;
-        this.noise = noise;
+
+        randTex = new Texture(64, 64, TextureFormat.Red);
+        randTex.setWrapU(TextureWrap.Repeat);
+        randTex.setWrapV(TextureWrap.Repeat);
+        randTex.setKeepData(true);
+        randTex.setData(ByteBuffer.allocateDirect(64*64).order(ByteOrder.nativeOrder()));
     }
 
     @Override
     public void render(Renderer renderer, Camera camera, Mesh mesh, Matrix4f model) {
+        updateRandom();
         renderer.setState(state);
         renderer.setShaderProgram(program);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
-        program.setUniform("u_dither", UniformType.Sampler2D, 1);
-        program.setUniform("u_rgb", UniformType.Sampler2D, 2);
-        program.setUniform("u_noise", UniformType.Sampler2D, 3);
-        program.setUniform("u_resolution", UniformType.Vector2, resolution);
-        program.setUniform("u_time", UniformType.Float, time.getTime());
+        program.setUniform("u_normal", UniformType.Sampler2D, 1);
+        program.setUniform("u_random", UniformType.Sampler2D, 2);
         renderer.setTexture(0, diffuse);
-        renderer.setTexture(1, dither);
-        renderer.setTexture(2, rgb);
-        renderer.setTexture(3, noise);
+        renderer.setTexture(1, normal);
+        renderer.setTexture(2, randTex);
         renderer.renderMesh(mesh);
+    }
+
+    private static Random rand = new Random();
+    private float lastTime = 0;
+
+    private void updateRandom() {
+        if (time.getTime() - lastTime > 0.0125f) {
+            lastTime = time.getTime();
+        } else return;
+
+        ByteBuffer data = randTex.getData();
+        while (data.remaining() > 0) {
+            float rnd = rand.nextFloat();
+            byte val = (byte) (255 * rnd);
+            //if (rand.nextInt() > 0.75) val = (byte) 255;
+            data.put(val);
+        }
+        data.flip();
+        randTex.setData(data);
     }
 }
