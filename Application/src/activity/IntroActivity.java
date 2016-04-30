@@ -17,6 +17,9 @@ import tpa.joml.Matrix4f;
  */
 public class IntroActivity extends Activity {
 
+    static float DELAY = 0.1f*0.1f*0.1f*0.1f;
+    static float JITTER = 0.5f*0;
+
     SpriteBatch batch = null;
     String text = "";
     TaskManager tasks;
@@ -91,7 +94,7 @@ public class IntroActivity extends Activity {
             });
 
             if (show.charAt(ind) != '\n')
-                tasks.add(new DelayTask(0.1f + 0.5f*(float)(Math.random()*Math.random()), context.time));
+                tasks.add(new DelayTask(DELAY + JITTER*(float)(Math.random()*Math.random()), context.time));
             else
                 tasks.add(new DelayTask(0.9f, context.time));
         }
@@ -140,6 +143,8 @@ public class IntroActivity extends Activity {
                 return false;
             }
         });
+
+        tasks.add(new DelayTask(1, context.time));
 
         tasks.add(new Task() {
             @Override

@@ -38,6 +38,8 @@ public class CompositeMaterial extends Material {
             "\n" +
             "varying vec2 v_uv;\n" +
             "\n" +
+            "uniform float u_timer;\n" +
+            "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_normal;\n" +
             "uniform sampler2D u_random;\n" +
@@ -64,6 +66,8 @@ public class CompositeMaterial extends Material {
             "    float bars = smoothstep(0.8+0.01, 0.8, abs(v_uv.y*2-1));\n" +
             "    \n" +
             "    gl_FragColor = vec4(pow(final_color*vignet*diff*bars, vec3(0.87)), 1.0);\n" +
+            "    \n" +
+            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), exp(-u_timer * 0.7f));\n" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);
@@ -72,6 +76,7 @@ public class CompositeMaterial extends Material {
     private Texture normal;
     private Time time;
     private Texture randTex;
+    private float timer = 0;
 
     public CompositeMaterial (Texture diffuse, Texture normal, Time time) {
         super(PROGRAM);
@@ -88,16 +93,22 @@ public class CompositeMaterial extends Material {
 
     @Override
     public void render(Renderer renderer, Camera camera, Mesh mesh, Matrix4f model) {
+        timer += time.getFrameTime();
         updateRandom();
         renderer.setState(state);
         renderer.setShaderProgram(program);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
         program.setUniform("u_normal", UniformType.Sampler2D, 1);
         program.setUniform("u_random", UniformType.Sampler2D, 2);
+        program.setUniform("u_timer", UniformType.Float, timer);
         renderer.setTexture(0, diffuse);
         renderer.setTexture(1, normal);
         renderer.setTexture(2, randTex);
         renderer.renderMesh(mesh);
+    }
+
+    public void setTimer (float timer) {
+        this.timer = timer;
     }
 
     private static Random rand = new Random();

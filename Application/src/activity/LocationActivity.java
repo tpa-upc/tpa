@@ -112,6 +112,7 @@ public abstract class LocationActivity extends Activity {
 
     @Override
     public void onBegin(Context context) {
+        composite.setTimer(1000000);
         context.keyboard.setKeyboardListener(null);
         onEntered(context);
     }
