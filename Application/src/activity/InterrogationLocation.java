@@ -1,6 +1,7 @@
 package activity;
 
 import game.Game;
+import game.GameActivity;
 import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
@@ -109,7 +110,8 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
-        addGeometry(box);
+        //addGeometry(box);
+
         addGeometry(wall);
         addGeometry(wall1);
         addGeometry(tile0);
@@ -125,12 +127,15 @@ public class InterrogationLocation extends LocationActivity {
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
-        camera.clearColor.set(0f);
-        cam.position.set(2.45f, 1.5f, 3f);
+        camera.clearColor.set(0.125f);
+        cam.position.set(cam.position.x, 1.5f, 3f);
 
         // test ray picker
         box.model.identity().translate(0, 1f, -1.25f).scale(0.1f, 0.35f, 0.35f);
         picker.addBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 16);
+
+        box.model.identity().translate(0, 1f, -0.5f).scale(0.1f, 0.35f, 0.25f);
+        picker.addBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 32);
 
         context.mouse.setMouseListener(new MouseAdapter() {
             @Override
@@ -152,16 +157,24 @@ public class InterrogationLocation extends LocationActivity {
 
                 // raymarch the scene
                 Object hit = picker.query(ro, rd);
+                System.out.println(hit);
+                if (hit != null && hit.equals(16))
+                    Game.getInstance().pushActivity(GameActivity.Enemies);
+                else if (hit != null && hit.equals(32))
+                    Game.getInstance().pushActivity(GameActivity.Albert);
                 System.out.println("query="+hit+"\n");
             }
         });
     }
 
+    private float time = 0;
+
     @Override
     public void onTick(Context context) {
-        fps.update(context);
-        //cam.update();
-        //cam.position.x = 2.45f + 0.05f * (float) Math.sin(context.time.getTime());
+        //fps.update(context);
+        cam.update();
+        cam.position.x = 2.45f + 0.05f * (float) Math.sin(time);
+        time += context.time.getFrameTime();
 
         doorAnimation -= context.time.getFrameTime();
         if (doorAnimation < 0) doorAnimation = 0;

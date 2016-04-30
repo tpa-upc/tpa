@@ -15,7 +15,7 @@ public enum Attribute {
     Uv(2, 2, "a_uv"),   // vec2
 
     /** r, g, b */
-    Color(3, 3, "a_color"),   // vec3
+    Color(3, 4, "a_color"),   // vec3
 
     /** tx, ty, tz */
     Tangent(4, 3, "a_tangent"),   // vec3

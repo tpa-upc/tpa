@@ -1,0 +1,99 @@
+package activity;
+
+import game.Game;
+import rendering.SpriteBatch;
+import tpa.application.Context;
+import tpa.audio.Sound;
+import tpa.graphics.render.RendererState;
+import tpa.graphics.texture.Framebuffer;
+import tpa.graphics.texture.Texture;
+import tpa.graphics.texture.TextureFormat;
+import tpa.input.keyboard.KeyboardAdapter;
+import tpa.input.keyboard.KeyboardInput;
+import tpa.input.mouse.MouseAdapter;
+import tpa.joml.Matrix4f;
+
+/**
+ * Created by germangb on 30/04/2016.
+ */
+public class ImageActivity extends Activity {
+
+    private String path;
+    private SpriteBatch drawer;
+    private Texture texture;
+    private Sound paper0;
+    private Sound paper1;
+    private Framebuffer fbo;
+    private RendererState state = new RendererState();
+
+    public ImageActivity (String file) {
+        this.path = file;
+    }
+
+    @Override
+    public void onPreLoad(Context context) {
+        Game.getInstance().getResources().load(path, Texture.class);
+        Game.getInstance().getResources().load("res/sfx/paper0.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/paper1.wav", Sound.class);
+
+        drawer = new SpriteBatch(context.renderer);
+        fbo = new Framebuffer(context.window.getWidth(), context.window.getHeight(), new TextureFormat[]{TextureFormat.Rgb}, false);
+    }
+
+    @Override
+    public void onPostLoad(Context context) {
+        texture = Game.getInstance().getResources().get(path, Texture.class);
+        paper0 = Game.getInstance().getResources().get("res/sfx/paper0.wav", Sound.class);
+        paper1 = Game.getInstance().getResources().get("res/sfx/paper1.wav", Sound.class);
+    }
+
+    @Override
+    public void onBegin(Context context) {
+        context.audioRenderer.playSound(paper1);
+
+        context.keyboard.setKeyboardListener(new KeyboardAdapter() {
+            @Override
+            public void onKeyDown(int key) {
+                if (key == KeyboardInput.KEY_ESCAPE)
+                    Game.getInstance().popActivity();
+            }
+        });
+
+        context.mouse.setMouseListener(new MouseAdapter() {
+            @Override
+            public void onMouseDown(int button) {
+                Game.getInstance().popActivity();
+            }
+        });
+
+        time = 0;
+    }
+
+    float time = 0;
+
+    @Override
+    public void onUpdate(Context context) {
+        //context.renderer.clearBuffers();
+        //context.renderer.setClearColor(0, 0, 0, 1);
+        float aspect = (float) context.window.getWidth()/context.window.getHeight();
+        float s = 0.5f;
+        time += context.time.getFrameTime()*16;
+
+        drawer.begin();
+        //drawer.setProjection(new Matrix4f());
+        //drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
+        float t = 1-(float)Math.exp(-time);
+        drawer.setProjection(new Matrix4f().setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(0.025f).scale((1-t) * 0.1f + t * 1).scale((float)texture.getWidth()/512f));
+        drawer.setColor(0,0,0, 0.5f);
+        float off = 0 * (1-t) + 0.0125f * t;
+        drawer.add(texture, -0.5f+off, -0.5f+off*1.5f, 1, 1, 0, 0, 1, 1);
+        drawer.setColor(1,1,1,1);
+        drawer.add(texture, -0.5f, -0.5f, 1, 1, 0, 0, 1, 1);
+        drawer.end();
+    }
+
+    @Override
+    public void onEnd(Context context) {
+        context.audioRenderer.playSound(paper0);
+    }
+}

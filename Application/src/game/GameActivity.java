@@ -17,7 +17,13 @@ public enum GameActivity {
     Dialog (new DialogActivity("res/dialog.json")),
 
     /** Intro activity */
-    Intro (new IntroActivity());
+    Intro (new IntroActivity()),
+
+    /** List of public enemies. */
+    Enemies (new ImageActivity("res/textures/enemies_big.png")),
+
+    /** Albert Oliveras. */
+    Albert (new ImageActivity("res/textures/albert_big.png"));;
 
     /** referenced game activity */
     private activity.Activity activity;

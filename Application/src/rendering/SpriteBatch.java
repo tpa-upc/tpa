@@ -12,6 +12,7 @@ import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.Texture;
 import tpa.joml.Matrix4f;
 import tpa.joml.Vector3f;
+import tpa.joml.Vector4f;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -38,7 +39,7 @@ public class SpriteBatch {
     private Matrix4f projection = new Matrix4f();
     private int quads = 0;
 
-    private Vector3f tint = new Vector3f(1, 1, 1);
+    private Vector4f tint = new Vector4f(1);
 
     public SpriteBatch (Renderer renderer) {
         this.renderer = renderer;
@@ -52,8 +53,8 @@ public class SpriteBatch {
         program.setUniform("u_projection", UniformType.Matrix4, projection.set(prj));
     }
 
-    public void setColor (float r, float g, float b) {
-        tint.set(r, g, b);
+    public void setColor (float r, float g, float b, float a) {
+        tint.set(r, g, b, a);
     }
 
     public void begin () {
@@ -103,7 +104,7 @@ public class SpriteBatch {
             flush();
 
         // don't overflow the nio buffers!
-        if (position.remaining() < 12 || color.remaining() < 12 || uv.remaining() < 8 || indices.remaining() < 6)
+        if (position.remaining() < 12 || color.remaining() < 16 || uv.remaining() < 8 || indices.remaining() < 6)
             flush();
 
         used = texture;
@@ -114,10 +115,10 @@ public class SpriteBatch {
                 x, y+height, 0
         });
         color.put(new float[] {
-                tint.x, tint.y, tint.z,
-                tint.x, tint.y, tint.z,
-                tint.x, tint.y, tint.z,
-                tint.x, tint.y, tint.z
+                tint.x, tint.y, tint.z, tint.w,
+                tint.x, tint.y, tint.z, tint.w,
+                tint.x, tint.y, tint.z, tint.w,
+                tint.x, tint.y, tint.z, tint.w
         });
         uv.put(new float[]{
                 u, v,
