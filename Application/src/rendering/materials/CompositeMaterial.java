@@ -34,13 +34,19 @@ public class CompositeMaterial extends Material {
             "    v_uv = a_position.xy*0.5+0.5;\n" +
             "}";
 
-    private static String FRAG = "#version 130\n" +
+    private static String FRAG = "#version 120\n" +
             "\n" +
             "varying vec2 v_uv;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_normal;\n" +
             "uniform sampler2D u_random;\n" +
+            "\n" +
+            "float smoothstep (float edge0, float edge1, float x) {\n" +
+            "    float t;  /* Or genDType t; */\n" +
+            "    t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);\n" +
+            "    return t * t * (3.0 - 2.0 * t);\n" +
+            "}\n" +
             "\n" +
             "void main () {\n" +
             "    float rand0 = texture2D(u_random, v_uv*vec2(640, 480)/4/vec2(64)).r;\n" +
