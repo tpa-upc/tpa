@@ -2,16 +2,20 @@ package activity;
 
 import game.Game;
 import rendering.DecalActor;
+import rendering.FpsInput;
 import rendering.GeometryActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
 import rendering.materials.WireframeMaterial;
 import rendering.utils.CameraController;
+import rendering.utils.Raymarcher;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
 import tpa.input.keyboard.KeyboardInput;
+import tpa.input.mouse.MouseAdapter;
+import tpa.joml.Vector3f;
 
 /**
  * Test room
@@ -20,7 +24,9 @@ import tpa.input.keyboard.KeyboardInput;
  */
 public class InterrogationLocation extends LocationActivity {
 
+    Raymarcher picker = new Raymarcher();
     CameraController cam;
+    FpsInput fps;
 
     GeometryActor box;
 
@@ -51,6 +57,7 @@ public class InterrogationLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/enemies.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/window.png", Texture.class);
 
+        fps = new FpsInput(camera);
         cam = new CameraController(camera);
         cam.tiltZ = 0.025f;
     }
@@ -85,20 +92,15 @@ public class InterrogationLocation extends LocationActivity {
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
 
         box = new GeometryActor(boxMesh, boxMat);
-        box.model.translate(4, 1f, -1).scale(0.25f);
-
         albert = new DecalActor(albertMat);
         albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f);
-
         enemies = new DecalActor(enemiesMat);
         enemies.model.translate(0, 1, -1.25f).rotateY(180*3.1415f/180).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.05f).scale(0.45f);
-
         door = new GeometryActor(doorMesh, doorMat);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(1.5f, 0, 0.5f).rotateY(95*3.1415f/180);
         window = new GeometryActor(windowMesh, windowMat);
         window.model.translate(1.5f, 0.5f, -2f);
-
         wall = new GeometryActor(wallMesh, wallMat);
         wall1 = new GeometryActor(wallMesh, wallMat);
         wall1.model.translate(4, 0, -2).rotateY(180*3.1415f/180);
@@ -114,7 +116,6 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(door);
         addGeometry(window);
         addGeometry(table);
-
         addDecal(albert);
         addDecal(enemies);
 
@@ -125,17 +126,42 @@ public class InterrogationLocation extends LocationActivity {
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0f);
+        cam.position.set(2.45f, 1.5f, 3f);
 
-        cam.position.y = 1.5f;
-        cam.position.z = 3;
-        cam.position.x = 2.45f;
+        // test ray picker
+        box.model.identity().translate(0, 1f, -1.25f).scale(0.1f, 0.35f, 0.35f);
+        picker.addBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 16);
+
+        context.mouse.setMouseListener(new MouseAdapter() {
+            @Override
+            public void onMouseDown(int button) {
+                float x = (float) context.mouse.getCursorX()/context.window.getWidth();
+                float y = 1 - (float) context.mouse.getCursorY()/context.window.getHeight();
+
+                Vector3f ro = new Vector3f();
+                Vector3f rd = new Vector3f();
+                camera.ray(x, y, ro, rd);
+                System.out.println("Mouse: "+x+" "+y);
+                System.out.println(String.format("ro=(%.02f %.02f %.02f) rd=(%.02f %.02f %.02f)", ro.x, ro.y, ro.z, rd.x, rd.y, rd.z));
+
+                float lambda = (-2 - ro.z) / rd.z;
+                float hx = ro.x + lambda * rd.x;
+                float hy = ro.y + lambda * rd.y;
+                float hz = ro.z + lambda * rd.z;
+                System.out.println(String.format("hit=(%.02f %.02f %.02f)", hx, hy, hz));
+
+                // raymarch the scene
+                Object hit = picker.query(ro, rd);
+                System.out.println("query="+hit+"\n");
+            }
+        });
     }
 
     @Override
     public void onTick(Context context) {
-        cam.update();
-
-        cam.position.x = 2.45f + 0.05f * (float) Math.sin(context.time.getTime());
+        fps.update(context);
+        //cam.update();
+        //cam.position.x = 2.45f + 0.05f * (float) Math.sin(context.time.getTime());
 
         doorAnimation -= context.time.getFrameTime();
         if (doorAnimation < 0) doorAnimation = 0;
