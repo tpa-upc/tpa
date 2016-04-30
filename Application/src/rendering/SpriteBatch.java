@@ -197,11 +197,11 @@ public class SpriteBatch {
         String vert = "#version 120\n" +
                 "\n" +
                 "attribute vec3 a_position;\n" +
-                "attribute vec3 a_color;\n" +
+                "attribute vec4 a_color;\n" +
                 "attribute vec2 a_uv;\n" +
                 "\n" +
                 "varying vec2 v_uv;\n" +
-                "varying vec3 v_color;\n" +
+                "varying vec4 v_color;\n" +
                 "\n" +
                 "uniform mat4 u_projection;\n" +
                 "\n" +
@@ -214,13 +214,13 @@ public class SpriteBatch {
         String frag = "#version 120\n" +
                 "\n" +
                 "varying vec2 v_uv;\n" +
-                "varying vec3 v_color;\n" +
+                "varying vec4 v_color;\n" +
                 "\n" +
                 "uniform sampler2D u_texture;\n" +
                 "\n" +
                 "void main () {\n" +
                 "    vec4 text = texture2D(u_texture, v_uv);\n" +
-                "    gl_FragColor = text * vec4(v_color, 1.0);\n" +
+                "    gl_FragColor = text * v_color;\n" +
                 "}";
         program = new ShaderProgram(vert, frag, Attribute.Position, Attribute.Uv, Attribute.Color);
     }
