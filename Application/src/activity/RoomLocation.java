@@ -1,6 +1,7 @@
 package activity;
 
 import game.Game;
+import game.GameActivity;
 import rendering.*;
 import rendering.materials.*;
 import rendering.utils.CameraController;
@@ -9,6 +10,7 @@ import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
 import tpa.input.keyboard.KeyboardInput;
+import tpa.joml.Vector3f;
 
 /**
  * Test room
@@ -151,6 +153,11 @@ public class RoomLocation extends LocationActivity {
         addDecal(poster);
         addDecal(poster1);
 
+        // add picks
+        addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
+        addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
+        addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
+
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
@@ -158,7 +165,7 @@ public class RoomLocation extends LocationActivity {
 
         cam.position.y = 1.5f;
         cam.position.z = 3;
-        cam.position.x = 3f;
+        cam.position.x = 2.5f;
     }
 
     @Override
@@ -170,9 +177,19 @@ public class RoomLocation extends LocationActivity {
             cam.position.x -= context.time.getFrameTime()*2;
         }
 
-        cam.position.x += (float) Math.sin(context.time.getTime()) * 0.001f;
+        //cam.position.x += (float) Math.sin(context.time.getTime()) * 0.001f;
 
         if (cam.position.x < 2.5f) cam.position.x = 2.5f;
+    }
+
+    @Override
+    public void onSelected(Object data) {
+        if (data.equals("notes")) {
+            Game.getInstance().pushActivity(GameActivity.Note1);
+        } else if (data.equals("door")) {
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Interrogation);
+        }
     }
 
     @Override

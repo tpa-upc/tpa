@@ -25,8 +25,14 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
 
     MouseListener mouseListener;
 
+    long normalCursor;
+    long handCursor;
+
     public LwjglMouseInput (long window) {
         this.window = window;
+
+        normalCursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        handCursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
 
         this.window = window;
         lastX = x = 0;
@@ -95,6 +101,18 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
     }
 
     @Override
+    public void setCursor(Cursor cursor) {
+        switch (cursor) {
+            case Arrow:
+                glfwSetCursor(window, normalCursor);
+                break;
+            case Hand:
+                glfwSetCursor(window, handCursor);
+                break;
+        }
+    }
+
+    @Override
     public boolean isButtonDown(int button) {
         if (button < GLFW_MOUSE_BUTTON_1 || button > GLFW_MOUSE_BUTTON_2)
             throw new IllegalArgumentException();
@@ -126,5 +144,7 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
         mouseCallback.free();
         cursorPosCallback.free();
         scrollCallback.free();
+        glfwDestroyCursor(normalCursor);
+        glfwDestroyCursor(handCursor);
     }
 }

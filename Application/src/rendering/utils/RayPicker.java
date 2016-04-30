@@ -16,6 +16,11 @@ public interface RayPicker {
     void addBox (Vector3f position, Vector3f scale, Object id);
 
     /**
+     * Clear all volumes from the ray picker
+     */
+    void clear ();
+
+    /**
      * Query the scene with a ray
      * @param ro ray origin
      * @param rd ray direction

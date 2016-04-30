@@ -22,6 +22,12 @@ public enum GameActivity {
     /** List of public enemies. */
     Enemies (new ImageActivity("res/textures/enemies_big.png")),
 
+    /** Post-it note #0. */
+    Note0 (new ImageActivity("res/textures/note0.png")),
+
+    /** Post-it note #1. */
+    Note1 (new ImageActivity("res/textures/note1.png")),
+
     /** Albert Oliveras. */
     Albert (new ImageActivity("res/textures/albert_big.png"));;
 

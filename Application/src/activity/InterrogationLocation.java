@@ -25,7 +25,6 @@ import tpa.joml.Vector3f;
  */
 public class InterrogationLocation extends LocationActivity {
 
-    Raymarcher picker = new Raymarcher();
     CameraController cam;
     FpsInput fps;
 
@@ -132,39 +131,10 @@ public class InterrogationLocation extends LocationActivity {
 
         // test ray picker
         box.model.identity().translate(0, 1f, -1.25f).scale(0.1f, 0.35f, 0.35f);
-        picker.addBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 16);
+        addPickerBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 16);
 
         box.model.identity().translate(0, 1f, -0.5f).scale(0.1f, 0.35f, 0.25f);
-        picker.addBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 32);
-
-        context.mouse.setMouseListener(new MouseAdapter() {
-            @Override
-            public void onMouseDown(int button) {
-                float x = (float) context.mouse.getCursorX()/context.window.getWidth();
-                float y = 1 - (float) context.mouse.getCursorY()/context.window.getHeight();
-
-                Vector3f ro = new Vector3f();
-                Vector3f rd = new Vector3f();
-                camera.ray(x, y, ro, rd);
-                System.out.println("Mouse: "+x+" "+y);
-                System.out.println(String.format("ro=(%.02f %.02f %.02f) rd=(%.02f %.02f %.02f)", ro.x, ro.y, ro.z, rd.x, rd.y, rd.z));
-
-                float lambda = (-2 - ro.z) / rd.z;
-                float hx = ro.x + lambda * rd.x;
-                float hy = ro.y + lambda * rd.y;
-                float hz = ro.z + lambda * rd.z;
-                System.out.println(String.format("hit=(%.02f %.02f %.02f)", hx, hy, hz));
-
-                // raymarch the scene
-                Object hit = picker.query(ro, rd);
-                System.out.println(hit);
-                if (hit != null && hit.equals(16))
-                    Game.getInstance().pushActivity(GameActivity.Enemies);
-                else if (hit != null && hit.equals(32))
-                    Game.getInstance().pushActivity(GameActivity.Albert);
-                System.out.println("query="+hit+"\n");
-            }
-        });
+        addPickerBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 32);
     }
 
     private float time = 0;
@@ -173,7 +143,7 @@ public class InterrogationLocation extends LocationActivity {
     public void onTick(Context context) {
         //fps.update(context);
         cam.update();
-        cam.position.x = 2.45f + 0.05f * (float) Math.sin(time);
+        cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
         time += context.time.getFrameTime();
 
         doorAnimation -= context.time.getFrameTime();
@@ -181,6 +151,15 @@ public class InterrogationLocation extends LocationActivity {
         door.model.identity()
                 .translate(3, 0, -2)
                 .rotateY(-2.5f*Math.min(doorAnimation, 1));
+    }
+
+    @Override
+    public void onSelected(Object data) {
+        if (data.equals(16)) {
+            Game.getInstance().pushActivity(GameActivity.Enemies);
+        } else if (data.equals(32)) {
+            Game.getInstance().pushActivity(GameActivity.Albert);
+        }
     }
 
     @Override

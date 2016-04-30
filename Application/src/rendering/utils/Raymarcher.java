@@ -23,6 +23,13 @@ public class Raymarcher implements RayPicker {
         ids.add(id);
     }
 
+    @Override
+    public void clear() {
+        poss.clear();
+        scas.clear();
+        ids.clear();
+    }
+
     private class IdWrap {
         Object id = null;
     }
@@ -37,7 +44,7 @@ public class Raymarcher implements RayPicker {
             IdWrap wr = new IdWrap();
             float dist = distance(p, wr);
             //System.out.println("[RAYM] it="+i+" h="+h+" dist="+dist+" p="+p.toString(NumberFormat.getInstance()));
-            if (dist < 0.05f) {
+            if (dist < 0.01f) {
                 return wr.id;
             }
             h += Math.max(dist, 0.01f);

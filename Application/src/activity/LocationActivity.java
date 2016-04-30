@@ -5,12 +5,16 @@ import rendering.*;
 import rendering.materials.CompositeMaterial;
 import rendering.materials.DepthMaterial;
 import rendering.materials.Material;
+import rendering.materials.WireframeMaterial;
+import rendering.utils.RayPicker;
+import rendering.utils.Raymarcher;
 import tpa.application.Context;
 import tpa.application.Window;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.render.*;
 import tpa.graphics.texture.*;
-import tpa.joml.Vector2f;
+import tpa.input.mouse.Cursor;
+import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -57,6 +61,15 @@ public abstract class LocationActivity extends Activity {
     /** material for rendering framebuffer */
     private CompositeMaterial composite;
 
+    /** Wireframe material for debugging */
+    private WireframeMaterial wireframe;
+
+    /** Ray picker */
+    private RayPicker picker = new Raymarcher();
+
+    /** 3d rendering helper */
+    private SpriteBatch sprites;
+
     /** load location specific resources here */
     public abstract void onRoomPreLoad(Context context);
 
@@ -68,6 +81,9 @@ public abstract class LocationActivity extends Activity {
 
     /** called once per frame */
     public abstract void onTick (Context context);
+
+    /** Called when something is 3D-picked */
+    public abstract void onSelected (Object data);
 
     /** Called when the scene is left */
     public abstract void onLeft (Context context);
@@ -91,14 +107,29 @@ public abstract class LocationActivity extends Activity {
         box = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
         composite = new CompositeMaterial(lowresPass.getTargets()[0], lowresPass.getTargets()[1], context.time);
+        wireframe = new WireframeMaterial();
+        sprites = new SpriteBatch(context.renderer);
         onRoomPostLoad(context);
+    }
+
+    /**
+     * Add a box for the 3d picker
+     * @param pos box position
+     * @param size box scale
+     * @param data data associated with box
+     */
+    protected void addPickerBox (Vector3f pos, Vector3f size, Object data) {
+        picker.addBox(pos, size, data);
+        //GeometryActor debug = new GeometryActor(box, wireframe);
+        //debug.model.translate(pos).scale(size);
+        //addGeometry(debug);
     }
 
     /**
      * Add a geometry actor to the scene
      * @param actor geometry actor
      */
-    void addGeometry (GeometryActor actor) {
+    protected void addGeometry (GeometryActor actor) {
         this.geometry.add(actor);
     }
 
@@ -106,28 +137,57 @@ public abstract class LocationActivity extends Activity {
      * Add a decal to the scene
      * @param actor decal actor
      */
-    void addDecal (DecalActor actor) {
+    protected void addDecal (DecalActor actor) {
         this.decals.add(actor);
     }
 
     @Override
     public void onBegin(Context context) {
+        onEntered(context);
+
+        // set input listeners
         composite.setTimer(1000000);
         context.keyboard.setKeyboardListener(null);
-        onEntered(context);
+        context.mouse.setMouseListener(new MouseAdapter() {
+            @Override
+            public void onMouseDown(int button) {
+                Object hit = pick(context);
+
+                if (hit != null) {
+                    onSelected(hit);
+                }
+            }
+        });
+    }
+
+    private Object pick (Context context) {
+        float x = (float) context.mouse.getCursorX()/context.window.getWidth();
+        float y = 1 - (float) context.mouse.getCursorY()/context.window.getHeight();
+
+        Vector3f ro = new Vector3f();
+        Vector3f rd = new Vector3f();
+        camera.ray(x, y, ro, rd);
+
+        return picker.query(ro, rd);
     }
 
     @Override
     public void onEnd(Context context) {
         onLeft(context);
         context.keyboard.setKeyboardListener(null);
+        context.mouse.setMouseListener(null);
         geometry.clear();
         decals.clear();
+        picker.clear();
+        context.mouse.setCursor(Cursor.Arrow);
     }
 
     @Override
     public void onUpdate(Context context) {
         onTick(context);
+
+        if (pick(context) != null) context.mouse.setCursor(Cursor.Hand);
+        else context.mouse.setCursor(Cursor.Arrow);
 
         // update camera
         camera.update();

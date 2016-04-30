@@ -30,6 +30,12 @@ public interface MouseInput {
     void setMouseListener (MouseListener listener);
 
     /**
+     * Set mouse cursor
+     * @param cursor cursor
+     */
+    void setCursor (Cursor cursor);
+
+    /**
      * Check if mouse button is being held down
      * @param button button index
      * @return true if button is being held down, false otherwise
