@@ -26,6 +26,10 @@ public class TaskManager {
         started = false;
     }
 
+    public int remaining () {
+        return queue.size();
+    }
+
     /** Update tasks */
     public void update () {
         if (queue.isEmpty()) return;

@@ -17,7 +17,7 @@ public enum GameActivity {
     Interrogation(new InterrogationLocation()),
 
     /** Test dialog */
-    Dialog (new DialogActivity("res/dialog.json")),
+    Dialog (new DialogActivity("res/dialogues/casa2_alter_ego.json")),
 
     /** Intro activity */
     Intro (new IntroActivity()),

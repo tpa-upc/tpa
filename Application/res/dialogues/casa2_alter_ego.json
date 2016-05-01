@@ -2,16 +2,19 @@
   "dialog": [
     {
       "questions":[
-        {"text": "Hey sweetie, how are you?", "answer": 0}
+        {"preview": "Hey!", "text": "Hey sweetie, how are you?;this is a second line for longer text", "answer": 0},
+        {"preview": "Pointless...", "text": "This is a pointless question;And it's multi line to be even more pointless", "answer": 1}
       ],
       "answers":[
-        {"text": "Fine, it was cold today in the park...", "data": null, "jump": 1}
+        {"text": "Fine, it was cold today in the park...", "data": null, "jump": 1},
+        {"text": "Pointless answer", "data": null, "jump": 0}
       ]
     },
 
     {
       "questions":[
-        {"text": "How do you know that? Which park?", "answer": 0}
+        {"preview": "Huh?", "text": "How do you know that? Which park?", "answer": 0},
+        {"preview": "True...", "text": "Ha Ha, That's true", "answer": 0}
       ],
       "answers":[
         {"text": "There’s a note in the wall…", "data": "note_wall", "jump": -1}
