@@ -101,6 +101,7 @@ public class DialogActivity extends Activity {
             }
         });
 
+        tasks.clear();
         node = dialog.dialog[0];
         state = 0;
         selected = 0;
@@ -120,7 +121,7 @@ public class DialogActivity extends Activity {
         batch.begin();
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
 
-        batch.setColor(0, 0, 0, 1/60f * 0.5f);
+        batch.setColor(0, 0, 0, 1/60f * 0.35f);
         batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
 
         batch.setColor(0, 0, 0, 1);
