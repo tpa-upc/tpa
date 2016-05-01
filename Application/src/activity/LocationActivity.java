@@ -1,6 +1,7 @@
 package activity;
 
 import game.Game;
+import game.Values;
 import rendering.*;
 import rendering.materials.CompositeMaterial;
 import rendering.materials.DepthMaterial;
@@ -146,7 +147,7 @@ public abstract class LocationActivity extends Activity {
         onEntered(context);
 
         // set input listeners
-        composite.setTimer(1000000);
+        composite.setTimer(Values.LOCATION_TRANSITION_ANIMATION?0:9999);
         context.keyboard.setKeyboardListener(null);
         context.mouse.setMouseListener(new MouseAdapter() {
             @Override
@@ -180,6 +181,7 @@ public abstract class LocationActivity extends Activity {
         decals.clear();
         picker.clear();
         context.mouse.setCursor(Cursor.Arrow);
+        Values.LOCATION_TRANSITION_ANIMATION = true;
     }
 
     @Override

@@ -5,6 +5,7 @@ import activity.tasks.PrintTask;
 import activity.tasks.Task;
 import activity.tasks.TaskManager;
 import game.Game;
+import game.Values;
 import rendering.SpriteBatch;
 import tpa.application.Context;
 import tpa.graphics.texture.Texture;
@@ -269,6 +270,6 @@ public class DialogActivity extends Activity {
 
     @Override
     public void onEnd(Context context) {
-
+        Values.LOCATION_TRANSITION_ANIMATION = false;
     }
 }

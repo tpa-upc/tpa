@@ -6,7 +6,7 @@ package game;
 public class Values {
 
     /** text value */
-    public static int TEST = 42;
+    public static boolean LOCATION_TRANSITION_ANIMATION = true;
 
     private Values () {}
 }

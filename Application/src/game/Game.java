@@ -21,9 +21,6 @@ public class Game {
     /** Stack of activities */
     private Stack<GameActivity> activities = new Stack<>();
 
-    /** Game's flahs used by the game logic */
-    private HashMap<String, Object> flags = new HashMap<>();
-
     /** Resource manager */
     private ResourceManager resources = new SimpleResourceManager();
 

@@ -1,6 +1,7 @@
 package activity;
 
 import game.Game;
+import game.Values;
 import rendering.SpriteBatch;
 import tpa.application.Context;
 import tpa.audio.Sound;
@@ -101,5 +102,6 @@ public class ImageActivity extends Activity {
     @Override
     public void onEnd(Context context) {
         context.audioRenderer.playSound(paper0);
+        Values.LOCATION_TRANSITION_ANIMATION = false;
     }
 }
