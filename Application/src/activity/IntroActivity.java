@@ -17,8 +17,8 @@ import tpa.joml.Matrix4f;
  */
 public class IntroActivity extends Activity {
 
-    static float DELAY = 0.1f*0.1f*0.1f*0.1f;
-    static float JITTER = 0.5f*0;
+    static float DELAY = 0.1f;
+    static float JITTER = 0.25f;
 
     SpriteBatch batch = null;
     String text = "";
