@@ -10,6 +10,7 @@ import tpa.application.Context;
 import tpa.graphics.texture.Texture;
 import tpa.input.keyboard.KeyboardAdapter;
 import tpa.input.keyboard.KeyboardInput;
+import tpa.input.mouse.Cursor;
 import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Matrix4f;
 
@@ -123,9 +124,12 @@ public class DialogActivity extends Activity {
         batch.setColor(0, 0, 0, 1);
         batch.add(pixel, 0, h-64, w, 64, 0, 0, 1, 1);
 
+        context.mouse.setCursor(Cursor.Arrow);
         if (state == 0) {
             int my = h-context.mouse.getCursorY();
             selected = my/32;
+            if (selected < node.questions.length)
+                context.mouse.setCursor(Cursor.Hand);
 
             for (int i = 0; i < node.questions.length; ++i) {
                 String text = node.questions[i].text;
@@ -134,7 +138,7 @@ public class DialogActivity extends Activity {
                 batch.setColor(0.25f, 0.25f, 0.25f, 1);
                 if (selected == i)
                     batch.setColor(1, 1, 1, 1);
-                batch.addText(font, 16, h - 24*(i+1) - 12, "["+(i+1)+"] "+text, 12);
+                batch.addText(font, 16, h - 24*(i+1) - 12, "> "+text, 12);
             }
         } else if ((state == 1 || state == 2) && text.length() > 0) {
             if (state == 1) batch.setColor(0, 0, 0, 1);

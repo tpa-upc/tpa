@@ -27,11 +27,13 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
 
     long normalCursor;
     long handCursor;
+    long crossCursor;
 
     public LwjglMouseInput (long window) {
         this.window = window;
 
-        normalCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+        normalCursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        crossCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
         handCursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
 
         this.window = window;
@@ -106,6 +108,9 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
             case Arrow:
                 glfwSetCursor(window, normalCursor);
                 break;
+            case Cross:
+                glfwSetCursor(window, crossCursor);
+                break;
             case Hand:
                 glfwSetCursor(window, handCursor);
                 break;
@@ -146,5 +151,6 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
         scrollCallback.free();
         glfwDestroyCursor(normalCursor);
         glfwDestroyCursor(handCursor);
+        glfwDestroyCursor(crossCursor);
     }
 }

@@ -8,6 +8,9 @@ public enum Cursor {
     /** Arrow cursor */
     Arrow,
 
+    /** crosshair */
+    Cross,
+
     /** Selection cursor */
     Hand
 }
