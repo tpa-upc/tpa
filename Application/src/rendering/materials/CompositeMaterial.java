@@ -63,7 +63,7 @@ public class CompositeMaterial extends Material {
             "    vec3 final_color = mix(color, color*0.85, rand0 + rand1);\n" +
             "    float vignet = smoothstep(1.5, 0.25, length(v_uv*2-1));\n" +
             "    \n" +
-            "    float bars = smoothstep(0.8+0.01, 0.8, abs(v_uv.y*2-1));\n" +
+            "    float bars = smoothstep(0.7+0.01, 0.7, abs(v_uv.y*2-1));\n" +
             "    \n" +
             "    gl_FragColor = vec4(pow(final_color*vignet*diff*bars, vec3(0.87)), 1.0);\n" +
             "    \n" +

@@ -10,6 +10,7 @@ import tpa.application.Context;
 import tpa.graphics.texture.Texture;
 import tpa.input.keyboard.KeyboardAdapter;
 import tpa.input.keyboard.KeyboardInput;
+import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Matrix4f;
 
 /**
@@ -17,7 +18,7 @@ import tpa.joml.Matrix4f;
  */
 public class DialogActivity extends Activity {
 
-    private SpriteBatch batch;
+    private static SpriteBatch batch = null;
 
     /** Dialog file */
     private String file;
@@ -28,7 +29,7 @@ public class DialogActivity extends Activity {
     /** Current dialog node */
     private Dialog.Node node;
 
-    private Texture font;
+    private Texture font, pixel;
 
     /** task manager */
     private TaskManager tasks;
@@ -43,7 +44,7 @@ public class DialogActivity extends Activity {
      * 2 -> animate response
      */
     private int state = 0;
-    private int line = 0;
+    private int selected = 0;
     private String[] lines;
 
     public DialogActivity (String file) {
@@ -53,9 +54,11 @@ public class DialogActivity extends Activity {
     @Override
     public void onPreLoad(Context context) {
         this.context = context;
-        batch = new SpriteBatch(context.renderer);
+        if (batch == null)
+            batch = new SpriteBatch(context.renderer);
         Game.getInstance().getResources().load(file, Dialog.class);
         Game.getInstance().getResources().load("res/textures/ubuntu24.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         tasks = new TaskManager();
     }
 
@@ -63,10 +66,11 @@ public class DialogActivity extends Activity {
     public void onPostLoad(Context context) {
         dialog = Game.getInstance().getResources().get(file, Dialog.class);
         font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
+        pixel = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
 
         node = dialog.dialog[0];
         state = 0;
-        line = 0;
+        selected = 0;
     }
 
     @Override
@@ -82,15 +86,29 @@ public class DialogActivity extends Activity {
                 }
             }
         });
-        context.mouse.setMouseListener(null);
+        context.mouse.setMouseListener(new MouseAdapter() {
+            @Override
+            public void onMouseDown(int button) {
+                if (state == 0) {
+                    int id = selected;
+                    if (id >= 0 && id < node.questions.length) {
+                        onSelectQuestion(id);
+                    }
+                }
+            }
+        });
+
+        node = dialog.dialog[0];
+        state = 0;
+        selected = 0;
     }
 
     @Override
     public void onUpdate(Context context) {
         tasks.update();
 
-        context.renderer.setClearColor(0, 0, 0, 1);
-        context.renderer.clearBuffers();
+        //context.renderer.setClearColor(0.5f, 0.5f, 0.5f, 1);
+        //context.renderer.clearBuffers();
 
         int w = context.window.getWidth();
         int h = context.window.getHeight();
@@ -99,15 +117,37 @@ public class DialogActivity extends Activity {
         batch.begin();
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
 
+        batch.setColor(0, 0, 0, 1/60f * 0.15f);
+        batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
+
+        batch.setColor(0, 0, 0, 1);
+        batch.add(pixel, 0, h-64, w, 64, 0, 0, 1, 1);
+
         if (state == 0) {
+            int my = h-context.mouse.getCursorY();
+            selected = my/32;
+
             for (int i = 0; i < node.questions.length; ++i) {
                 String text = node.questions[i].text;
                 if (node.questions[i].preview != null)
                     text = node.questions[i].preview;
-                batch.addText(font, 16, h - 24*(i+1) - 16, "["+(i+1)+"] "+text, 12);
+                batch.setColor(0.25f, 0.25f, 0.25f, 1);
+                if (selected == i)
+                    batch.setColor(1, 1, 1, 1);
+                batch.addText(font, 16, h - 24*(i+1) - 12, "["+(i+1)+"] "+text, 12);
             }
-        } else if (state == 1) {
-            batch.addText(font, 16, h - 24 - 16, text, 12);
+        } else if ((state == 1 || state == 2) && text.length() > 0) {
+            if (state == 1) batch.setColor(0, 0, 0, 1);
+            else batch.setColor(1, 1, 1, 1);
+
+            //batch.add(pixel, 0, h-42, 12*text.length()+8, 42, 0, 0, 1, 1);
+
+            if (state == 2) batch.setColor(0, 0, 0, 1);
+            else batch.setColor(1, 1, 1, 1);
+
+            batch.setColor(1, 1, 1, 1);
+
+            batch.addText(font, 16, h - 46, text, 12);
         }
         batch.end();
     }
@@ -115,14 +155,14 @@ public class DialogActivity extends Activity {
     private void onSelectQuestion (int id) {
         System.out.println("asdasdasd "+id);
         state = 1;
-        line = 0;
+        selected = 0;
 
         Dialog.Answer ans = node.answers[node.questions[id].answer];
         Dialog.Question que = node.questions[id];
         lines = que.text.split(";");
         text = "";
 
-        tasks.add(new DelayTask(0.5f, context.time));
+        tasks.add(new DelayTask(0.25f, context.time));
         for (int i = 0; i < lines.length; ++i) {
             String str = lines[i];
             for (int x = 0; x < str.length(); ++x) {
@@ -138,10 +178,10 @@ public class DialogActivity extends Activity {
                         return true;
                     }
                 });
-                tasks.add(new DelayTask(0.05f, context.time));
+                tasks.add(new DelayTask(0.025f, context.time));
             }
 
-            tasks.add(new DelayTask(0.5f, context.time));
+            tasks.add(new DelayTask(0.75f, context.time));
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
@@ -160,6 +200,7 @@ public class DialogActivity extends Activity {
             @Override
             public void onBegin() {
                 text = "";
+                state = 2;
             }
 
             @Override
@@ -184,7 +225,7 @@ public class DialogActivity extends Activity {
                         return true;
                     }
                 });
-                tasks.add(new DelayTask(0.05f, context.time));
+                tasks.add(new DelayTask(0.025f, context.time));
             }
 
             tasks.add(new DelayTask(0.5f, context.time));

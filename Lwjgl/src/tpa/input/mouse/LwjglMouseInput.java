@@ -31,7 +31,7 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
     public LwjglMouseInput (long window) {
         this.window = window;
 
-        normalCursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        normalCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
         handCursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
 
         this.window = window;
