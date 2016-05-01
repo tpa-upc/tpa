@@ -79,6 +79,7 @@ public class DialogActivity extends Activity {
         context.keyboard.setKeyboardListener(new KeyboardAdapter() {
             @Override
             public void onKeyDown(int key) {
+                if (key == KeyboardInput.KEY_ESCAPE) Game.getInstance().popActivity();
                 if (state == 0) {
                     int id = key - KeyboardInput.KEY_1;
                     if (id >= 0 && id < node.questions.length) {
@@ -118,7 +119,7 @@ public class DialogActivity extends Activity {
         batch.begin();
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
 
-        batch.setColor(0, 0, 0, 1/60f * 0.15f);
+        batch.setColor(0, 0, 0, 1/60f * 0.5f);
         batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
 
         batch.setColor(0, 0, 0, 1);
