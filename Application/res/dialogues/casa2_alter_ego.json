@@ -1,0 +1,21 @@
+{
+  "dialog": [
+    {
+      "questions":[
+        {"text": "Hey sweetie, how are you?", "answer": 0}
+      ],
+      "answers":[
+        {"text": "Fine, it was cold today in the park...", "data": null, "jump": 1}
+      ]
+    },
+
+    {
+      "questions":[
+        {"text": "How do you know that? Which park?", "answer": 0}
+      ],
+      "answers":[
+        {"text": "There’s a note in the wall…", "data": "note_wall", "jump": -1}
+      ]
+    }
+  ]
+}

@@ -125,7 +125,7 @@ public class RoomLocation extends LocationActivity {
         pc = new GeometryActor(pcMesh, pcMat);
         pc.model.translate(3.5f, 0.675f, -1.5f).rotateY(0.25f);
         chair = new GeometryActor(chairMesh, pcMat);
-        chair.model.translate(4f, 0, -2.25f).rotateY(0.25f).scale(0.85f);
+        chair.model.translate(5f, 0, -2.25f).rotateY(0.25f).scale(0.85f);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(4f, 0, -2).rotateY(-0.1f);
         tile0 = new GeometryActor(tileMesh, tileMat);
@@ -161,11 +161,12 @@ public class RoomLocation extends LocationActivity {
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
-        camera.clearColor.set(0.1f);
+        camera.clearColor.set(0.0f);
 
         cam.position.y = 1.5f;
-        cam.position.z = 3;
+        cam.position.z = 2.5f;
         cam.position.x = 2.5f;
+        cam.tiltX = 0.1f;
     }
 
     @Override
@@ -189,6 +190,8 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("door")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
+        } else if (data.equals("pc")) {
+            Game.getInstance().pushActivity(GameActivity.Dialog);
         }
     }
 

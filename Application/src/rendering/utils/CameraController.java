@@ -15,6 +15,7 @@ public class CameraController {
     public Vector3f position = new Vector3f(0);
 
     public float tiltZ = 0.05f;
+    public float tiltX = 0f;
 
     public CameraController (Camera camera) {
         this.camera = camera;
@@ -25,6 +26,7 @@ public class CameraController {
         camera.view.identity();
         camera.view.rotateZ(tiltZ);
         camera.view.rotateY(-0.1f);
+        camera.view.rotateX(tiltX);
         camera.view.lookAt(p.x, p.y, p.z, p.x, p.y-0.1f, 0, 0, 1, 0);
     }
 }

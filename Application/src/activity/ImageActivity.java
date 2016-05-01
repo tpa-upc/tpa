@@ -87,9 +87,9 @@ public class ImageActivity extends Activity {
         //drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
         float t = 1-(float)Math.exp(-time);
         drawer.setProjection(new Matrix4f());
-        //drawer.setColor(0, 0, 0, 1/60f*0.75f);
-        //drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
-        drawer.setProjection(new Matrix4f().setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(rot).scale((1-t) * 0.1f + t * 1).scale((float)texture.getWidth()/512f));
+        drawer.setColor(0, 0, 0, 1/60f*0.5f);
+        drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
+        drawer.setProjection(new Matrix4f().setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(rot).scale((1-t) * 0.65f + t * 1).scale((float)texture.getWidth()/512f));
         drawer.setColor(0,0,0, 0.025f);
         float off = 0 * (1-t) + 0.0125f * t;
         drawer.add(texture, -0.5f+off, -0.5f+off, 1, 1, 0, 0, 1, 1);

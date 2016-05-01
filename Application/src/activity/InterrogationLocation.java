@@ -28,13 +28,15 @@ public class InterrogationLocation extends LocationActivity {
     CameraController cam;
     FpsInput fps;
 
-    GeometryActor box;
-
     GeometryActor window;
     GeometryActor door;
     GeometryActor table;
     GeometryActor wall;
     GeometryActor wall1;
+    GeometryActor wall2;
+    GeometryActor wall3;
+    GeometryActor wall4;
+    GeometryActor wall5;
     GeometryActor tile0;
 
     DecalActor albert;
@@ -44,7 +46,6 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onRoomPreLoad(Context context) {
-        Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/heavy_door.json", Mesh.class);
@@ -52,6 +53,7 @@ public class InterrogationLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_left.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/interrogation_texture_top.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/heavy_door.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/albert.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/enemies.png", Texture.class);
@@ -64,7 +66,6 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
-        Mesh boxMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
         Mesh doorMesh = Game.getInstance().getResources().get("res/models/heavy_door.json", Mesh.class);
@@ -72,6 +73,7 @@ public class InterrogationLocation extends LocationActivity {
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/interrogation_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_left.png", Texture.class);
+        Texture wallTopTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_top.png", Texture.class);
         Texture doorTex = Game.getInstance().getResources().get("res/textures/heavy_door.png", Texture.class);
         Texture albertTex = Game.getInstance().getResources().get("res/textures/albert.png", Texture.class);
         Texture enemiesTex = Game.getInstance().getResources().get("res/textures/enemies.png", Texture.class);
@@ -82,16 +84,15 @@ public class InterrogationLocation extends LocationActivity {
         tileTex.setWrapV(TextureWrap.Repeat);
 
         // create materials
-        WireframeMaterial boxMat = new WireframeMaterial();
         TexturedMaterial tileMat = new TexturedMaterial(tileTex);
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
+        TexturedMaterial wallTopMat = new TexturedMaterial(wallTopTex);
         TexturedMaterial doorMat = new TexturedMaterial(doorTex);
         TexturedMaterial windowMat = new TexturedMaterial(windowTex);
         TexturedMaterial tableMat = new TexturedMaterial(doorTex);
         DecalMaterial albertMat = new DecalMaterial(albertTex, depth);
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
 
-        box = new GeometryActor(boxMesh, boxMat);
         albert = new DecalActor(albertMat);
         albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f);
         enemies = new DecalActor(enemiesMat);
@@ -104,15 +105,25 @@ public class InterrogationLocation extends LocationActivity {
         wall = new GeometryActor(wallMesh, wallMat);
         wall1 = new GeometryActor(wallMesh, wallMat);
         wall1.model.translate(4, 0, -2).rotateY(180*3.1415f/180);
+        wall2 = new GeometryActor(wallMesh, wallTopMat);
+        wall2.model.translate(0, 2, 0);
+        wall3 = new GeometryActor(wallMesh, wallTopMat);
+        wall3.model.translate(0, 2, -2).rotateY(-90*3.1415f/180);
+        wall4 = new GeometryActor(wallMesh, wallTopMat);
+        wall4.model.translate(2, 2, -2).rotateY(-90*3.1415f/180);
+        wall5 = new GeometryActor(wallMesh, wallTopMat);
+        wall5.model.translate(4, 2, -2).rotateY(180*3.1415f/180);
         tile0 = new GeometryActor(tileMesh, tileMat);
     }
 
     @Override
     public void onEntered(Context context) {
-        //addGeometry(box);
-
         addGeometry(wall);
         addGeometry(wall1);
+        addGeometry(wall2);
+        addGeometry(wall3);
+        addGeometry(wall4);
+        addGeometry(wall5);
         addGeometry(tile0);
         addGeometry(door);
         addGeometry(window);
@@ -127,14 +138,12 @@ public class InterrogationLocation extends LocationActivity {
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0.125f);
-        cam.position.set(cam.position.x, 1.5f, 3f);
+        cam.position.set(cam.position.x, 1.5f, 2.5f);
+        cam.tiltX = 0.1f;
 
         // test ray picker
-        box.model.identity().translate(0, 1f, -1.25f).scale(0.1f, 0.35f, 0.35f);
-        addPickerBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 16);
-
-        box.model.identity().translate(0, 1f, -0.5f).scale(0.1f, 0.35f, 0.25f);
-        addPickerBox(box.model.getTranslation(new Vector3f()), box.model.getScale(new Vector3f()), 32);
+        addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
+        addPickerBox(new Vector3f(0, 1f, -0.5f), new Vector3f(0.1f, 0.35f, 0.25f), 32);
     }
 
     private float time = 0;

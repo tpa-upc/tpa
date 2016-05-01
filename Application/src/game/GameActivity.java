@@ -10,6 +10,9 @@ public enum GameActivity {
     /** Room location */
     Room(new RoomLocation()),
 
+    /** Club location */
+    Club(new ClubLocation()),
+
     /** Interrogation location */
     Interrogation(new InterrogationLocation()),
 
