@@ -50,7 +50,7 @@ public class ImageActivity extends Activity {
 
     @Override
     public void onBegin(Context context) {
-        context.audioRenderer.playSound(paper1);
+        context.audioRenderer.playSound(paper1, false);
 
         context.keyboard.setKeyboardListener(new KeyboardAdapter() {
             @Override
@@ -101,7 +101,7 @@ public class ImageActivity extends Activity {
 
     @Override
     public void onEnd(Context context) {
-        context.audioRenderer.playSound(paper0);
+        context.audioRenderer.playSound(paper0, false);
         Values.LOCATION_TRANSITION_ANIMATION = false;
     }
 }

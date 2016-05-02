@@ -24,7 +24,7 @@ public class IntroActivity extends Activity {
     String text = "";
     TaskManager tasks;
     Texture mono;
-    Sound type, typeLow, telf;
+    Sound type, typeLow;
     float alpha = 1;
 
     @Override
@@ -36,13 +36,11 @@ public class IntroActivity extends Activity {
         Game.getInstance().getResources().load("res/textures/mono.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/type_writer.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/type_writer_low.wav", Sound.class);
-        Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
     }
 
     @Override
     public void onPostLoad(Context context) {
         type = Game.getInstance().getResources().get("res/sfx/type_writer.wav", Sound.class);
-        telf = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
         typeLow = Game.getInstance().getResources().get("res/sfx/type_writer_low.wav", Sound.class);
         mono = Game.getInstance().getResources().get("res/textures/mono.png", Texture.class);
         mono.setMag(TextureFilter.Linear);
@@ -84,9 +82,9 @@ public class IntroActivity extends Activity {
                 public void onBegin() {
                     text += show.charAt(ind);
                     if (show.charAt(ind) != '\n')
-                        context.audioRenderer.playSound(type);
+                        context.audioRenderer.playSound(type, false);
                     else
-                        context.audioRenderer.playSound(typeLow);
+                        context.audioRenderer.playSound(typeLow, false);
                 }
 
                 @Override
@@ -119,7 +117,7 @@ public class IntroActivity extends Activity {
         tasks.add(new Task() {
             @Override
             public void onBegin() {
-                context.audioRenderer.playSound(typeLow);
+                context.audioRenderer.playSound(typeLow, false);
                 blink = false;
             }
 
@@ -147,10 +145,10 @@ public class IntroActivity extends Activity {
         });
 
         tasks.add(new DelayTask(2, context.time));
-        tasks.add(new Task() {
+        /*tasks.add(new Task() {
             @Override
             public void onBegin() {
-                context.audioRenderer.playSound(telf);
+                context.audioRenderer.playSound(telf, true);
             }
 
             @Override
@@ -158,7 +156,7 @@ public class IntroActivity extends Activity {
                 return true;
             }
         });
-        tasks.add(new DelayTask(2, context.time));
+        tasks.add(new DelayTask(2, context.time));*/
 
         tasks.add(new Task() {
             @Override

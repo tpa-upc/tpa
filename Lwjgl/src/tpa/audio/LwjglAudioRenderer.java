@@ -50,7 +50,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     }
 
     @Override
-    public void playSound(Sound sound) {
+    public void playSound(Sound sound, boolean loop) {
         Integer source = sources.get(sound);
         if (source == null || sound.isDirty()) {
             int buffer = source == null ? alGenBuffers() : buffers.get(sound);
@@ -87,6 +87,15 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         }
 
         alSourcePlay(source);
+        alSourcei(source, AL_LOOPING, loop?AL_TRUE:AL_FALSE);
+    }
+
+    @Override
+    public void stopSound(Sound sound) {
+        Integer source = sources.get(sound);
+        if (source != null) {
+            alSourceStop(source);
+        }
     }
 
     @Override

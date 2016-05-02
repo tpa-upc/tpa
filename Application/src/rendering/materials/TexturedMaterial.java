@@ -9,6 +9,7 @@ import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.Texture;
 import tpa.joml.Matrix4f;
+import tpa.joml.Vector3f;
 
 /**
  * Created by germangb on 13/04/16.
@@ -43,11 +44,12 @@ public class TexturedMaterial extends Material {
             "varying vec3 v_normal;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
+            "uniform vec3 u_tint;\n" +
             "\n" +
             "void main () {\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    \n" +
-            "    gl_FragData[0] = vec4(color, 1.0);\n" +
+            "    gl_FragData[0] = vec4(color*u_tint, 1.0);\n" +
             "    gl_FragData[1] = vec4(v_normal * 0.5 + 0.5, 1.0);\n" +
             "}";
 
@@ -57,12 +59,25 @@ public class TexturedMaterial extends Material {
     /** material texture */
     private Texture texture;
 
+    /** Tint */
+    private Vector3f tint = new Vector3f(1);
+
     /** Creates a Lambert material */
     public TexturedMaterial(Texture texture) {
         super(PROGRAM);
         this.texture = texture;
         state.culling = Culling.BackFace;
         state.depthTest = true;
+    }
+
+    /**
+     * Set material tint color
+     * @param r red
+     * @param g green
+     * @param b blue
+     */
+    public void setTint (float r, float g, float b) {
+        tint.set(r, g, b);
     }
 
     @Override
@@ -77,6 +92,7 @@ public class TexturedMaterial extends Material {
         program.setUniform("u_view", UniformType.Matrix4, camera.view);
         program.setUniform("u_model", UniformType.Matrix4, model);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
+        program.setUniform("u_tint", UniformType.Vector3, tint);
 
         // bind texture
         renderer.setTexture(0, texture);

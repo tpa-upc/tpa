@@ -5,46 +5,52 @@
     {
       /**asdasdasd*/
       "questions": [
-        {"text": "Smith.", "answer": 0}
+        {"text": "<ignore>", "answer": 1},
+        {"text": "Who's calling?", "answer": 0}
       ],
       "answers": [
-        {"text": "Here Thompson. We’ve got another case.;There has been a crime in Hyde Park.;Some children have found the body while going to school.;We don’t want this to be seen in media.", "data": null, "jump": 1}
+        {"text": "This is Thompson. We’ve got another case.;There has been a crime in Hyde Park.;Some children have found the body while going to school.;We don’t want this to be seen in media.", "data": null, "jump": 1},
+        {"text": "Beeep... Beeep... Beeep...", "data": "ignore", "jump": -1}
       ]
     },
 
     {
       "questions": [
-        {"text": "Okay, should I go to there or...?", "answer": 0}
+        {"preview": "I don't care", "text": "What the hell do I care?;Anyway;Shall we meet there?"},
+        {"preview": "Okay", "text": "Okay, should I go to there or...?", "answer": 0}
       ],
       "answers": [
-        {"text": "Why do you keep asking this? You know you're not allowed...", "data": null, "jump": 2}
+        {"text": "EEErrr... no;You are not allowed...;It's not my decision, don't get mad at me!;Please don't hate me", "data": null, "jump": 2},
+        {"text": "Why do you keep asking this?;You know you're not allowed...", "data": null, "jump": 2}
       ]
     },
 
     {
       "questions": [
-        {"preview": "sure", "text": "Sure. But you always need me. Tell me something about the crime scene, then.", "answer": 0}
+        {"preview": "Get lost", "text": "Well in that case, I'm not interested...;Not unless I know something...", "answer": 0},
+        {"preview": "Yea... Sure", "text": "Sure... But you always need me.;Tell me something about the crime scene at least.", "answer": 0}
       ],
       "answers": [
-        {"text": "Jess Brown. Female, 30 years old. Approximate time of death: 6 am. Possible cause of death: asphyxiation, but she has signs of violence in her arms.", "data": null, "jump": 3}
+        {"text": "Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3}
       ]
     },
 
     {
       "questions": [
-        {"text": "If she shows signs of violence in her arms, it does not seem that she has killed herself."}
+        {"preview": "Wow!", "text": "Wow!, That's messed up.;Doesn't look like a suicide though...", "answer": 0},
+        {"preview": "Signs of violence?", "text": "If she shows signs of violence in her arms; it does not seem that she has killed herself."}
       ],
       "answers": [
-        {"text": "Well... Yet to determine if it was a murder or suicide, okay? Also, there is a baby buggy nearby, but no child.", "data": null, "jump": 4}
+        {"text": "Well... Yet to determine if it was a murder or suicide;mkay?;Also, there is a baby buggy nearby, but no child.", "data": null, "jump": 4}
       ]
     },
 
     {
       "questions": [
-        {"text": "A buggy with no baby… we may have two victims after all. What a tragedy! I’ve never liked kids. Thanks Thompson, a pleasure as always...", "answer": 0}
+        {"preview": "What?", "text": "We may have two victims after all.;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 0}
       ],
       "answers": [
-        {"text": "Shut up Mel, and do your work. And check your emails.", "data": "finish", "jump": -1}
+        {"text": "Shut up Mel, and do your work.;By the way, check your email;I'm sending you something...", "data": "finish", "jump": -1}
       ]
     }
   ]

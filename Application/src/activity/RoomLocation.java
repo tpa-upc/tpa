@@ -6,6 +6,7 @@ import rendering.*;
 import rendering.materials.*;
 import rendering.utils.CameraController;
 import tpa.application.Context;
+import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
@@ -32,6 +33,7 @@ public class RoomLocation extends LocationActivity {
     DecalActor poster;
     DecalActor poster1;
 
+    GeometryActor telf;
     GeometryActor wall;
     GeometryActor wall1;
     GeometryActor pc;
@@ -40,8 +42,21 @@ public class RoomLocation extends LocationActivity {
     GeometryActor table;
     GeometryActor chair;
 
+    Sound telfSound;
+    Context context;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    boolean phoneRing = true;
+    boolean emailReceived = false;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public void onRoomPreLoad(Context context) {
+        this.context = context;
+        Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
+        Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
@@ -57,17 +72,21 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/notes.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/poster.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/poster1.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/telephone.png", Texture.class);
 
         cam = new CameraController(camera);
     }
 
     @Override
     public void onRoomPostLoad(Context context) {
+        telfSound = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
+        Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
         Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
         Mesh pcMesh = Game.getInstance().getResources().get("res/models/pc.json", Mesh.class);
+        Texture telfTex = Game.getInstance().getResources().get("res/textures/telephone.png", Texture.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/room_texture.png", Texture.class);
         Texture doorTex = Game.getInstance().getResources().get("res/textures/door0.png", Texture.class);
         Texture door1Tex = Game.getInstance().getResources().get("res/textures/door1.png", Texture.class);
@@ -84,6 +103,7 @@ public class RoomLocation extends LocationActivity {
         tileTex.setWrapV(TextureWrap.Repeat);
 
         // create materials
+        TexturedMaterial telfMat = new TexturedMaterial(telfTex);
         TexturedMaterial tileMat = new TexturedMaterial(tileTex);
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
         TexturedMaterial tableMat = new TexturedMaterial(tableTex);
@@ -94,6 +114,9 @@ public class RoomLocation extends LocationActivity {
         DecalMaterial notesMat = new DecalMaterial(notesTex, depth);
         DecalMaterial posterMat = new DecalMaterial(posterTex, depth);
         DecalMaterial poster1Mat = new DecalMaterial(poster1Tex, depth);
+
+        telf = new GeometryActor(telfModel, telfMat);
+        telf.model.translate(2.25f, 1.0f, -2f);
 
         door0 = new DecalActor(doorMat);
         door0.model.translate(1, 0, -1f).rotateY(56*3.14f/180).scale(0.85f, 0.1f, 0.85f);
@@ -135,6 +158,7 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        addGeometry(telf);
         addGeometry(table);
         addGeometry(chair);
         addGeometry(pc);
@@ -145,20 +169,22 @@ public class RoomLocation extends LocationActivity {
         addDecal(door0);
         addDecal(door1);
         addDecal(door2);
-        addDecal(notes0);
-        addDecal(notes1);
-        addDecal(notes2);
-        addDecal(notes3);
+
+        //addDecal(notes0);
+        //addDecal(notes1);
+        //addDecal(notes2);
+        //addDecal(notes3);
         addDecal(notes4);
+
         addDecal(poster);
         addDecal(poster1);
 
         // add picks
-        addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
-        addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
+        if (phoneRing) addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.1f), "telf");
+        if (emailReceived) addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
 
-        if (var)
-            addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
+        //addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
+        //addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -169,10 +195,21 @@ public class RoomLocation extends LocationActivity {
         cam.position.z = 2.5f;
         cam.position.x = 2.5f;
         cam.tiltX = 0.1f;
+
+        if (phoneRing) {
+            context.audioRenderer.playSound(telfSound, true);
+        }
     }
 
     @Override
     public void onTick(Context context) {
+        if (phoneRing) {
+            TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
+            if ((int) (context.time.getTime() / 0.5f) % 2 == 0)
+                telfMat.setTint(1, 0.68f, 0.68f);
+            else telfMat.setTint(1, 1, 1);
+        }
+
         cam.update();
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_RIGHT)) {
             cam.position.x += context.time.getFrameTime()*2;
@@ -184,7 +221,7 @@ public class RoomLocation extends LocationActivity {
 
         if (cam.position.x < 2.5f) cam.position.x = 2.5f;
     }
-boolean var = false;
+
     @Override
     public void onSelected(Object data) {
         if (data.equals("notes")) {
@@ -192,13 +229,12 @@ boolean var = false;
         } else if (data.equals("door")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
-        } else if (data.equals("pc")) {
-            Game.getInstance().pushActivity(GameActivity.Dialog, new ActivityListener() {
-                @Override
-                public void onResult(Activity act, Object data) {
-                    if (data.equals("finish")) {
-                        var = true;
-                    }
+        } else if (data.equals("telf")) {
+            context.audioRenderer.stopSound(telfSound);
+            Game.getInstance().pushActivity(GameActivity.Dialog, (act, data1) -> {
+                if (data1.equals("finish")) {
+                    phoneRing = false;
+                    emailReceived = true;
                 }
             });
         }
