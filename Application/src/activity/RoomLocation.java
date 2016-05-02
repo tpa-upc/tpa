@@ -156,7 +156,9 @@ public class RoomLocation extends LocationActivity {
         // add picks
         addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
         addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
-        addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
+
+        if (var)
+            addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -182,7 +184,7 @@ public class RoomLocation extends LocationActivity {
 
         if (cam.position.x < 2.5f) cam.position.x = 2.5f;
     }
-
+boolean var = false;
     @Override
     public void onSelected(Object data) {
         if (data.equals("notes")) {
@@ -191,7 +193,14 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
         } else if (data.equals("pc")) {
-            Game.getInstance().pushActivity(GameActivity.Dialog);
+            Game.getInstance().pushActivity(GameActivity.Dialog, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object data) {
+                    if (data.equals("finish")) {
+                        var = true;
+                    }
+                }
+            });
         }
     }
 
