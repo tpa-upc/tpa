@@ -69,6 +69,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
 
     // fbo handles
     private Map<Framebuffer, Integer> fbos = new HashMap<>();
+    private Framebuffer defaultFbo = null;
 
     public LwjglRenderer() {
         caps = GL.createCapabilities();
@@ -350,6 +351,11 @@ public class LwjglRenderer implements Renderer, Destroyable {
         usedId = handle;
     }
 
+    @Override
+    public void setDefaultFramebuffer(Framebuffer fbo) {
+        this.defaultFbo = fbo;
+    }
+
     private static IntBuffer drawBuffers = ByteBuffer.allocateDirect(32<<2)
             .order(ByteOrder.nativeOrder())
             .asIntBuffer();
@@ -365,9 +371,15 @@ public class LwjglRenderer implements Renderer, Destroyable {
         }
 
         if (fbo == null) {
-            if (ext) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-            else glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            return;
+            if (defaultFbo == null) {
+                if (ext) glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+                else glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                return;
+            } else {
+                //TODO: ugh!
+                setFramebuffer(defaultFbo);
+                return;
+            }
         }
 
         Integer handle = fbos.get(fbo);

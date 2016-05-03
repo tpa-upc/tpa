@@ -2,21 +2,38 @@ package test;
 
 import game.Game;
 import game.GameActivity;
+import rendering.materials.GrainMaterial;
 import resources.ResourceManager;
 import tpa.application.Application;
 import tpa.application.Context;
+import tpa.graphics.geometry.Mesh;
+import tpa.graphics.texture.Framebuffer;
+import tpa.graphics.texture.TextureFormat;
 
 /**
  * Created by germangb on 12/04/16.
  */
 public class GameTest implements Application {
 
-    private boolean loaded = false;
+    boolean loaded = false;
+
+    // grain effect
+    Mesh quad;
+    Framebuffer fbo;
+    GrainMaterial mat;
 
     @Override
     public void onInit(Context context) {
         // set context
         Game.getInstance().setContext(context);
+
+        // load quad
+        Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
+
+        // create default Framebuffer & shader
+        fbo = new Framebuffer(context.window.getWidth(), context.window.getHeight(), new TextureFormat[]{TextureFormat.Rgb}, true);
+        context.renderer.setDefaultFramebuffer(fbo);
+        mat = new GrainMaterial(fbo.getTargets()[0], context.time);
 
         // load activities
         for (GameActivity act : GameActivity.values())
@@ -44,6 +61,10 @@ public class GameTest implements Application {
         if (res.isFinishedLoading()) {
             if (!loaded) {
                 loaded = true;
+
+                // grab quad
+                quad = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
+
                 for (GameActivity act : GameActivity.values())
                     act.getActivity().onPostLoad(context);
 
@@ -53,7 +74,13 @@ public class GameTest implements Application {
             }
 
             context.renderer.beginFrame();
+            context.renderer.setDefaultFramebuffer(fbo);
+            context.renderer.setFramebuffer(null);
             Game.getInstance().onUpdate(context);
+            context.renderer.setDefaultFramebuffer(null);
+            context.renderer.setFramebuffer(null);
+            context.renderer.setViewport(0, 0, context.window.getWidth(), context.window.getHeight());
+            mat.render(context.renderer, null, quad, null);
             context.renderer.endFrame();
         } else {
             // load resources

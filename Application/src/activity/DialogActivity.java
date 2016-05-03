@@ -8,6 +8,7 @@ import game.Game;
 import game.Values;
 import rendering.SpriteBatch;
 import tpa.application.Context;
+import tpa.audio.Sound;
 import tpa.graphics.texture.Texture;
 import tpa.input.keyboard.KeyboardAdapter;
 import tpa.input.keyboard.KeyboardInput;
@@ -48,6 +49,7 @@ public class DialogActivity extends Activity {
     private int state = 0;
     private int selected = 0;
     private String[] lines;
+    private Sound click;
 
     public DialogActivity (String file) {
         this.file = file;
@@ -61,6 +63,7 @@ public class DialogActivity extends Activity {
         Game.getInstance().getResources().load(file, Dialog.class);
         Game.getInstance().getResources().load("res/textures/ubuntu24.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
+        Game.getInstance().getResources().load("res/sfx/click.wav", Sound.class);
         tasks = new TaskManager();
     }
 
@@ -69,6 +72,7 @@ public class DialogActivity extends Activity {
         dialog = Game.getInstance().getResources().get(file, Dialog.class);
         font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
         pixel = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
+        click = Game.getInstance().getResources().get("res/sfx/click.wav", Sound.class);
 
         node = dialog.dialog[0];
         state = 0;
@@ -80,13 +84,13 @@ public class DialogActivity extends Activity {
         context.keyboard.setKeyboardListener(new KeyboardAdapter() {
             @Override
             public void onKeyDown(int key) {
-                if (key == KeyboardInput.KEY_ESCAPE) Game.getInstance().popActivity();
-                if (state == 0) {
+                //if (key == KeyboardInput.KEY_ESCAPE) Game.getInstance().popActivity();
+                /*if (state == 0) {
                     int id = key - KeyboardInput.KEY_1;
                     if (id >= 0 && id < node.questions.length) {
                         onSelectQuestion(id);
                     }
-                }
+                }*/
             }
         });
         context.mouse.setMouseListener(new MouseAdapter() {
@@ -95,6 +99,7 @@ public class DialogActivity extends Activity {
                 if (state == 0) {
                     int id = selected;
                     if (id >= 0 && id < node.questions.length) {
+                        context.audioRenderer.playSound(click, false);
                         onSelectQuestion(id);
                     }
                 }
@@ -121,8 +126,8 @@ public class DialogActivity extends Activity {
         batch.begin();
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
 
-        batch.setColor(0, 0, 0, 1/60f * 0.35f);
-        batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
+        //batch.setColor(0, 0, 0, 1/60f * 0.35f);
+        //batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
 
         batch.setColor(0, 0, 0, 1);
         batch.add(pixel, 0, h-64, w, 64, 0, 0, 1, 1);
@@ -158,7 +163,7 @@ public class DialogActivity extends Activity {
     }
 
     private void onSelectQuestion (int id) {
-        System.out.println("asdasdasd "+id);
+        //System.out.println("asdasdasd "+id);
         state = 1;
         selected = 0;
 
@@ -168,6 +173,8 @@ public class DialogActivity extends Activity {
         Dialog.Question que = node.questions[id];
         lines = que.text.split(";");
         text = "";
+
+        if (que.data != null) report(que.data);
 
         tasks.add(new DelayTask(0.25f, context.time));
         for (int i = 0; i < lines.length; ++i) {
@@ -265,6 +272,11 @@ public class DialogActivity extends Activity {
                     if (ansf.jump >= 0) {
                         state = 0;
                         node = dialog.dialog[ansf.jump];
+
+                        if (node.questions.length == 1) {
+                            // go straight to the text
+                            onSelectQuestion(0);
+                        }
                     } else Game.getInstance().popActivity();
                 }
 

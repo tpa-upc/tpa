@@ -210,7 +210,7 @@ public class RoomLocation extends LocationActivity {
         }
 
         //addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
-        //addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
+        addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
         //addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
 
         // set camera
@@ -258,14 +258,15 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
         } else if (data.equals("telf")) {
-            context.audioRenderer.stopSound(telfSound);
             Game.getInstance().pushActivity(GameActivity.Dialog, (act, data1) -> {
                 if (data1.equals("finish")) {
                     phoneRing = false;
                     emailReceived = true;
                 } else if (data1.equals("ignore")) {
-                    System.out.println("asdasd");
                     phoneRing = true;
+                    context.audioRenderer.stopSound(telfSound);
+                } else if (data1.equals("pickup")) {
+                    context.audioRenderer.stopSound(telfSound);
                 }
             });
         }

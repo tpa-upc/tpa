@@ -104,6 +104,12 @@ public interface Renderer {
     void setShaderProgram (ShaderProgram program);
 
     /**
+     * Set the default framebuffer
+     * @param fbo
+     */
+    void setDefaultFramebuffer(Framebuffer fbo);
+
+    /**
      * Set framebuffer
      * @param fbo framebuffer, null to go to default framebuffer
      */

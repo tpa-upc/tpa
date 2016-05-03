@@ -5,32 +5,31 @@
     {
       /**asdasdasd*/
       "questions": [
-        {"preview": "Ignore", "text": "I'm not picking it up...", "answer": -1},
-        {"preview": "Answer the phone", "text": "Who's calling?", "answer": 0}
+        {"preview": "Ignore", "text": "I'm not picking it up...", "data": "ignore", "answer": -1},
+        {"preview": "Answer the phone", "text": "Who's calling?", "data": "pickup", "answer": 0}
       ],
       "answers": [
-        {"text": "This is Thompson. We’ve got another case.;There has been a crime in Hyde Park.;Some children have found the body while going to school.;Poor creatures... You should've seen their faces;We don’t want this to be seen in the media.", "data": null, "jump": 1}
+        {"text": "Hey, Mel!;This is Thompson.;We've got another case.;There has been a murder in Hyde Park.;Some children have found the body;They were on their way to school;Poor creatures...their faces...;Let's not get the media involved, OK?.", "data": null, "jump": 1}
       ]
     },
 
     {
       "questions": [
-        {"preview": "Say you don't care", "text": "What the hell do I care?;Anyway;Shall we meet there?"},
-        {"preview": "Accept the case", "text": "Okay, should I go to there or...?", "answer": 0}
+        {"preview": "Say you don't care", "text": "What the hell do I care?;Anyways...;Shall we meet there?", "answer": 0},
+        {"preview": "Accept the case", "text": "I understand.;...;Should I go to there or...?", "answer": 0}
       ],
       "answers": [
-        {"text": "EEErrr... no;You are not allowed...;It's not my decision though, so you can't get mad at me", "data": null, "jump": 2},
-        {"text": "Why do you keep asking this?;You know you're not allowed...", "data": null, "jump": 2}
+        {"text": "EEErrr... no?;You know you are not allowed;Not with your record...;It's not my decision though, so you can't get mad at me", "data": null, "jump": 2}
       ]
     },
 
     {
       "questions": [
-        {"preview": "Tell Thompson to get lost", "text": "I'm not interested;Bye :)", "answer": 1},
+        {"preview": "Tell Thompson to get lost", "text": "Then I guess I'm not interested;Bye :)", "answer": 1},
         {"preview": "Ask for more information", "text": "Sure... But you always need me.;Tell me something about the crime scene at least.", "answer": 0}
       ],
       "answers": [
-        {"text": "Ok, ok...;Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;No.. Wait...;My watch is not working;...;DAMN IT! The wife just gave it to me!;Anyway, I'm getting sidetracked. Back to the matter;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3},
+        {"text": "Ok, ok...;Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;No.. Wait...;My watch is not working;...;DAMN IT! The wife just gave it to me!;Anyways, I'm getting sidetracked. Back to the matter;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3},
         {"text": "DON'T YOU DARE HANGING UP ON ME...", "jump": -1}
       ]
     },
@@ -47,11 +46,9 @@
 
     {
       "questions": [
-        {"preview": "Ask thompson for clarification", "text": "Sorry I didn't get that last part;Could you repeat that, please?", "answer": 0},
-        {"preview": "Act interested", "text": "Very interesting;Very interesting indeed...;...;...;...;dot dot dot;...;anyway;We may have two victims after all!;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 1}
+        {"text": "Very interesting;Very interesting indeed...;...;Anyways;We may have two victims after all!;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 0}
       ],
       "answers": [
-        {"text": "Shut up Mel, and do your work.;By the way, check your email;I'm sending you something...", "data": "finish", "jump": -1},
         {"text": "Shut up Mel;Don't try to sound smart;Know your place;Before I go, check your inbox. I'm sending you something", "data": "finish", "jump": -1}
       ]
     }

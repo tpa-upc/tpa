@@ -16,6 +16,7 @@ public class Dialog {
     public class Question {
         public String preview;
         public String text;
+        public Object data;
         public int answer;
     }
 

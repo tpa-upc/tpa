@@ -116,7 +116,7 @@ public class SimpleResourceManager implements ResourceManager {
 
     @Override
     public void update() {
-        if (queued.isEmpty() || System.currentTimeMillis() - last < 250)
+        if (queued.isEmpty() || System.currentTimeMillis() - last < -250)
             return;
 
         last = System.currentTimeMillis();
