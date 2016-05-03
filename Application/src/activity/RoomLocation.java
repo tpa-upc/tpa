@@ -60,7 +60,7 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onRoomPreLoad(Context context) {
         this.context = context;
-        Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
@@ -84,7 +84,7 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
-        telfSound = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
+        telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
@@ -189,7 +189,7 @@ public class RoomLocation extends LocationActivity {
         // add picks
         if (phoneRing) {
             phoneRing = false;
-            tasks.add(new DelayTask(4, context.time));
+            tasks.add(new DelayTask(5, context.time));
             System.out.println("RINGING-END "+tasks.remaining());
             tasks.add(new Task() {
                 @Override
@@ -229,11 +229,13 @@ public class RoomLocation extends LocationActivity {
         tasks.update();
         //System.out.println(tasks.remaining()+" remm");
 
+        TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
         if (phoneRing) {
-            TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
             if ((int) (context.time.getTime() / 0.5f) % 2 == 0)
                 telfMat.setTint(1, 0.68f, 0.68f);
             else telfMat.setTint(1, 1, 1);
+        } else {
+            telfMat.setTint(1, 1, 1);
         }
 
         cam.update();

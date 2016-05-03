@@ -5,19 +5,18 @@
     {
       /**asdasdasd*/
       "questions": [
-        {"text": "<ignore>", "answer": 1},
-        {"text": "Who's calling?", "answer": 0}
+        {"preview": "Ignore", "text": "I'm not picking it up...", "answer": -1},
+        {"preview": "Answer the phone", "text": "Who's calling?", "answer": 0}
       ],
       "answers": [
-        {"text": "This is Thompson. We’ve got another case.;There has been a crime in Hyde Park.;Some children have found the body while going to school.;We don’t want this to be seen in media.", "data": null, "jump": 1},
-        {"text": "Beeep... Beeep... Beeep...", "data": "ignore", "jump": -1}
+        {"text": "This is Thompson. We’ve got another case.;There has been a crime in Hyde Park.;Some children have found the body while going to school.;Poor creatures... You should've seen their faces;We don’t want this to be seen in the media.", "data": null, "jump": 1}
       ]
     },
 
     {
       "questions": [
-        {"preview": "I don't care", "text": "What the hell do I care?;Anyway;Shall we meet there?"},
-        {"preview": "Okay", "text": "Okay, should I go to there or...?", "answer": 0}
+        {"preview": "Say you don't care", "text": "What the hell do I care?;Anyway;Shall we meet there?"},
+        {"preview": "Accept the case", "text": "Okay, should I go to there or...?", "answer": 0}
       ],
       "answers": [
         {"text": "EEErrr... no;You are not allowed...;It's not my decision, don't get mad at me!;Please don't hate me", "data": null, "jump": 2},
@@ -27,31 +26,33 @@
 
     {
       "questions": [
-        {"preview": "Get lost", "text": "Well in that case, I'm not interested...;Not unless I know something...", "answer": 0},
-        {"preview": "Yea... Sure", "text": "Sure... But you always need me.;Tell me something about the crime scene at least.", "answer": 0}
+        {"preview": "Tell Thompson to get lost", "text": "I'm not interested;Bye :)", "answer": 1},
+        {"preview": "Ask for more information", "text": "Sure... But you always need me.;Tell me something about the crime scene at least.", "answer": 0}
       ],
       "answers": [
-        {"text": "Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3}
+        {"text": "Ok, ok...;Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;No.. Wait...;My watch is not working;...;DAMN IT! The wife just gave it to me!;Anyway, I'm getting sidetracked. Back to the matter;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3},
+        {"text": "DON'T YOU DARE HANGING UP ON ME...", "jump": -1}
       ]
     },
 
     {
       "questions": [
-        {"preview": "Wow!", "text": "Wow!, That's messed up.;Doesn't look like a suicide though...", "answer": 0},
-        {"preview": "Signs of violence?", "text": "If she shows signs of violence in her arms; it does not seem that she has killed herself."}
+        {"preview": "Act impressed", "text": "Wow!, That's messed up.;Doesn't look like a suicide though...", "answer": 0},
+        {"preview": "Act logical", "text": "If she shows signs of violence in her arms; it does not seem that she has killed herself."}
       ],
       "answers": [
-        {"text": "Well... Yet to determine if it was a murder or suicide;mkay?;Also, there is a baby buggy nearby, but no child.", "data": null, "jump": 4}
+        {"text": "Well... Yet to determine if it was a murder or suicide;Also, there was a buggy nearby, but no child;We presume it belongs to the victim", "data": null, "jump": 4}
       ]
     },
 
     {
       "questions": [
-        {"preview": "Can you repeat?", "text": "Sorry I didn't get that last part;Could you repeat that, please?", "answer": 0},
-        {"preview": "Interesting...", "text": "Very interesting;Very interesting indeed...;...;...;...;dot dot dot;...;anyway;We may have two victims after all!;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 0}
+        {"preview": "Ask thompson for clarification", "text": "Sorry I didn't get that last part;Could you repeat that, please?", "answer": 0},
+        {"preview": "Act interested", "text": "Very interesting;Very interesting indeed...;...;...;...;dot dot dot;...;anyway;We may have two victims after all!;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 1}
       ],
       "answers": [
-        {"text": "Shut up Mel, and do your work.;By the way, check your email;I'm sending you something...", "data": "finish", "jump": -1}
+        {"text": "Shut up Mel, and do your work.;By the way, check your email;I'm sending you something...", "data": "finish", "jump": -1},
+        {"text": "Shut up Mel;Don't try to sound smart;Know your place;Before I go, check your inbox. I'm sending you something", "data": "finish", "jump": -1}
       ]
     }
   ]

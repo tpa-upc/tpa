@@ -51,8 +51,7 @@ public class CompositeMaterial extends Material {
             "}\n" +
             "\n" +
             "void main () {\n" +
-            "    float rand0 = texture2D(u_random, v_uv*vec2(640, 480)/4/vec2(64)).r;\n" +
-            "    float rand1 = 0;//texture2D(u_random, -v_uv*vec2(640, 480)/4/vec2(64)).r * 0.125;\n" +
+            "    float rand0 = texture2D(u_random, v_uv*vec2(720, 480)/4/vec2(64)).r;\n" +
             "    \n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    vec3 normal = texture2D(u_normal, v_uv).rgb * 2.0 - 1.0;\n" +
@@ -60,7 +59,7 @@ public class CompositeMaterial extends Material {
             "    float diff = clamp(dot(normal, normalize(vec3(-1, 3, 2))), 0.0, 1.0);\n" +
             "    diff = mix(0.5, 1.0, diff);\n" +
             "    \n" +
-            "    vec3 final_color = mix(color, color*0.85, rand0 + rand1);\n" +
+            "    vec3 final_color = mix(color, color*0.85, rand0);\n" +
             "    float vignet = smoothstep(1.5, 0.25, length(v_uv*2-1));\n" +
             "    \n" +
             "    float bars = smoothstep(0.7+0.01, 0.7, abs(v_uv.y*2-1));\n" +

@@ -149,10 +149,8 @@ public class DialogActivity extends Activity {
 
             //batch.add(pixel, 0, h-42, 12*text.length()+8, 42, 0, 0, 1, 1);
 
-            if (state == 2) batch.setColor(0, 0, 0, 1);
+            if (state == 2) batch.setColor(1, 0, 1, 1);
             else batch.setColor(1, 1, 1, 1);
-
-            batch.setColor(1, 1, 1, 1);
 
             batch.addText(font, 16, h - 46, text, 12);
         }
@@ -164,7 +162,9 @@ public class DialogActivity extends Activity {
         state = 1;
         selected = 0;
 
-        Dialog.Answer ans = node.answers[node.questions[id].answer];
+        int ansId = node.questions[id].answer;
+        Dialog.Answer ans = null;
+        if (ansId >= 0) ans = node.answers[ansId];
         Dialog.Question que = node.questions[id];
         lines = que.text.split(";");
         text = "";
@@ -203,28 +203,51 @@ public class DialogActivity extends Activity {
         }
 
         tasks.add(new DelayTask(1, context.time));
-        tasks.add(new Task() {
-            @Override
-            public void onBegin() {
-                text = "";
-                state = 2;
+
+        if (ans != null) {
+            tasks.add(new Task() {
+                @Override
+                public void onBegin() {
+                    text = "";
+                    state = 2;
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    return true;
+                }
+            });
+            lines = ans.text.split(";");
+
+            for (int i = 0; i < lines.length; ++i) {
+                String str = lines[i];
+                for (int x = 0; x < str.length(); ++x) {
+                    String sub = str.substring(0, x + 1);
+                    tasks.add(new Task() {
+                        @Override
+                        public void onBegin() {
+                            text = sub;
+                        }
+
+                        @Override
+                        public boolean onUpdate() {
+                            return true;
+                        }
+                    });
+                    tasks.add(new DelayTask(0.025f, context.time));
+                }
+
+                tasks.add(new DelayTask(0.5f, context.time));
             }
 
-            @Override
-            public boolean onUpdate() {
-                return true;
-            }
-        });
-        lines = ans.text.split(";");
+            final Dialog.Answer ansf = ans;
 
-        for (int i = 0; i < lines.length; ++i) {
-            String str = lines[i];
-            for (int x = 0; x < str.length(); ++x) {
-                String sub = str.substring(0, x+1);
+            // report data
+            if (ans.data != null) {
                 tasks.add(new Task() {
                     @Override
                     public void onBegin() {
-                        text = sub;
+                        report(ansf.data);
                     }
 
                     @Override
@@ -232,18 +255,27 @@ public class DialogActivity extends Activity {
                         return true;
                     }
                 });
-                tasks.add(new DelayTask(0.025f, context.time));
             }
 
-            tasks.add(new DelayTask(0.5f, context.time));
-        }
-
-        // report data
-        if (ans.data != null) {
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
-                    report(ans.data);
+                    if (ansf.jump >= 0) {
+                        state = 0;
+                        node = dialog.dialog[ansf.jump];
+                    } else Game.getInstance().popActivity();
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    return true;
+                }
+            });
+        } else {
+            tasks.add(new Task() {
+                @Override
+                public void onBegin() {
+                    Game.getInstance().popActivity();
                 }
 
                 @Override
@@ -252,21 +284,6 @@ public class DialogActivity extends Activity {
                 }
             });
         }
-
-        tasks.add(new Task() {
-            @Override
-            public void onBegin() {
-                if (ans.jump >= 0) {
-                    state = 0;
-                    node = dialog.dialog[ans.jump];
-                } else Game.getInstance().popActivity();
-            }
-
-            @Override
-            public boolean onUpdate() {
-                return true;
-            }
-        });
     }
 
     @Override
