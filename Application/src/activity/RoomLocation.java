@@ -1,5 +1,8 @@
 package activity;
 
+import activity.tasks.DelayTask;
+import activity.tasks.Task;
+import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
 import rendering.*;
@@ -46,6 +49,8 @@ public class RoomLocation extends LocationActivity {
     Context context;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    TaskManager tasks = new TaskManager();
 
     boolean phoneRing = true;
     boolean emailReceived = false;
@@ -158,6 +163,8 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        //tasks.clear();
+
         addGeometry(telf);
         addGeometry(table);
         addGeometry(chair);
@@ -180,9 +187,29 @@ public class RoomLocation extends LocationActivity {
         addDecal(poster1);
 
         // add picks
-        if (phoneRing) addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.1f), "telf");
-        if (emailReceived) addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
+        if (phoneRing) {
+            phoneRing = false;
+            tasks.add(new DelayTask(4, context.time));
+            System.out.println("RINGING-END "+tasks.remaining());
+            tasks.add(new Task() {
+                @Override
+                public void onBegin() {
+                    System.out.println("enter!");
+                    addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.1f), "telf");
+                    context.audioRenderer.playSound(telfSound, true);
+                    phoneRing = true;
+                }
 
+                @Override
+                public boolean onUpdate() {
+                    System.out.println("update!!!!");
+                    return true;
+                }
+            });
+            System.out.println("RINGING-END "+tasks.remaining());
+        }
+
+        //addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
         //addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
         //addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
 
@@ -195,14 +222,13 @@ public class RoomLocation extends LocationActivity {
         cam.position.z = 2.5f;
         cam.position.x = 2.5f;
         cam.tiltX = 0.1f;
-
-        if (phoneRing) {
-            context.audioRenderer.playSound(telfSound, true);
-        }
     }
 
     @Override
     public void onTick(Context context) {
+        tasks.update();
+        //System.out.println(tasks.remaining()+" remm");
+
         if (phoneRing) {
             TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
             if ((int) (context.time.getTime() / 0.5f) % 2 == 0)
@@ -235,6 +261,9 @@ public class RoomLocation extends LocationActivity {
                 if (data1.equals("finish")) {
                     phoneRing = false;
                     emailReceived = true;
+                } else if (data1.equals("ignore")) {
+                    System.out.println("asdasd");
+                    phoneRing = true;
                 }
             });
         }

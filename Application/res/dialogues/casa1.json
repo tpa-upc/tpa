@@ -47,7 +47,8 @@
 
     {
       "questions": [
-        {"preview": "What?", "text": "We may have two victims after all.;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 0}
+        {"preview": "Can you repeat?", "text": "Sorry I didn't get that last part;Could you repeat that, please?", "answer": 0},
+        {"preview": "Interesting...", "text": "Very interesting;Very interesting indeed...;...;...;...;dot dot dot;...;anyway;We may have two victims after all!;What a tragedy! I’ve never liked kids anyway.;Thanks Thompson, a pleasure as always...", "answer": 0}
       ],
       "answers": [
         {"text": "Shut up Mel, and do your work.;By the way, check your email;I'm sending you something...", "data": "finish", "jump": -1}
