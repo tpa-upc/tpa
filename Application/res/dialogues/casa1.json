@@ -19,7 +19,7 @@
         {"preview": "Accept the case", "text": "Okay, should I go to there or...?", "answer": 0}
       ],
       "answers": [
-        {"text": "EEErrr... no;You are not allowed...;It's not my decision, don't get mad at me!;Please don't hate me", "data": null, "jump": 2},
+        {"text": "EEErrr... no;You are not allowed...;It's not my decision though, so you can't get mad at me", "data": null, "jump": 2},
         {"text": "Why do you keep asking this?;You know you're not allowed...", "data": null, "jump": 2}
       ]
     },

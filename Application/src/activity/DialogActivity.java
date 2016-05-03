@@ -172,6 +172,7 @@ public class DialogActivity extends Activity {
         tasks.add(new DelayTask(0.25f, context.time));
         for (int i = 0; i < lines.length; ++i) {
             String str = lines[i];
+            tasks.add(new DelayTask(0.5f, context.time));
             for (int x = 0; x < str.length(); ++x) {
                 String sub = str.substring(0, x+1);
                 tasks.add(new Task() {
@@ -221,6 +222,7 @@ public class DialogActivity extends Activity {
 
             for (int i = 0; i < lines.length; ++i) {
                 String str = lines[i];
+                tasks.add(new DelayTask(0.5f, context.time));
                 for (int x = 0; x < str.length(); ++x) {
                     String sub = str.substring(0, x + 1);
                     tasks.add(new Task() {
