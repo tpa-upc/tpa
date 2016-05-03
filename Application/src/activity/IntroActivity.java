@@ -180,7 +180,7 @@ public class IntroActivity extends Activity {
         context.renderer.setClearColor(0, 0, 0, 1);
         batch.begin();
         batch.setColor(alpha, alpha, alpha, alpha);
-        batch.addText(mono, 32, 256+64, text+(blink?'_':""), 24);
+        batch.addText(mono, 32, context.window.getHeight()-200, text+(blink?'_':""), 24);
         batch.end();
     }
 

@@ -9,6 +9,7 @@ import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Framebuffer;
 import tpa.graphics.texture.TextureFormat;
+import tpa.joml.Vector2f;
 
 /**
  * Created by germangb on 12/04/16.
@@ -31,9 +32,11 @@ public class GameTest implements Application {
         Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
 
         // create default Framebuffer & shader
-        fbo = new Framebuffer(context.window.getWidth(), context.window.getHeight(), new TextureFormat[]{TextureFormat.Rgb}, true);
+        int w = context.window.getWidth();
+        int h = context.window.getHeight();
+        fbo = new Framebuffer(w, h, new TextureFormat[]{TextureFormat.Rgb}, true);
         context.renderer.setDefaultFramebuffer(fbo);
-        mat = new GrainMaterial(fbo.getTargets()[0], context.time);
+        mat = new GrainMaterial(fbo.getTargets()[0], context.time, new Vector2f(w, h));
 
         // load activities
         for (GameActivity act : GameActivity.values())

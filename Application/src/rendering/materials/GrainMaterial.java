@@ -11,6 +11,7 @@ import tpa.graphics.texture.TextureFilter;
 import tpa.graphics.texture.TextureFormat;
 import tpa.graphics.texture.TextureWrap;
 import tpa.joml.Matrix4f;
+import tpa.joml.Vector2f;
 import tpa.timing.Time;
 
 import java.nio.ByteBuffer;
@@ -39,10 +40,11 @@ public class GrainMaterial extends Material {
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_random;\n" +
+            "uniform vec2 u_resolution;\n" +
             "\n" +
             "void main () {\n" +
-            "    float rand0 = texture2D(u_random, v_uv*vec2(720, 480)/4/vec2(64)).r*2-1;\n" +
-            "    float rand1 = texture2D(u_random, v_uv*vec2(720, 480)/8/vec2(64) + vec2(0.125671, 0.7235)).r*2-1;\n" +
+            "    float rand0 = texture2D(u_random, v_uv*u_resolution/4/vec2(64)).r*2-1;\n" +
+            "    float rand1 = texture2D(u_random, v_uv*u_resolution/8/vec2(64) + vec2(0.125671, 0.7235)).r*2-1;\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    color = mix(color + rand0*0.05, color*0.75, (rand0*0.5 + rand1*0.5)*0.5+0.5);\n" +
             "    gl_FragColor = vec4(pow(color, vec3(0.85)), 1.0);\n" +
@@ -53,9 +55,11 @@ public class GrainMaterial extends Material {
     private Texture diffuse;
     private Texture randTex;
     private Time time;
+    private Vector2f resolution;
 
-    public GrainMaterial(Texture diffuse, Time time) {
+    public GrainMaterial(Texture diffuse, Time time, Vector2f res) {
         super(PROGRAM);
+        this.resolution = res;
         this.time = time;
         this.diffuse = diffuse;
         randTex = new Texture(64, 64, TextureFormat.Red);
@@ -73,6 +77,7 @@ public class GrainMaterial extends Material {
         renderer.setShaderProgram(program);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
         program.setUniform("u_random", UniformType.Sampler2D, 1);
+        program.setUniform("u_resolution", UniformType.Vector2, resolution);
         renderer.setTexture(0, diffuse);
         renderer.setTexture(1, randTex);
         renderer.renderMesh(mesh);
