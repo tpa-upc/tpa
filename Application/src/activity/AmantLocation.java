@@ -20,7 +20,7 @@ import tpa.joml.Vector3f;
 public class AmantLocation extends LocationActivity {
 
     FpsInput fps;
-    Sound telf;
+    Sound telf, hang;
     GeometryActor cubo;
     GeometryActor person, smallPerson;
     DecalActor notas;
@@ -36,6 +36,7 @@ public class AmantLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/debug.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
     }
 
     @Override
@@ -46,6 +47,7 @@ public class AmantLocation extends LocationActivity {
         Texture notesTexture = Game.getInstance().getResources().get("res/textures/debug.png", Texture.class);
         Texture personTexture = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         telf = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
+        hang = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
 
         DecalMaterial decMat = new DecalMaterial(notesTexture, depth);
 
@@ -84,6 +86,8 @@ public class AmantLocation extends LocationActivity {
         addGeometry(smallPerson);
         addDecal(notas);
 
+        addPickerBox(new Vector3f(0, 0.6f, 0), new Vector3f(0.2f, 0.6f, 0.2f), "persona");
+
         if (dialogoOn) {
             addPickerBox(new Vector3f(0.35f, 1, -2), new Vector3f(0.25f), "caja!");
         }
@@ -99,6 +103,8 @@ public class AmantLocation extends LocationActivity {
         if (data.equals("caja!")) {
             context.audioRenderer.playSound(telf, false);
             Game.getInstance().pushActivity(GameActivity.Note0);
+        } else if (data.equals("persona")) {
+            context.audioRenderer.playSound(hang, false);
         }
     }
 

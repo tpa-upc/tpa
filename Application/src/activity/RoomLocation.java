@@ -45,8 +45,7 @@ public class RoomLocation extends LocationActivity {
     GeometryActor table;
     GeometryActor chair;
 
-    Sound telfSound;
-    Context context;
+    Sound telfSound, hangPhone;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,8 +58,8 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onRoomPreLoad(Context context) {
-        this.context = context;
-        Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
@@ -84,7 +83,9 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
-        telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
+        telfSound = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
+        hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
+
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
@@ -247,8 +248,12 @@ public class RoomLocation extends LocationActivity {
 
         //cam.position.x += (float) Math.sin(context.time.getTime()) * 0.001f;
 
-        if (cam.position.x < 2.5f) cam.position.x = 2.5f;
+        //if (cam.position.x < 2.5f) cam.position.x = 2.5f;
+
+        fps.update(context);
     }
+
+    FpsInput fps = new FpsInput(camera);
 
     @Override
     public void onSelected(Context context, Object data) {
@@ -262,11 +267,15 @@ public class RoomLocation extends LocationActivity {
                 if (data1.equals("finish")) {
                     phoneRing = false;
                     emailReceived = true;
+                    context.audioRenderer.playSound(hangPhone, false);
+                } else if (data1.equals("screw_you")) {
+                    context.audioRenderer.playSound(hangPhone, false);
                 } else if (data1.equals("ignore")) {
                     phoneRing = true;
-                    this.context.audioRenderer.stopSound(telfSound);
+                    context.audioRenderer.playSound(hangPhone, false);
+                    context.audioRenderer.stopSound(telfSound);
                 } else if (data1.equals("pickup")) {
-                    this.context.audioRenderer.stopSound(telfSound);
+                    context.audioRenderer.stopSound(telfSound);
                 }
             });
         }

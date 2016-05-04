@@ -30,7 +30,7 @@
       ],
       "answers": [
         {"text": "Ok, ok...;Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;No.. Wait...;My watch is not working;...;DAMN IT! The wife just gave it to me this morning!;Anyways, I'm getting sidetracked. Back to the matter;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3},
-        {"text": "DON'T YOU DARE HANGING UP ON ME...", "jump": -1}
+        {"text": "DON'T YOU DARE HANGING UP ON ME...", "data": "screw_you", "jump": -1}
       ]
     },
 
