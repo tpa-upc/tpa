@@ -75,7 +75,9 @@ public class SimpleResourceManager implements ResourceManager {
             }
         } else if (p.type == Mesh.class) {
             try {
+                System.out.println("Load mesh "+p.path);
                 Mesh mesh = ResourceUtils.loadMesh(p.path);
+                System.out.println("Load mesh "+p.path+" done!");
                 loaded.put(p.path, mesh);
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
