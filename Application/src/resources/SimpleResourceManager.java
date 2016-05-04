@@ -65,7 +65,9 @@ public class SimpleResourceManager implements ResourceManager {
         System.out.println(p.path+" "+p.type);
         if (p.type == Texture.class) {
             try {
+                System.out.println("load texture");
                 Texture tex = ResourceUtils.loadTexture(p.path);
+                System.out.println("load texture");
                 loaded.put(p.path, tex);
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
