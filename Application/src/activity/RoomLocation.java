@@ -193,7 +193,7 @@ public class RoomLocation extends LocationActivity {
             System.out.println("RINGING-END "+tasks.remaining());
             tasks.add(new DoSomethingTask(() -> {
                 System.out.println("enter!");
-                addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.1f), "telf");
+                addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
                 context.audioRenderer.playSound(telfSound, true);
                 phoneRing = true;
             }));
