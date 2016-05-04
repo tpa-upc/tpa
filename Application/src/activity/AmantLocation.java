@@ -30,7 +30,7 @@ public class AmantLocation extends LocationActivity {
 
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
-        Game.getInstance().getResources().load("res/textures/notes.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/debug.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
     }
 
@@ -38,7 +38,7 @@ public class AmantLocation extends LocationActivity {
     public void onRoomPostLoad(Context context) {
         Mesh cuboMEsh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Texture texture = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
-        Texture notesTexture = Game.getInstance().getResources().get("res/textures/notes.png", Texture.class);
+        Texture notesTexture = Game.getInstance().getResources().get("res/textures/debug.png", Texture.class);
         telf = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
 
         DecalMaterial decMat = new DecalMaterial(notesTexture, depth);
@@ -54,13 +54,13 @@ public class AmantLocation extends LocationActivity {
     @Override
     public void onEntered(Context context) {
         cubo.model.identity().translate(0, 0, 0);
-        notas.model.identity().translate(1, 0, -2).scale(1).rotateX(45*3.1415f/180);
+        notas.model.identity().translate(2, 0.4f, -1.75f).scale(1).rotateX(45*3.1415f/180).rotateY(10*3.1415f/180);
 
         addGeometry(cubo);
         addDecal(notas);
 
         if (dialogoOn) {
-            addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 0.5f, 0.5f), "caja!");
+            addPickerBox(new Vector3f(0.35f, 1, -2), new Vector3f(0.25f), "caja!");
         }
 
         camera.view.setLookAt(1, 1, 2, 1, 1, 0, 0, 1, 0);

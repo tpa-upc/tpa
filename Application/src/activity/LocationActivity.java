@@ -38,6 +38,9 @@ public abstract class LocationActivity extends Activity {
     /** Geometry visible on the scene */
     private List<GeometryActor> geometry = new ArrayList<>();
 
+    /** geometry that doesn't go into the depth pass */
+    private List<GeometryActor> debugGeometry = new ArrayList<>();
+
     /** Decals visible on the screen */
     private List<DecalActor> decals = new ArrayList<>();
 
@@ -123,7 +126,7 @@ public abstract class LocationActivity extends Activity {
         picker.addBox(pos, size, data);
         GeometryActor debug = new GeometryActor(box, wireframe);
         debug.model.translate(pos).scale(size);
-        addGeometry(debug);
+        debugGeometry.add(debug);
     }
 
     /**
@@ -140,9 +143,9 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addDecal (DecalActor actor) {
         this.decals.add(actor);
-        //GeometryActor debug = new GeometryActor(box, wireframe);
-        //debug.model.set(actor.model);
-        //addGeometry(debug);
+        GeometryActor debug = new GeometryActor(box, wireframe);
+        debug.model.set(actor.model);
+        debugGeometry.add(debug);
     }
 
     @Override
@@ -183,6 +186,7 @@ public abstract class LocationActivity extends Activity {
         geometry.clear();
         decals.clear();
         picker.clear();
+        debugGeometry.clear();
         context.mouse.setCursor(Cursor.Arrow);
         Values.LOCATION_TRANSITION_ANIMATION = true;
     }
@@ -236,6 +240,13 @@ public abstract class LocationActivity extends Activity {
         for (DecalActor decal : decals) {
             Material mat = decal.getMaterial();
             mat.render(context.renderer, camera, box, decal.model);
+        }
+
+        // render debug geometry
+        // render geometry
+        for (GeometryActor actor : debugGeometry) {
+            Material mat = actor.getMaterial();
+            mat.render(renderer, camera, actor.getMesh(), actor.model);
         }
 
         // window pass
