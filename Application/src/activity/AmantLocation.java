@@ -11,6 +11,7 @@ import tpa.application.Context;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
+import tpa.graphics.texture.TextureFilter;
 import tpa.joml.Vector3f;
 
 /**
@@ -21,6 +22,7 @@ public class AmantLocation extends LocationActivity {
     FpsInput fps;
     Sound telf;
     GeometryActor cubo;
+    GeometryActor person, smallPerson;
     DecalActor notas;
     boolean dialogoOn = true;
 
@@ -28,20 +30,27 @@ public class AmantLocation extends LocationActivity {
     public void onRoomPreLoad(Context context) {
         fps = new FpsInput(camera);
 
+        Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/girl.jpg", Texture.class);
         Game.getInstance().getResources().load("res/textures/debug.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
     }
 
     @Override
     public void onRoomPostLoad(Context context) {
+        Mesh personMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
         Mesh cuboMEsh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Texture texture = Game.getInstance().getResources().get("res/textures/girl.jpg", Texture.class);
         Texture notesTexture = Game.getInstance().getResources().get("res/textures/debug.png", Texture.class);
+        Texture personTexture = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         telf = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
 
         DecalMaterial decMat = new DecalMaterial(notesTexture, depth);
+
+        TexturedMaterial personMaterial = new TexturedMaterial(personTexture);
+
         TexturedMaterial mat = new TexturedMaterial(texture);
         mat.setTint(1, 0, 1);
 
@@ -56,6 +65,14 @@ public class AmantLocation extends LocationActivity {
         notas.rotation.rotateY(10*RAD2DEG); // rota sobre el eje Y
         notas.update(); // actualiza la transformacion
 
+        // crear y mover la capsulas (por ahora, personas)
+        person = new GeometryActor(personMesh, personMaterial);
+
+        smallPerson = new GeometryActor(personMesh, personMaterial);
+        smallPerson.position.set(0.5f, 0, 0);
+        smallPerson.scale.set(1, 0.45f, 1);  // componente Y multiplicada por 0.45
+        smallPerson.update();   // actualiza transformación
+
         // definir perspectiva de la camara
         camera.projection.setPerspective(45f, 4/3f, 0.1f, 1000f);
     }
@@ -63,6 +80,8 @@ public class AmantLocation extends LocationActivity {
     @Override
     public void onEntered(Context context) {
         addGeometry(cubo);
+        addGeometry(person);
+        addGeometry(smallPerson);
         addDecal(notas);
 
         if (dialogoOn) {
