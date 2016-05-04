@@ -29,7 +29,7 @@ public class AmantLocation extends LocationActivity {
         fps = new FpsInput(camera);
 
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
-        Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/girl.jpg", Texture.class);
         Game.getInstance().getResources().load("res/textures/debug.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
     }
@@ -37,7 +37,7 @@ public class AmantLocation extends LocationActivity {
     @Override
     public void onRoomPostLoad(Context context) {
         Mesh cuboMEsh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
-        Texture texture = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
+        Texture texture = Game.getInstance().getResources().get("res/textures/girl.jpg", Texture.class);
         Texture notesTexture = Game.getInstance().getResources().get("res/textures/debug.png", Texture.class);
         telf = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
 
@@ -50,11 +50,11 @@ public class AmantLocation extends LocationActivity {
 
         // mover la posicion del Decal
         float RAD2DEG = 3.14159265f/180f;
-        notas.position.set(2, 0.4f, -1.75f);
-        notas.scale.set(1);
-        notas.rotation.rotateX(45*RAD2DEG);
-        notas.rotation.rotateY(10*RAD2DEG);
-        notas.update(); // actualiza la transformación
+        notas.position.set(2, 0.4f, -1.75f);    // modifica posicion
+        notas.scale.set(0.75f); // modifica la escala
+        notas.rotation.rotateX(45*RAD2DEG); // rota sobre el eje X
+        notas.rotation.rotateY(10*RAD2DEG); // rota sobre el eje Y
+        notas.update(); // actualiza la transformacion
 
         // definir perspectiva de la camara
         camera.projection.setPerspective(45f, 4/3f, 0.1f, 1000f);
