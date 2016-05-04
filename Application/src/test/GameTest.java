@@ -95,5 +95,6 @@ public class GameTest implements Application {
             context.renderer.setClearColor(1, 0, 1, 1);
             context.renderer.endFrame();
         }
+        System.out.println("sajdhkjashjkdasjkhdkhakshdasd");
     }
 }

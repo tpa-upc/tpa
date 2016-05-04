@@ -121,7 +121,9 @@ public class SimpleResourceManager implements ResourceManager {
             return;
 
         last = System.currentTimeMillis();
+        System.out.println("begin loading");
         process();
+        System.out.println("finish loading");
     }
 
     @Override
