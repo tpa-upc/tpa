@@ -42,7 +42,7 @@ public class Launch {
         program.onInit(con);
 
         // main loop
-        while (!GLFW.glfwWindowShouldClose(window)) {
+        while (GLFW.glfwWindowShouldClose(window) == GLFW.GLFW_FALSE) {
             // update what needs to be updated
             try {
                 time.update();
@@ -50,7 +50,7 @@ public class Launch {
                 mouse.update();
             } catch (Exception e) {
                 e.printStackTrace();
-                GLFW.glfwSetWindowShouldClose(window, true);
+                GLFW.glfwSetWindowShouldClose(window, GLFW.GLFW_TRUE);
             }
 
             GLFW.glfwSwapBuffers(window);
