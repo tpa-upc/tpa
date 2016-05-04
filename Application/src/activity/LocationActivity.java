@@ -66,7 +66,7 @@ public abstract class LocationActivity extends Activity {
     private CompositeMaterial composite;
 
     /** Wireframe material for debugging */
-    private WireframeMaterial wireframe;
+    //private WireframeMaterial wireframe;
 
     /** Ray picker */
     private RayPicker picker = new Raymarcher();
@@ -111,7 +111,7 @@ public abstract class LocationActivity extends Activity {
         box = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
         composite = new CompositeMaterial(lowresPass.getTargets()[0], lowresPass.getTargets()[1], context.time);
-        wireframe = new WireframeMaterial();
+        //wireframe = new WireframeMaterial();
         sprites = new SpriteBatch(context.renderer);
         onRoomPostLoad(context);
     }
@@ -124,7 +124,9 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addPickerBox (Vector3f pos, Vector3f size, Object data) {
         picker.addBox(pos, size, data);
-        GeometryActor debug = new GeometryActor(box, wireframe);
+        WireframeMaterial wire = new WireframeMaterial();
+        wire.setTint(1, 0.7f, 0.7f);
+        GeometryActor debug = new GeometryActor(box, wire);
         debug.model.translate(pos).scale(size);
         debugGeometry.add(debug);
     }
@@ -143,7 +145,9 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addDecal (DecalActor actor) {
         this.decals.add(actor);
-        GeometryActor debug = new GeometryActor(box, wireframe);
+        WireframeMaterial wire = new WireframeMaterial();
+        wire.setTint(0.7f, 1, 0.7f);
+        GeometryActor debug = new GeometryActor(box, wire);
         debug.model.set(actor.model);
         debugGeometry.add(debug);
     }
@@ -243,10 +247,9 @@ public abstract class LocationActivity extends Activity {
         }
 
         // render debug geometry
-        // render geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
-            mat.render(renderer, camera, actor.getMesh(), actor.model);
+            mat.render(context.renderer, camera, box, actor.model);
         }
 
         // window pass

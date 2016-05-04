@@ -9,6 +9,7 @@ import tpa.graphics.render.Renderer;
 import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.joml.Matrix4f;
+import tpa.joml.Vector3f;
 
 /**
  * Created by germangb on 13/04/16.
@@ -31,12 +32,17 @@ public class WireframeMaterial extends Material {
     /** fragment shader */
     private static String FRAGMENT = "#version 120\n" +
             "\n" +
+            "uniform vec3 u_tint;\n" +
+            "\n" +
             "void main () {\n" +
-            "    gl_FragColor = vec4(1.0);\n" +
+            "    gl_FragColor = vec4(u_tint, 1.0);\n" +
             "}";
 
     /** shader program */
     private static ShaderProgram PROGRAM = new ShaderProgram(VERTEX, FRAGMENT, Attribute.Position);
+
+    /** wireframe tint */
+    private Vector3f tint = new Vector3f(1);
 
     /** Creates a Lambert material */
     public WireframeMaterial() {
@@ -44,6 +50,10 @@ public class WireframeMaterial extends Material {
         state.culling = Culling.Disabled;
         state.renderMode = RenderMode.Wireframe;
         state.depthTest = true;
+    }
+
+    public void setTint (float r, float g, float b) {
+        tint.set(r, g, b);
     }
 
     @Override
@@ -63,6 +73,7 @@ public class WireframeMaterial extends Material {
         program.setUniform("u_projection", UniformType.Matrix4, camera.projection);
         program.setUniform("u_view", UniformType.Matrix4, camera.view);
         program.setUniform("u_model", UniformType.Matrix4, model);
+        program.setUniform("u_tint", UniformType.Vector3, tint);
 
         // render mesh
         renderer.renderMesh(mesh);
