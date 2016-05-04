@@ -154,9 +154,13 @@ public class ResourceUtils {
      * @throws Exception error
      */
     public static Texture loadTexture (String path) throws Exception {
+        System.out.println("adios");
         // open image file
         FileInputStream is = new FileInputStream(path);
+        System.out.println("heeeeey");
         BufferedImage img = ImageIO.read(is);
+
+        System.out.println("hola");
 
         int cmp = 3;
         if (img.getTransparency() == Transparency.TRANSLUCENT) cmp = 4;
