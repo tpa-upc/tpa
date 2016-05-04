@@ -62,6 +62,7 @@ public class SimpleResourceManager implements ResourceManager {
     private void process () {
         // load one resource
         Pair p = queued.poll();
+        System.out.println(p.path+" "+p.type);
         if (p.type == Texture.class) {
             try {
                 Texture tex = ResourceUtils.loadTexture(p.path);
