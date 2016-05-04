@@ -163,6 +163,8 @@ public class ResourceUtils {
         Texture texture = new Texture(img.getWidth(), img.getHeight(), cmp==3?TextureFormat.Rgb:TextureFormat.Rgba);
         ByteBuffer data = ByteBuffer.allocateDirect(img.getWidth()*img.getHeight()*cmp).order(ByteOrder.nativeOrder());
 
+        System.out.println("agdhjgashdjgajshdgajsdgajdasd "+img.getWidth()+" "+img.getHeight());
+
         // read pixel data
         for (int x = 0; x < img.getWidth(); ++x)
             for (int y = 0; y < img.getHeight(); ++y) {
@@ -176,6 +178,8 @@ public class ResourceUtils {
                     data.put((byte)((argb >> 24)&0xff));
                 }
             }
+
+        System.out.println("agdhjgashdjgajshdgajsdgajdasd");
 
         // set texture data
         data.flip();
