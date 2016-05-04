@@ -84,7 +84,7 @@ public abstract class LocationActivity extends Activity {
     public abstract void onTick (Context context);
 
     /** Called when something is 3D-picked */
-    public abstract void onSelected (Object data);
+    public abstract void onSelected(Context context, Object data);
 
     /** Called when the scene is left */
     public abstract void onLeft (Context context);
@@ -121,9 +121,9 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addPickerBox (Vector3f pos, Vector3f size, Object data) {
         picker.addBox(pos, size, data);
-        //GeometryActor debug = new GeometryActor(box, wireframe);
-        //debug.model.translate(pos).scale(size);
-        //addGeometry(debug);
+        GeometryActor debug = new GeometryActor(box, wireframe);
+        debug.model.translate(pos).scale(size);
+        addGeometry(debug);
     }
 
     /**
@@ -140,6 +140,9 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addDecal (DecalActor actor) {
         this.decals.add(actor);
+        //GeometryActor debug = new GeometryActor(box, wireframe);
+        //debug.model.set(actor.model);
+        //addGeometry(debug);
     }
 
     @Override
@@ -155,7 +158,7 @@ public abstract class LocationActivity extends Activity {
                 Object hit = pick(context);
 
                 if (hit != null) {
-                    onSelected(hit);
+                    onSelected(context, hit);
                 }
             }
         });

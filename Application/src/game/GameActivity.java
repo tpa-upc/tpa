@@ -10,6 +10,9 @@ public enum GameActivity {
     /** Room location */
     Room(new RoomLocation()),
 
+    /** Amant location */
+    Amant(new AmantLocation()),
+
     /** Club location */
     Club(new ClubLocation()),
 
@@ -28,11 +31,13 @@ public enum GameActivity {
     /** Post-it note #0. */
     Note0 (new ImageActivity("res/textures/note0.png")),
 
+    Puerta (new ImageActivity("res/textures/girl.jpg")),
+
     /** Post-it note #1. */
     Note1 (new ImageActivity("res/textures/note1.png")),
 
     /** Albert Oliveras. */
-    Albert (new ImageActivity("res/textures/albert_big.png"));;
+    Albert (new ImageActivity("res/textures/albert_big.png"));
 
     /** referenced game activity */
     private activity.Activity activity;

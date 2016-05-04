@@ -1,19 +1,14 @@
 package activity;
 
 import game.Game;
-import game.GameActivity;
-import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
-import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
-import rendering.materials.WireframeMaterial;
 import rendering.utils.CameraController;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
-import tpa.joml.Vector3f;
 
 /**
  * Test room
@@ -124,7 +119,7 @@ public class ClubLocation extends LocationActivity {
     }
 
     @Override
-    public void onSelected(Object data) {
+    public void onSelected(Context context, Object data) {
 
     }
 

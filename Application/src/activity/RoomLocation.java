@@ -66,7 +66,6 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/chair.json", Mesh.class);
-        Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/room_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/room_texture_left.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/door0.png", Texture.class);
@@ -78,6 +77,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/poster.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/poster1.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/telephone.png", Texture.class);
+        Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
 
         cam = new CameraController(camera);
     }
@@ -251,7 +251,7 @@ public class RoomLocation extends LocationActivity {
     }
 
     @Override
-    public void onSelected(Object data) {
+    public void onSelected(Context context, Object data) {
         if (data.equals("notes")) {
             Game.getInstance().pushActivity(GameActivity.Note1);
         } else if (data.equals("door")) {
@@ -264,9 +264,9 @@ public class RoomLocation extends LocationActivity {
                     emailReceived = true;
                 } else if (data1.equals("ignore")) {
                     phoneRing = true;
-                    context.audioRenderer.stopSound(telfSound);
+                    this.context.audioRenderer.stopSound(telfSound);
                 } else if (data1.equals("pickup")) {
-                    context.audioRenderer.stopSound(telfSound);
+                    this.context.audioRenderer.stopSound(telfSound);
                 }
             });
         }
