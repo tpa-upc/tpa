@@ -13,6 +13,9 @@
           <root url="jar://$MODULE_DIR$/lib/lwjgl.jar!/" />
         </CLASSES>
         <JAVADOC />
+        <NATIVE>
+          <root url="file://$MODULE_DIR$/native" />
+        </NATIVE>
         <SOURCES />
       </library>
     </orderEntry>
