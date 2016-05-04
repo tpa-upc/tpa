@@ -66,7 +66,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/chair.json", Mesh.class);
-        Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/chair.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/room_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/room_texture_left.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/door0.png", Texture.class);
@@ -90,7 +90,7 @@ public class RoomLocation extends LocationActivity {
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
         Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
-        Mesh pcMesh = Game.getInstance().getResources().get("res/models/pc.json", Mesh.class);
+        Mesh pcMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
         Texture telfTex = Game.getInstance().getResources().get("res/textures/telephone.png", Texture.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/room_texture.png", Texture.class);
         Texture doorTex = Game.getInstance().getResources().get("res/textures/door0.png", Texture.class);
