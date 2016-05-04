@@ -7,15 +7,11 @@ import rendering.FpsInput;
 import rendering.GeometryActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
-import rendering.materials.WireframeMaterial;
 import rendering.utils.CameraController;
-import rendering.utils.Raymarcher;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
-import tpa.input.keyboard.KeyboardInput;
-import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Vector3f;
 
 /**
@@ -163,7 +159,7 @@ public class InterrogationLocation extends LocationActivity {
     }
 
     @Override
-    public void onSelected(Object data) {
+    public void onSelected(Context context, Object data) {
         if (data.equals(16)) {
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {

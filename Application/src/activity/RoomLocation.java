@@ -251,7 +251,7 @@ public class RoomLocation extends LocationActivity {
     }
 
     @Override
-    public void onSelected(Object data) {
+    public void onSelected(Context context, Object data) {
         if (data.equals("notes")) {
             Game.getInstance().pushActivity(GameActivity.Note1);
         } else if (data.equals("door")) {
@@ -264,9 +264,9 @@ public class RoomLocation extends LocationActivity {
                     emailReceived = true;
                 } else if (data1.equals("ignore")) {
                     phoneRing = true;
-                    context.audioRenderer.stopSound(telfSound);
+                    this.context.audioRenderer.stopSound(telfSound);
                 } else if (data1.equals("pickup")) {
-                    context.audioRenderer.stopSound(telfSound);
+                    this.context.audioRenderer.stopSound(telfSound);
                 }
             });
         }

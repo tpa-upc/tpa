@@ -116,14 +116,14 @@ public class SimpleResourceManager implements ResourceManager {
 
     @Override
     public void update() {
-        System.out.println("queue: "+ queued.size());
+        //System.out.println("queue: "+ queued.size());
         if (queued.isEmpty())
             return;
 
         last = System.currentTimeMillis();
-        System.out.println("begin loading");
+        //System.out.println("begin loading");
         process();
-        System.out.println("finish loading");
+        //System.out.println("finish loading");
     }
 
     @Override
