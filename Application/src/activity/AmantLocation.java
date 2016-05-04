@@ -75,7 +75,7 @@ public class AmantLocation extends LocationActivity {
     public void onSelected(Context context, Object data) {
         if (data.equals("caja!")) {
             context.audioRenderer.playSound(telf, false);
-            Game.getInstance().pushActivity(GameActivity.Puerta);
+            Game.getInstance().pushActivity(GameActivity.Note0);
         }
     }
 
