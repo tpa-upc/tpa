@@ -48,22 +48,26 @@ public class AmantLocation extends LocationActivity {
         cubo = new GeometryActor(cuboMEsh, mat);
         notas = new DecalActor(decMat);
 
+        // mover la posicion del Decal
+        float RAD2DEG = 3.14159265f/180f;
+        notas.position.set(2, 0.4f, -1.75f);
+        notas.scale.set(1);
+        notas.rotation.rotateX(45*RAD2DEG);
+        notas.rotation.rotateY(10*RAD2DEG);
+        notas.update(); // actualiza la transformación
+
+        // definir perspectiva de la camara
         camera.projection.setPerspective(45f, 4/3f, 0.1f, 1000f);
     }
 
     @Override
     public void onEntered(Context context) {
-        cubo.model.identity().translate(0, 0, 0);
-        notas.model.identity().translate(2, 0.4f, -1.75f).scale(1).rotateX(45*3.1415f/180).rotateY(10*3.1415f/180);
-
         addGeometry(cubo);
         addDecal(notas);
 
         if (dialogoOn) {
             addPickerBox(new Vector3f(0.35f, 1, -2), new Vector3f(0.25f), "caja!");
         }
-
-        camera.view.setLookAt(1, 1, 2, 1, 1, 0, 0, 1, 0);
     }
 
     @Override

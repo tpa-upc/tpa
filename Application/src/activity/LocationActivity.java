@@ -26,8 +26,10 @@ import java.util.List;
  */
 public abstract class LocationActivity extends Activity {
 
+    private static final boolean DEBUG = true;
+
     /** low res scale */
-    private static int SCALE = 2;
+    private static final int SCALE = 2;
 
     ///** resource manager for the location, to load textures, meshes, sound, etc */
     //protected ResourceManager resources = new SimpleResourceManager();
@@ -124,11 +126,13 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addPickerBox (Vector3f pos, Vector3f size, Object data) {
         picker.addBox(pos, size, data);
-        WireframeMaterial wire = new WireframeMaterial();
-        wire.setTint(1, 0.7f, 0.7f);
-        GeometryActor debug = new GeometryActor(box, wire);
-        debug.model.translate(pos).scale(size);
-        debugGeometry.add(debug);
+        if (DEBUG) {
+            WireframeMaterial wire = new WireframeMaterial();
+            wire.setTint(1, 0.7f, 0.7f);
+            GeometryActor debug = new GeometryActor(box, wire);
+            debug.model.translate(pos).scale(size);
+            debugGeometry.add(debug);
+        }
     }
 
     /**
@@ -145,11 +149,13 @@ public abstract class LocationActivity extends Activity {
      */
     protected void addDecal (DecalActor actor) {
         this.decals.add(actor);
-        WireframeMaterial wire = new WireframeMaterial();
-        wire.setTint(0.7f, 1, 0.7f);
-        GeometryActor debug = new GeometryActor(box, wire);
-        debug.model.set(actor.model);
-        debugGeometry.add(debug);
+        if (DEBUG) {
+            WireframeMaterial wire = new WireframeMaterial();
+            wire.setTint(0.7f, 1, 0.7f);
+            GeometryActor debug = new GeometryActor(box, wire);
+            debug.model.set(actor.model);
+            debugGeometry.add(debug);
+        }
     }
 
     @Override
