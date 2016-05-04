@@ -62,6 +62,7 @@ public class GameTest implements Application {
         ResourceManager res = Game.getInstance().getResources();
 
         if (res.isFinishedLoading()) {
+            System.out.println("finished!!!!!");
             if (!loaded) {
                 loaded = true;
 
