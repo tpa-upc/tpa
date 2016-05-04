@@ -44,7 +44,7 @@ public class RoomLocation extends LocationActivity {
     GeometryActor table;
     GeometryActor chair;
 
-    Sound telfSound, hangPhone;
+    Sound telfSound, hangPhone, pickupPhone;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,6 +59,7 @@ public class RoomLocation extends LocationActivity {
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
@@ -84,6 +85,7 @@ public class RoomLocation extends LocationActivity {
     public void onRoomPostLoad(Context context) {
         telfSound = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
+        pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
 
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
@@ -266,6 +268,7 @@ public class RoomLocation extends LocationActivity {
                     context.audioRenderer.stopSound(telfSound);
                 } else if (data1.equals("pickup")) {
                     context.audioRenderer.stopSound(telfSound);
+                    context.audioRenderer.playSound(pickupPhone,false);
                 }
             });
         }
