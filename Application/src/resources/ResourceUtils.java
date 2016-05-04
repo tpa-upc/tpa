@@ -154,20 +154,14 @@ public class ResourceUtils {
      * @throws Exception error
      */
     public static Texture loadTexture (String path) throws Exception {
-        System.out.println("adios");
         // open image file
         FileInputStream is = new FileInputStream(path);
-        System.out.println("heeeeey");
         BufferedImage img = ImageIO.read(is);
-
-        System.out.println("hola");
 
         int cmp = 3;
         if (img.getTransparency() == Transparency.TRANSLUCENT) cmp = 4;
         Texture texture = new Texture(img.getWidth(), img.getHeight(), cmp==3?TextureFormat.Rgb:TextureFormat.Rgba);
         ByteBuffer data = ByteBuffer.allocateDirect(img.getWidth()*img.getHeight()*cmp).order(ByteOrder.nativeOrder());
-
-        System.out.println("agdhjgashdjgajshdgajsdgajdasd "+img.getWidth()+" "+img.getHeight());
 
         // read pixel data
         for (int x = 0; x < img.getWidth(); ++x)
@@ -182,8 +176,6 @@ public class ResourceUtils {
                     data.put((byte)((argb >> 24)&0xff));
                 }
             }
-
-        System.out.println("agdhjgashdjgajshdgajsdgajdasd");
 
         // set texture data
         data.flip();

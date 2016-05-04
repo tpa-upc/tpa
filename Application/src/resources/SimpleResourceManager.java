@@ -62,12 +62,9 @@ public class SimpleResourceManager implements ResourceManager {
     private void process () {
         // load one resource
         Pair p = queued.poll();
-        System.out.println(p.path+" "+p.type);
         if (p.type == Texture.class) {
             try {
-                System.out.println("load texture");
                 Texture tex = ResourceUtils.loadTexture(p.path);
-                System.out.println("load texture");
                 loaded.put(p.path, tex);
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
@@ -78,9 +75,7 @@ public class SimpleResourceManager implements ResourceManager {
             }
         } else if (p.type == Mesh.class) {
             try {
-                System.out.println("Load mesh "+p.path);
                 Mesh mesh = ResourceUtils.loadMesh(p.path);
-                System.out.println("Load mesh "+p.path+" done!");
                 loaded.put(p.path, mesh);
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);

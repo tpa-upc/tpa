@@ -62,7 +62,6 @@ public class GameTest implements Application {
         ResourceManager res = Game.getInstance().getResources();
 
         if (res.isFinishedLoading()) {
-            System.out.println("finished!!!!!");
             if (!loaded) {
                 loaded = true;
 
@@ -95,6 +94,5 @@ public class GameTest implements Application {
             context.renderer.setClearColor(1, 0, 1, 1);
             context.renderer.endFrame();
         }
-        System.out.println("sajdhkjashjkdasjkhdkhakshdasd");
     }
 }
