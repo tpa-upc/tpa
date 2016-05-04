@@ -16,6 +16,8 @@ import tpa.input.mouse.Cursor;
 import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Matrix4f;
 
+import java.io.BufferedInputStream;
+
 /**
  * Created by germangb on 20/04/16.
  */
@@ -196,7 +198,7 @@ public class DialogActivity extends Activity {
                 tasks.add(new DelayTask(0.025f, context.time));
             }
 
-            tasks.add(new DelayTask(0.75f, context.time));
+            tasks.add(new DelayTask(0.5f, context.time));
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
@@ -210,7 +212,7 @@ public class DialogActivity extends Activity {
             });
         }
 
-        tasks.add(new DelayTask(1, context.time));
+        //tasks.add(new DelayTask(1, context.time));
 
         if (ans != null) {
             tasks.add(new Task() {

@@ -1,6 +1,7 @@
 package activity;
 
 import activity.tasks.DelayTask;
+import activity.tasks.DoSomethingTask;
 import activity.tasks.Task;
 import activity.tasks.TaskManager;
 import game.Game;
@@ -17,8 +18,6 @@ import tpa.input.keyboard.KeyboardInput;
 import tpa.joml.Vector3f;
 
 /**
- * Test room
- *
  * Created by germangb on 13/04/16.
  */
 public class RoomLocation extends LocationActivity {
@@ -192,21 +191,12 @@ public class RoomLocation extends LocationActivity {
             phoneRing = false;
             tasks.add(new DelayTask(5, context.time));
             System.out.println("RINGING-END "+tasks.remaining());
-            tasks.add(new Task() {
-                @Override
-                public void onBegin() {
-                    System.out.println("enter!");
-                    addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.1f), "telf");
-                    context.audioRenderer.playSound(telfSound, true);
-                    phoneRing = true;
-                }
-
-                @Override
-                public boolean onUpdate() {
-                    System.out.println("update!!!!");
-                    return true;
-                }
-            });
+            tasks.add(new DoSomethingTask(() -> {
+                System.out.println("enter!");
+                addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.1f), "telf");
+                context.audioRenderer.playSound(telfSound, true);
+                phoneRing = true;
+            }));
             System.out.println("RINGING-END "+tasks.remaining());
         }
 
