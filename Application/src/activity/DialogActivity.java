@@ -101,7 +101,7 @@ public class DialogActivity extends Activity {
                 if (state == 0) {
                     int id = selected;
                     if (id >= 0 && id < node.questions.length) {
-                        context.audioRenderer.playSound(click, false);
+                        //context.audioRenderer.playSound(click, false);
                         onSelectQuestion(id);
                     }
                 }
