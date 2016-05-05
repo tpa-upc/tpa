@@ -22,8 +22,6 @@ import tpa.joml.Vector3f;
  */
 public class RoomLocation extends LocationActivity {
 
-    CameraController cam;
-
     DecalActor door0;
     DecalActor door1;
     DecalActor door2;
@@ -51,13 +49,14 @@ public class RoomLocation extends LocationActivity {
     TaskManager tasks = new TaskManager();
 
     boolean phoneRing = true;
+    boolean phoneIgnored = false;
     boolean emailReceived = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onRoomPreLoad(Context context) {
-        Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
@@ -77,13 +76,11 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/poster1.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/telephone.png", Texture.class);
         Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
-
-        cam = new CameraController(camera);
     }
 
     @Override
     public void onRoomPostLoad(Context context) {
-        telfSound = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
+        telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
 
@@ -140,8 +137,8 @@ public class RoomLocation extends LocationActivity {
         notes2.model.translate(2.25f+1.25f, 1f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes3.model.translate(2.25f + 0.5f, 1.1f, -1.5f).rotateX(80*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes4.model.translate(0, 1.1f, -1f).rotateZ(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
-        poster.model.translate(2.25f + 3.5f, 1.1f, -2f).rotateZ(0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.75f, 0.25f, 0.75f);
-        poster1.model.translate(2.25f + 4.75f, 1.0f, -2f).rotateZ(-0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.65f, 0.25f, 0.65f);
+        poster.model.translate(2.25f + 3.5f, 1.1f, -2f).rotateZ(0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.75f, 0.05f, 0.75f);
+        poster1.model.translate(2.25f + 4.75f, 1.0f, -2f).rotateZ(-0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.65f, 0.05f, 0.65f);
 
         door1 = new DecalActor(door1Mat);
         door1.model.translate(0, 0.85f + 1e-3f, -1).rotateY(180*3.1415f/180).rotateZ(90*3.1415f/180).scale(0.85f, 0.1f, 0.85f);
@@ -191,7 +188,7 @@ public class RoomLocation extends LocationActivity {
         // add picks
         if (phoneRing) {
             phoneRing = false;
-            tasks.add(new DelayTask(5, context.time));
+            tasks.add(new DelayTask(phoneIgnored?15:5, context.time));
             tasks.add(new DoSomethingTask(() -> {
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
                 context.audioRenderer.playSound(telfSound, true);
@@ -208,11 +205,6 @@ public class RoomLocation extends LocationActivity {
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0.0f);
-
-        cam.position.y = 1.5f;
-        cam.position.z = 2.5f;
-        cam.position.x = 2.5f;
-        cam.tiltX = 0.1f;
     }
 
     @Override
@@ -227,13 +219,6 @@ public class RoomLocation extends LocationActivity {
             else telfMat.setTint(1, 1, 1);
         } else {
             telfMat.setTint(1, 1, 1);
-        }
-
-        cam.update();
-        if (context.keyboard.isKeyDown(KeyboardInput.KEY_RIGHT)) {
-            cam.position.x += context.time.getFrameTime()*2;
-        } else if (context.keyboard.isKeyDown(KeyboardInput.KEY_LEFT)) {
-            cam.position.x -= context.time.getFrameTime()*2;
         }
 
         //cam.position.x += (float) Math.sin(context.time.getTime()) * 0.001f;
@@ -263,6 +248,7 @@ public class RoomLocation extends LocationActivity {
                 } else if (data1.equals("screw_you")) {
                     context.audioRenderer.playSound(hangPhone, false);
                 } else if (data1.equals("ignore")) {
+                    phoneIgnored = true;
                     context.audioRenderer.playSound(hangPhone, false);
                     context.audioRenderer.stopSound(telfSound);
                 } else if (data1.equals("pickup")) {
