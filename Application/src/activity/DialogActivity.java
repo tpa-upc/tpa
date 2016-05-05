@@ -112,6 +112,10 @@ public class DialogActivity extends Activity {
         node = dialog.dialog[0];
         state = 0;
         selected = 0;
+
+        if (node.questions.length == 1) {
+            onSelectQuestion(0);
+        }
     }
 
     @Override
@@ -178,10 +182,9 @@ public class DialogActivity extends Activity {
 
         if (que.data != null) report(que.data);
 
-        tasks.add(new DelayTask(0.25f, context.time));
+        //tasks.add(new DelayTask(0.25f, context.time));
         for (int i = 0; i < lines.length; ++i) {
             String str = lines[i];
-            tasks.add(new DelayTask(0.5f, context.time));
             for (int x = 0; x < str.length(); ++x) {
                 String sub = str.substring(0, x+1);
                 tasks.add(new Task() {

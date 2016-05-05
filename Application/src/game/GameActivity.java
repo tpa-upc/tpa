@@ -22,6 +22,9 @@ public enum GameActivity {
     /** Test dialog */
     Dialog (new DialogActivity("res/dialogues/casa1.json")),
 
+    /** fix door inner monologue */
+    FixDoor (new DialogActivity("res/dialogues/fix_door.json")),
+
     /** Intro activity */
     Intro (new IntroActivity()),
 

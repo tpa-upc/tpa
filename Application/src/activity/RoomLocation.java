@@ -192,19 +192,17 @@ public class RoomLocation extends LocationActivity {
         if (phoneRing) {
             phoneRing = false;
             tasks.add(new DelayTask(5, context.time));
-            System.out.println("RINGING-END "+tasks.remaining());
             tasks.add(new DoSomethingTask(() -> {
-                System.out.println("enter!");
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
                 context.audioRenderer.playSound(telfSound, true);
                 phoneRing = true;
             }));
-            System.out.println("RINGING-END "+tasks.remaining());
         }
 
         //addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
         addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
         //addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
+        addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -254,6 +252,8 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("door")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
+        } else if (data.equals("fix_it")) {
+            Game.getInstance().pushActivity(GameActivity.FixDoor);
         } else if (data.equals("telf")) {
             Game.getInstance().pushActivity(GameActivity.Dialog, (act, data1) -> {
                 if (data1.equals("finish")) {
@@ -263,7 +263,6 @@ public class RoomLocation extends LocationActivity {
                 } else if (data1.equals("screw_you")) {
                     context.audioRenderer.playSound(hangPhone, false);
                 } else if (data1.equals("ignore")) {
-                    phoneRing = true;
                     context.audioRenderer.playSound(hangPhone, false);
                     context.audioRenderer.stopSound(telfSound);
                 } else if (data1.equals("pickup")) {
