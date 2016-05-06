@@ -10,9 +10,6 @@ public enum GameActivity {
     /** Room location */
     Room(new RoomLocation()),
 
-    /** Amant location */
-    Amant(new AmantLocation()),
-
     /** Club location */
     Club(new ClubLocation()),
 
