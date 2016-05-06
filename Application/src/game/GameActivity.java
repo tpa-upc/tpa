@@ -13,6 +13,9 @@ public enum GameActivity {
     /** Club location */
     Club(new ClubLocation()),
 
+    /** demo location */
+    Demo(new DemoLocation()),
+
     /** Interrogation location */
     Interrogation(new InterrogationLocation()),
 
