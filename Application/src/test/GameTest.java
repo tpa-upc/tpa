@@ -1,5 +1,6 @@
 package test;
 
+import activity.Activity;
 import game.Game;
 import game.GameActivity;
 import rendering.materials.GrainMaterial;
@@ -72,8 +73,12 @@ public class GameTest implements Application {
                     act.getActivity().onPostLoad(context);
 
                 // push some activity
-                Game.getInstance().pushActivity(GameActivity.Demo);
-                //Game.getInstance().pushActivity(GameActivity.Intro);
+                Game.getInstance().pushActivity(GameActivity.Dialog, new Activity.ActivityListener() {
+                    @Override
+                    public void onResult(Activity act, Object data) {
+
+                    }
+                });
             }
 
             context.renderer.beginFrame();
