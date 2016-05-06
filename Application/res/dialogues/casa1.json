@@ -9,7 +9,7 @@
         {"preview": "Answer the phone", "text": "Who's calling?", "data": "pickup", "answer": 0}
       ],
       "answers": [
-        {"text": "Hey, Mel!;This is Thompson.;We've got another case.;There has been a murder in Hyde Park.;Some children have found the body;They were on their way to school;Poor creatures...their faces...;Let's not get the media involved, OK?.", "data": null, "jump": 1}
+        {"text": "Hey, Mel!;This is Thompson.;We've got another case.;There has been a murder in Hyde Park.;Some children have found the body;Let's not get the media involved, OK?", "data": null, "jump": 1}
       ]
     },
 
@@ -29,7 +29,7 @@
         {"preview": "Ask for more information", "text": "Sure... But you always need me.;Tell me something about the crime scene at least", "answer": 0}
       ],
       "answers": [
-        {"text": "Ok, ok...;Jess Brown. Female, 30 years old.;Approximate time of death: 6 am.;No.. Wait...;My watch is not working;...;DAMN IT! The wife just gave it to me this morning!;Anyways, I'm getting sidetracked. Back to the matter;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3},
+        {"text": "Ok, ok...;Jess Brown. Female, 30 years old.;Approximate time of death is 6 am;Possible cause of death: asphyxiation; but she shows signs of violence in her arms.", "data": null, "jump": 3},
         {"text": "DON'T YOU DARE HANGING UP ON ME...", "data": "screw_you", "jump": -1}
       ]
     },

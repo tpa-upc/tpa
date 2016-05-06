@@ -114,8 +114,8 @@ public class ClubLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-        //fps.update(context);
-        cam.update();
+        fps.update(context);
+        //cam.update();
     }
 
     @Override

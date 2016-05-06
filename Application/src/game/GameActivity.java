@@ -20,7 +20,10 @@ public enum GameActivity {
     Interrogation(new InterrogationLocation()),
 
     /** Test dialog */
-    Dialog (new DialogActivity("res/dialogues/casa1.json")),
+    DialoguePhone(new DialogActivity("res/dialogues/casa1.json")),
+
+    /** Open email dialog */
+    DialogueEmail(new DialogActivity("res/dialogues/email0.json")),
 
     /** fix door inner monologue */
     FixDoor (new DialogActivity("res/dialogues/fix_door.json")),

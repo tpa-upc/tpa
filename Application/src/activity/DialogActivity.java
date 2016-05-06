@@ -25,10 +25,10 @@ public class DialogActivity extends Activity {
 
     private static SpriteBatch batch = null;
 
-    /** Dialog file */
+    /** DialoguePhone file */
     private String file;
 
-    /** Dialog */
+    /** DialoguePhone */
     private Dialog dialog;
 
     /** Current dialog node */
@@ -132,7 +132,7 @@ public class DialogActivity extends Activity {
         //batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
 
         batch.setColor(0, 0, 0, 1);
-        batch.add(pixel, 0, h-64, w, 64, 0, 0, 1, 1);
+        batch.add(pixel, 0, h-70, w, 70, 0, 0, 1, 1);
 
         context.mouse.setCursor(Cursor.Arrow);
         if (state == 0) {

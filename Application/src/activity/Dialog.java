@@ -20,7 +20,7 @@ public class Dialog {
         public int answer;
     }
 
-    /** Dialog nodes */
+    /** DialoguePhone nodes */
     public class Node {
         public Question[] questions;
         public Answer[] answers;

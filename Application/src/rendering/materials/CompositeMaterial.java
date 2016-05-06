@@ -55,14 +55,14 @@ public class CompositeMaterial extends Material {
             "    vec3 normal = texture2D(u_normal, v_uv).rgb * 2.0 - 1.0;\n" +
             "    \n" +
             "    float diff = clamp(dot(normal, normalize(vec3(-1, 3, 2))), 0.0, 1.0);\n" +
-            "    diff = mix(0.35, 1.0, diff);\n" +
+            "    diff = mix(0.5, 1.0, diff);\n" +
             "    \n" +
             "    vec3 final_color = color;\n" +
             "    float vignet = smoothstep(1.75, 0.25, length(v_uv*2-1));\n" +
             "    \n" +
             "    float bars = smoothstep(0.7+0.01, 0.7, -(v_uv.y*2-1));\n" +
             "    \n" +
-            "    gl_FragColor = vec4(final_color*vignet*diff*bars, 1.0);\n" +
+            "    gl_FragColor = vec4(final_color*vignet*diff, 1.0);\n" +
             "    \n" +
             "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), exp(-u_timer * 0.35f));\n" +
             "}";

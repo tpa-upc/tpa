@@ -2,19 +2,17 @@ package activity;
 
 import activity.tasks.DelayTask;
 import activity.tasks.DoSomethingTask;
-import activity.tasks.Task;
 import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
+import game.Values;
 import rendering.*;
 import rendering.materials.*;
-import rendering.utils.CameraController;
 import tpa.application.Context;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
-import tpa.input.keyboard.KeyboardInput;
 import tpa.joml.Vector3f;
 
 /**
@@ -34,29 +32,29 @@ public class RoomLocation extends LocationActivity {
     DecalActor poster1;
 
     GeometryActor telf;
-    GeometryActor wall;
-    GeometryActor wall1;
+    GeometryActor wall, wallflip;
+    GeometryActor wall1,wall1flip;
     GeometryActor pc;
-    GeometryActor tile0;
-    GeometryActor tile1;
+    GeometryActor tile0, tile0flip;
+    GeometryActor tile1, tile1flip;
     GeometryActor table;
     GeometryActor chair;
 
-    Sound telfSound, hangPhone, pickupPhone;
+    Sound telfSound, hangPhone, pickupPhone, emailSound;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     TaskManager tasks = new TaskManager();
 
-    boolean phoneRing = true;
-    boolean phoneIgnored = false;
-    boolean emailReceived = false;
+    boolean phoneActive = false;
+    boolean forceEmail = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
@@ -80,6 +78,7 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
+        emailSound = Game.getInstance().getResources().get("res/sfx/email.wav", Sound.class);
         telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
@@ -110,7 +109,7 @@ public class RoomLocation extends LocationActivity {
         TexturedMaterial telfMat = new TexturedMaterial(telfTex);
         TexturedMaterial tileMat = new TexturedMaterial(tileTex);
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
-        TexturedMaterial tableMat = new TexturedMaterial(tableTex);
+        TexturedMaterial tableMat = new TexturedMaterial(telfTex);
         TexturedMaterial pcMat = new TexturedMaterial(pcTex);
         DecalMaterial doorMat = new DecalMaterial(doorTex, depth);
         DecalMaterial door1Mat = new DecalMaterial(door1Tex, depth);
@@ -120,7 +119,8 @@ public class RoomLocation extends LocationActivity {
         DecalMaterial poster1Mat = new DecalMaterial(poster1Tex, depth);
 
         telf = new GeometryActor(telfModel, telfMat);
-        telf.model.translate(2.25f, 1.0f, -2f);
+        telf.position.set(2.25f, 1.0f, -2f);
+        telf.update();
 
         door0 = new DecalActor(doorMat);
         door0.model.translate(1, 0, -1f).rotateY(56*3.14f/180).scale(0.85f, 0.1f, 0.85f);
@@ -135,7 +135,7 @@ public class RoomLocation extends LocationActivity {
         notes0.model.translate(2.25f, 1.0f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes1.model.translate(2.25f+1.5f, 1.25f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes2.model.translate(2.25f+1.25f, 1f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
-        notes3.model.translate(2.25f + 0.5f, 1.1f, -1.5f).rotateX(80*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
+        notes3.model.translate(2.25f + 0.5f, 1.1f, -2f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes4.model.translate(0, 1.1f, -1f).rotateZ(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         poster.model.translate(2.25f + 3.5f, 1.1f, -2f).rotateZ(0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.75f, 0.05f, 0.75f);
         poster1.model.translate(2.25f + 4.75f, 1.0f, -2f).rotateZ(-0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.65f, 0.05f, 0.65f);
@@ -147,30 +147,56 @@ public class RoomLocation extends LocationActivity {
         door2.model.translate(1, 0.85f + 1e-3f, -2).rotateY(90*3.1415f/180).rotateZ(90*3.1415f/180).scale(0.85f, 0.1f, 0.85f);
 
         wall = new GeometryActor(wallMesh, wallMat);
+        wallflip = new GeometryActor(wallMesh, wallMat);
+        wallflip.position.set(0, 0, 2);
+        wallflip.update();
+
         wall1 = new GeometryActor(wallMesh, wallMat);
         wall1.model.translate(8, 0, -2).rotateY(180*3.1415f/180);
+
+        wall1flip = new GeometryActor(wallMesh, wallMat);
+        wall1flip.rotation.rotateY((float)Math.toRadians(180));
+        wall1flip.position.set(8,0,0);
+        wall1flip.update();
+
         pc = new GeometryActor(pcMesh, pcMat);
         pc.model.translate(3.5f, 0.675f, -1.5f).rotateY(0.25f);
         chair = new GeometryActor(chairMesh, pcMat);
         chair.model.translate(5f, 0, -2.25f).rotateY(0.25f).scale(0.85f);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(4f, 0, -2).rotateY(-0.1f);
+
         tile0 = new GeometryActor(tileMesh, tileMat);
+
+        tile0flip = new GeometryActor(tileMesh, tileMat);
+        tile0flip.rotation.rotateY((float)Math.toRadians(180));
+        tile0flip.position.set(4, 0, 0);
+        tile0flip.update();
+
+        tile1flip = new GeometryActor(tileMesh, tileMat);
+        tile1flip.rotation.rotateY((float)Math.toRadians(180));
+        tile1flip.position.set(8, 0, 0);
+        tile1flip.update();
+
         tile1 = new GeometryActor(tileMesh, tileMat);
         tile1.model.translate(4, 0, 0);
     }
 
     @Override
     public void onEntered(Context context) {
-        //tasks.clear();
+        tasks.clear();
 
         addGeometry(telf);
         addGeometry(table);
         addGeometry(chair);
         addGeometry(pc);
         addGeometry(wall);
+        addGeometry(wallflip);
         addGeometry(wall1);
+        addGeometry(wall1flip);
         addGeometry(tile0);
+        addGeometry(tile0flip);
+        addGeometry(tile1flip);
         addGeometry(tile1);
         addDecal(door0);
         addDecal(door1);
@@ -179,26 +205,38 @@ public class RoomLocation extends LocationActivity {
         //addDecal(notes0);
         //addDecal(notes1);
         //addDecal(notes2);
-        //addDecal(notes3);
+        addDecal(notes3);
         addDecal(notes4);
 
         addDecal(poster);
         addDecal(poster1);
 
-        // add picks
-        if (phoneRing) {
-            phoneRing = false;
-            tasks.add(new DelayTask(phoneIgnored?15:5, context.time));
+        // You will receive a call
+        if (Values.ARGUMENTO == 0) {
+            tasks.add(new DelayTask(5, context.time));
             tasks.add(new DoSomethingTask(() -> {
+                phoneActive = true;
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
                 context.audioRenderer.playSound(telfSound, true);
-                phoneRing = true;
             }));
         }
 
-        //addPickerBox(new Vector3f(3.5f, 1, -1.25f), new Vector3f(0.3f, 0.2f, 0.3f), "pc");
-        addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.2f), "door");
-        //addPickerBox(new Vector3f(2.5f, 1, -2f), new Vector3f(0.75f, 0.75f, 0.2f), "notes");
+        // you will receive an email
+        if (Values.ARGUMENTO == 1) {
+            if (forceEmail) {
+                // add click region
+                addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
+            } else {
+                // wait and then add click region
+                tasks.add(new DelayTask(5, context.time));
+                tasks.add(new DoSomethingTask(() -> {
+                    addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
+                    context.audioRenderer.playSound(emailSound, false);
+                }));
+            }
+        }
+
+        // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
         // set camera
@@ -210,20 +248,20 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onTick(Context context) {
         tasks.update();
-        //System.out.println(tasks.remaining()+" remm");
 
         TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
-        if (phoneRing) {
-            if ((int) (context.time.getTime() / 0.5f) % 2 == 0)
+        if (phoneActive) {
+            int tim = (int) (context.time.getTime() / 0.125f) % 2;
+            float t = (float) Math.sin(context.time.getTime() * 64);
+            telf.position.set(2.25f + t*0.0125f, 1.0f, -2f);
+            telf.update();
+            if (tim == 0)
                 telfMat.setTint(1, 0.68f, 0.68f);
-            else telfMat.setTint(1, 1, 1);
+            else
+                telfMat.setTint(1, 1, 1);
         } else {
             telfMat.setTint(1, 1, 1);
         }
-
-        //cam.position.x += (float) Math.sin(context.time.getTime()) * 0.001f;
-
-        //if (cam.position.x < 2.5f) cam.position.x = 2.5f;
 
         fps.update(context);
     }
@@ -232,7 +270,15 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onSelected(Context context, Object data) {
-        if (data.equals("notes")) {
+        if (data.equals("pc")) {
+            forceEmail = true;
+            Game.getInstance().pushActivity(GameActivity.DialogueEmail, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object data) {
+                    System.out.println(data);
+                }
+            });
+        } else if (data.equals("notes")) {
             Game.getInstance().pushActivity(GameActivity.Note1);
         } else if (data.equals("door")) {
             Game.getInstance().popActivity();
@@ -240,18 +286,19 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("fix_it")) {
             Game.getInstance().pushActivity(GameActivity.FixDoor);
         } else if (data.equals("telf")) {
-            Game.getInstance().pushActivity(GameActivity.Dialog, (act, data1) -> {
-                if (data1.equals("finish")) {
-                    phoneRing = false;
-                    emailReceived = true;
+            Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
+                if (dat.equals("finish")) {
+                    Values.ARGUMENTO = 1;   // advance "plot counter"
                     context.audioRenderer.playSound(hangPhone, false);
-                } else if (data1.equals("screw_you")) {
+                } else if (dat.equals("screw_you")) {
+                    phoneActive = false;
                     context.audioRenderer.playSound(hangPhone, false);
-                } else if (data1.equals("ignore")) {
-                    phoneIgnored = true;
+                } else if (dat.equals("ignore")) {
+                    phoneActive = false;
                     context.audioRenderer.playSound(hangPhone, false);
                     context.audioRenderer.stopSound(telfSound);
-                } else if (data1.equals("pickup")) {
+                } else if (dat.equals("pickup")) {
+                    phoneActive = false;
                     context.audioRenderer.stopSound(telfSound);
                     context.audioRenderer.playSound(pickupPhone,false);
                 }
