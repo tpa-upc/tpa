@@ -73,7 +73,7 @@ public class GameTest implements Application {
 
                 // push some activity
                 Game.getInstance().pushActivity(GameActivity.Room);
-                Game.getInstance().pushActivity(GameActivity.Intro);
+                //Game.getInstance().pushActivity(GameActivity.Intro);
             }
 
             context.renderer.beginFrame();

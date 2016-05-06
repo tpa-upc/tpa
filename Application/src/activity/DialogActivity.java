@@ -51,7 +51,6 @@ public class DialogActivity extends Activity {
     private int state = 0;
     private int selected = 0;
     private String[] lines;
-    private Sound click;
 
     public DialogActivity (String file) {
         this.file = file;
@@ -65,7 +64,6 @@ public class DialogActivity extends Activity {
         Game.getInstance().getResources().load(file, Dialog.class);
         Game.getInstance().getResources().load("res/textures/ubuntu24.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
-        Game.getInstance().getResources().load("res/sfx/click.wav", Sound.class);
         tasks = new TaskManager();
     }
 
@@ -74,7 +72,6 @@ public class DialogActivity extends Activity {
         dialog = Game.getInstance().getResources().get(file, Dialog.class);
         font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
         pixel = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
-        click = Game.getInstance().getResources().get("res/sfx/click.wav", Sound.class);
 
         node = dialog.dialog[0];
         state = 0;
@@ -101,7 +98,6 @@ public class DialogActivity extends Activity {
                 if (state == 0) {
                     int id = selected;
                     if (id >= 0 && id < node.questions.length) {
-                        context.audioRenderer.playSound(click, false);
                         onSelectQuestion(id);
                     }
                 }
