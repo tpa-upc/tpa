@@ -198,7 +198,7 @@ public class RoomLocation extends LocationActivity {
         capsuleMat.setTint(1,0,1);
         alterego = new GeometryActor(capsuleModel, capsuleMat);
         alterego.position.set(4f, 1f, 0.75f);
-        alterego.scale.set(0.25f, 0.25f, 0.25f);
+        alterego.scale.set(0.2f, 0.2f, 0.2f);
         alterego.update();
 
         // set camera position
@@ -229,6 +229,7 @@ public class RoomLocation extends LocationActivity {
         addGeometry(tile0flip);
         addGeometry(tile1flip);
         addGeometry(tile1);
+        addGeometry(alterego);
         addDecal(window0);
         addDecal(window1);
         addDecal(door0);
@@ -251,7 +252,6 @@ public class RoomLocation extends LocationActivity {
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
                 context.audioRenderer.playSound(telfSound, false);
             }));
-            addGeometry(alterego);
         }
 
         // you will receive an email
@@ -269,6 +269,8 @@ public class RoomLocation extends LocationActivity {
             }
         }
 
+        //talk to alter ego
+        addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(3.5f, 3f, 1.5f), "alter_ego");
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
@@ -351,7 +353,10 @@ public class RoomLocation extends LocationActivity {
                     context.audioRenderer.playSound(pickupPhone,false);
                 }
             });
+        }  else if(data.equals("alter_ego")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgo1);
         }
+
     }
 
     @Override
