@@ -48,6 +48,8 @@ public class RoomLocation extends LocationActivity {
     boolean forceEmail = false;
     boolean musicPlaying = false;
     boolean walking = false;
+    boolean notewallShowUp = false;
+    boolean pointless_conversation = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -243,7 +245,7 @@ public class RoomLocation extends LocationActivity {
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
-            // first wait 10 teconds
+            // first wait 10 seconds
             tasks.add(new DelayTask(10, context.time));
 
             // after 10 seconds, add the clickable region and play the telf sound
@@ -269,10 +271,21 @@ public class RoomLocation extends LocationActivity {
             }
         }
 
-        //talk to alter ego
-        addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(3.5f, 3f, 1.5f), "alter_ego");
+
+
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
+
+        if(notewallShowUp== true){
+            addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.5f, 0.1f, 0.5f), "notes");
+        }
+
+        //talk to alter ego
+        if(pointless_conversation == true){
+            addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(0.2f, 0.2f, 0.2f), "alter_ego_pointless");
+        }else{
+            addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(0.2f, 0.2f, 0.2f), "alter_ego");
+        }
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -314,6 +327,8 @@ public class RoomLocation extends LocationActivity {
                 context.audioRenderer.stopSound(steps);
             }
         }
+
+
     }
 
     FpsInput fps = new FpsInput(camera);
@@ -354,7 +369,14 @@ public class RoomLocation extends LocationActivity {
                 }
             });
         }  else if(data.equals("alter_ego")){
-            Game.getInstance().pushActivity(GameActivity.AlterEgo1);
+            Game.getInstance().pushActivity(GameActivity.AlterEgo1, (act, dat) -> {
+                if(dat.equals("note_wall")){
+                    notewallShowUp = true;
+                    pointless_conversation = true;
+                }
+            });
+        } else if(data.equals("alter_ego_pointless")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgoP);
         }
 
     }

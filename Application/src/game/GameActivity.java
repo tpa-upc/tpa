@@ -49,7 +49,10 @@ public enum GameActivity {
     Albert (new ImageActivity("res/textures/albert_big.png")),
 
     /** Alter Ego first conversation **/
-    AlterEgo1 (new DialogActivity("res/dialogues/casa2_ater_ego.json"));
+    AlterEgo1 (new DialogActivity("res/dialogues/casa2_alter_ego.json")),
+
+    /** Alter Ego first pointless conversation **/
+    AlterEgoP (new DialogActivity("res/dialogues/casa2_alter_ego_repeat.json"));
 
     /** referenced game activity */
     private activity.Activity activity;
