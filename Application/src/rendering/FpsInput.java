@@ -38,6 +38,9 @@ public class FpsInput {
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_UP)) pitch -= 0.035f;
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_DOWN)) pitch += 0.035f;
 
+        if (pitch > 3.1415f/2) pitch = 3.1415f/2;
+        if (pitch < -3.1415f/2) pitch = -3.1415f/2;
+
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_SPACE))
             position.y += 0.1f;
 
