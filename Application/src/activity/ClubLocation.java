@@ -45,7 +45,7 @@ public class ClubLocation extends LocationActivity {
         Texture tileTex = Game.getInstance().getResources().get("res/textures/bar_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/bar_texture_left.png", Texture.class);
         Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
-        Texture chairTex = Game.getInstance().getResources().get(, Texture.class);
+        //Texture chairTex = Game.getInstance().getResources().get(, Texture.class);
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
         tileTex.setWrapV(TextureWrap.Repeat);
