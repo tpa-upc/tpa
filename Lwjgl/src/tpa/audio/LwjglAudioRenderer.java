@@ -40,6 +40,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     int musicSource;
     int musicFormat;
     int musicSampling;
+    boolean musicLoop;
 
     /** Audio device pointer */
     long device;
@@ -76,7 +77,11 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
                         getSamples(buffer);
                         alSourceQueueBuffers(musicSource, buffer);
                     } else {
-                        alDeleteBuffers(buffer);
+                        if (musicLoop) {
+                            playMusic(music, true, 1);
+                        } else {
+                            alDeleteBuffers(buffer);
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -134,8 +139,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         }
     }
 
-    @Override
-    public void playMusic(Music music) {
+    private void playMusic (Music music, boolean loop, int numBuffer) {
         //TODO Error handling
 
         if (musicIs != null) {
@@ -156,6 +160,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         }
 
         try {
+            musicLoop = loop;
             musicIs = AudioSystem.getAudioInputStream(new File(music.getFile()));
             AudioFormat format = musicIs.getFormat();
             musicSampling = (int) format.getSampleRate();
@@ -200,7 +205,8 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
                 }
 
                 // play music
-                alSourcePlay(musicSource);
+                if (alGetSourcei(musicSource, AL_SOURCE_STATE) != AL_PLAYING)
+                    alSourcePlay(musicSource);
 
                 this.music = music;
             }
@@ -211,6 +217,11 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
             e.printStackTrace();
             this.music = null;
         }
+    }
+
+    @Override
+    public void playMusic(Music music, boolean loop) {
+        playMusic(music, loop, 4);
     }
 
     /**

@@ -27,9 +27,12 @@ public class GameTest implements Application {
     public void onInit(Context context) {
         // set context
         Game.getInstance().setContext(context);
+        GameActivity.Loading.getActivity().onBegin(context);
 
         // load quad
         Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
+        Game.getInstance().getResources().finishLoading();
+        quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
 
         // create default Framebuffer & shader
         int w = context.window.getWidth();
@@ -41,20 +44,6 @@ public class GameTest implements Application {
         // load activities
         for (GameActivity act : GameActivity.values())
             act.getActivity().onPreLoad(context);
-
-        // set resources listener
-        Game.getInstance().getResources().setListener(new ResourceManager.ResourceManagerListener() {
-            @Override
-            public void onLoaded(String string, Class<?> type) {
-                System.out.println("[OK] "+string);
-            }
-
-            @Override
-            public void onFailed(String string, Class<?> type, Exception e) {
-                System.out.println("[ERR] "+string);
-                if (e != null) e.printStackTrace();
-            }
-        });
     }
 
     @Override
@@ -63,17 +52,15 @@ public class GameTest implements Application {
 
         if (res.isFinishedLoading()) {
             if (!loaded) {
+                GameActivity.Loading.getActivity().onEnd(context);
                 loaded = true;
-
-                // grab quad
-                quad = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
 
                 for (GameActivity act : GameActivity.values())
                     act.getActivity().onPostLoad(context);
 
                 // push some activity
                 Game.getInstance().pushActivity(GameActivity.Room);
-                //Game.getInstance().pushActivity(GameActivity.Intro);
+                Game.getInstance().pushActivity(GameActivity.Intro);
             }
 
             context.renderer.beginFrame();
@@ -90,8 +77,13 @@ public class GameTest implements Application {
             res.update();
 
             context.renderer.beginFrame();
-            context.renderer.clearBuffers();
-            context.renderer.setClearColor(1, 0, 1, 1);
+            context.renderer.setDefaultFramebuffer(fbo);
+            context.renderer.setFramebuffer(null);
+            GameActivity.Loading.getActivity().onUpdate(context);
+            context.renderer.setDefaultFramebuffer(null);
+            context.renderer.setFramebuffer(null);
+            context.renderer.setViewport(0, 0, context.window.getWidth(), context.window.getHeight());
+            mat.render(context.renderer, null, quad, null);
             context.renderer.endFrame();
         }
     }

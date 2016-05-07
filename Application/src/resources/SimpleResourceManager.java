@@ -49,6 +49,15 @@ public class SimpleResourceManager implements ResourceManager {
         p.path = file;
         p.type = type;
         queued.add(p);
+
+        if (Math.random() < 0.1f) {
+            String fakeFile = System.currentTimeMillis()+".lol";
+            lol.put(fakeFile, true);
+            p = new Pair();
+            p.path = fakeFile;
+            p.type = type;
+            queued.add(p);
+        }
     }
 
     @Override
@@ -129,7 +138,7 @@ public class SimpleResourceManager implements ResourceManager {
     @Override
     public void update() {
         //System.out.println("queue: "+ queued.size());
-        if (queued.isEmpty())
+        if (queued.isEmpty() || System.currentTimeMillis() - last < 0 + (long)(500 * Math.random()))
             return;
 
         last = System.currentTimeMillis();
@@ -141,6 +150,12 @@ public class SimpleResourceManager implements ResourceManager {
     @Override
     public boolean isFinishedLoading() {
         return queued.isEmpty();
+    }
+
+    @Override
+    public float getProgress() {
+        int total = lol.size();
+        return (float)loaded.size()/total;
     }
 
     @Override

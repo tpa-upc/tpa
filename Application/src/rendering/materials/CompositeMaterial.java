@@ -39,6 +39,7 @@ public class CompositeMaterial extends Material {
             "varying vec2 v_uv;\n" +
             "\n" +
             "uniform float u_timer;\n" +
+            "uniform float u_aspect;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_normal;\n" +
@@ -67,7 +68,7 @@ public class CompositeMaterial extends Material {
             "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), exp(-u_timer * 0.35f));\n" +
             "    \n" +
             "    vec2 uv2 = v_uv*2-1;\n" +
-            "    uv2.x *= 4.0/3.0;\n" +
+            "    uv2.x *= u_aspect;\n" +
             "    float center = smoothstep(0.02, 0.025, length(uv2));\n" +
             "    gl_FragColor.rgb = mix(vec3(1.0) - gl_FragColor.rgb * 0.75, gl_FragColor.rgb, center);\n" +
             "}";
@@ -103,6 +104,7 @@ public class CompositeMaterial extends Material {
         program.setUniform("u_normal", UniformType.Sampler2D, 1);
         program.setUniform("u_random", UniformType.Sampler2D, 2);
         program.setUniform("u_timer", UniformType.Float, timer);
+        program.setUniform("u_aspect", UniformType.Float, (float)diffuse.getWidth()/diffuse.getHeight());
         renderer.setTexture(0, diffuse);
         renderer.setTexture(1, normal);
         renderer.setTexture(2, randTex);

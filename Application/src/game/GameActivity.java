@@ -7,6 +7,9 @@ import activity.*;
  */
 public enum GameActivity {
 
+    /** Loading screen */
+    Loading(new LoadingActivity()),
+
     /** Room location */
     Room(new RoomLocation()),
 

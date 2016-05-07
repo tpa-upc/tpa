@@ -55,6 +55,7 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/music/ambient.wav", Music.class);
+        Game.getInstance().getResources().load("res/music/music.wav", Music.class);
         Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
@@ -82,7 +83,7 @@ public class RoomLocation extends LocationActivity {
     public void onRoomPostLoad(Context context) {
         // play music
         Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
-        context.audioRenderer.playMusic(music);
+        context.audioRenderer.playMusic(music, true);
 
         emailSound = Game.getInstance().getResources().get("res/sfx/email.wav", Sound.class);
         telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
