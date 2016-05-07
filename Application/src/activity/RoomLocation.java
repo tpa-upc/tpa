@@ -39,6 +39,7 @@ public class RoomLocation extends LocationActivity {
 
     Sound telfSound, hangPhone, pickupPhone, emailSound;
     Sound steps;
+    Sound paper;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +63,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/paper_short_16.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
@@ -92,6 +94,7 @@ public class RoomLocation extends LocationActivity {
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
         steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
+        paper = Game.getInstance().getResources().get("res/sfx/paper_short_16.wav", Sound.class);
 
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
@@ -277,7 +280,7 @@ public class RoomLocation extends LocationActivity {
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
         if(notewallShowUp== true){
-            addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.5f, 0.1f, 0.5f), "notes");
+            addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.3f, 0.5f, 0.5f), "notes");
         }
 
         //talk to alter ego
@@ -344,6 +347,7 @@ public class RoomLocation extends LocationActivity {
                 }
             });
         } else if (data.equals("notes")) {
+            context.audioRenderer.playSound(paper, false);
             Game.getInstance().pushActivity(GameActivity.Note1);
         } else if (data.equals("door")) {
             Game.getInstance().popActivity();
