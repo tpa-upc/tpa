@@ -37,6 +37,7 @@ public class RoomLocation extends LocationActivity {
     GeometryActor chair;
 
     Sound telfSound, hangPhone, pickupPhone, emailSound;
+    Sound steps;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +46,7 @@ public class RoomLocation extends LocationActivity {
     boolean phoneActive = false;
     boolean forceEmail = false;
     boolean musicPlaying = false;
+    boolean walking = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +55,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/music/ambient.wav", Music.class);
         Game.getInstance().getResources().load("res/music/music.wav", Music.class);
         Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
@@ -82,6 +85,7 @@ public class RoomLocation extends LocationActivity {
         telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
+        steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
 
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
@@ -230,7 +234,7 @@ public class RoomLocation extends LocationActivity {
             tasks.add(new DoSomethingTask(() -> {
                 phoneActive = true;
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
-                context.audioRenderer.playSound(telfSound, true);
+                context.audioRenderer.playSound(telfSound, false);
             }));
         }
 
@@ -262,6 +266,7 @@ public class RoomLocation extends LocationActivity {
     public void onTick(Context context) {
         tasks.update();
 
+        // blinking phone
         TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
         if (phoneActive) {
             int tim = (int) (context.time.getTime() / 0.125f) % 2;
@@ -276,7 +281,21 @@ public class RoomLocation extends LocationActivity {
             telfMat.setTint(1, 1, 1);
         }
 
+        // update camera
         fps.update(context);
+
+        // check if walking to play walking sound effect
+        if (fps.isWalking()) {
+            if (!walking) {
+                context.audioRenderer.playSound(steps, true);
+                walking = true;
+            }
+        } else {
+            if (walking) {
+                walking = false;
+                context.audioRenderer.stopSound(steps);
+            }
+        }
     }
 
     FpsInput fps = new FpsInput(camera);
