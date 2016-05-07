@@ -30,8 +30,8 @@ public class FpsInput {
         //yaw += context.mouse.getCursorDX() * 0.01f;
         //float dpitch = (context.mouse.getCursorY() - context.window.getHeight()/2)*0.01f;
         //float dyaw = (context.mouse.getCursorX() - context.window.getWidth()/2)*0.01f;
-        pitch += context.mouse.getCursorDY() * 0.01f;
-        yaw += context.mouse.getCursorDX() * 0.01f;
+        pitch += context.mouse.getCursorDY() * 0.005f;
+        yaw += context.mouse.getCursorDX() * 0.005f;
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_RIGHT)) yaw += 0.035f;
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_LEFT)) yaw -= 0.035f;
@@ -41,34 +41,36 @@ public class FpsInput {
         if (pitch > 3.1415f/2) pitch = 3.1415f/2;
         if (pitch < -3.1415f/2) pitch = -3.1415f/2;
 
+        float v = 0.025f;
+
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_SPACE))
-            position.y += 0.1f;
+            position.y += v;
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_LEFT_SHIFT))
-            position.y -= 0.1f;
+            position.y -= v;
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_W)) {
-            position.x += (float) Math.sin(sYaw) * 0.1f;
-            position.z -= (float) Math.cos(sYaw) * 0.1f;
+            position.x += (float) Math.sin(sYaw) * v;
+            position.z -= (float) Math.cos(sYaw) * v;
         }
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_S)) {
-            position.x -= (float) Math.sin(sYaw) * 0.1f;
-            position.z += (float) Math.cos(sYaw) * 0.1f;
+            position.x -= (float) Math.sin(sYaw) * v;
+            position.z += (float) Math.cos(sYaw) * v;
         }
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_D)) {
-            position.z += (float) Math.sin(sYaw) * 0.1f;
-            position.x += (float) Math.cos(sYaw) * 0.1f;
+            position.z += (float) Math.sin(sYaw) * v;
+            position.x += (float) Math.cos(sYaw) * v;
         }
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_A)) {
-            position.z -= (float) Math.sin(sYaw) * 0.1f;
-            position.x -= (float) Math.cos(sYaw) * 0.1f;
+            position.z -= (float) Math.sin(sYaw) * v;
+            position.x -= (float) Math.cos(sYaw) * v;
         }
 
-        sPitch += (pitch - sPitch) * context.time.getFrameTime() * 8;
-        sYaw += (yaw - sYaw) * context.time.getFrameTime() * 8;
+        sPitch += (pitch - sPitch) * context.time.getFrameTime() * 16;
+        sYaw += (yaw - sYaw) * context.time.getFrameTime() * 16;
 
         camera.view.identity()
                 .rotate(sPitch, 1, 0, 0)

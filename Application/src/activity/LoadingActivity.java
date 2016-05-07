@@ -50,7 +50,7 @@ public class LoadingActivity extends Activity {
                 System.out.println("[ERR] "+string);
                 lines.add("[ERR] "+string);
                 errors.add("[ERR] "+string);
-                if (e != null) e.printStackTrace();
+                //if (e != null) e.printStackTrace();
             }
         });
     }

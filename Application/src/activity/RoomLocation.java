@@ -24,9 +24,6 @@ public class RoomLocation extends LocationActivity {
     DecalActor door0;
     DecalActor door1;
     DecalActor door2;
-    DecalActor notes0;
-    DecalActor notes1;
-    DecalActor notes2;
     DecalActor notes3;
     DecalActor notes4;
     DecalActor poster;
@@ -121,69 +118,53 @@ public class RoomLocation extends LocationActivity {
         DecalMaterial posterMat = new DecalMaterial(posterTex, depth);
         DecalMaterial poster1Mat = new DecalMaterial(poster1Tex, depth);
 
+        // create everything and set its position
         telf = new GeometryActor(telfModel, telfMat);
         telf.position.set(2.25f, 1.0f, -2f);
         telf.update();
-
         door0 = new DecalActor(doorMat);
         door0.model.translate(1, 0, -1f).rotateY(56*3.14f/180).scale(0.85f, 0.1f, 0.85f);
-
-        notes0 = new DecalActor(notesMat);
-        notes1 = new DecalActor(notesMat);
-        notes2 = new DecalActor(notesMat);
         notes3 = new DecalActor(notesMat);
         notes4 = new DecalActor(notesMat);
         poster = new DecalActor(posterMat);
         poster1 = new DecalActor(poster1Mat);
-        notes0.model.translate(2.25f, 1.0f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
-        notes1.model.translate(2.25f+1.5f, 1.25f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
-        notes2.model.translate(2.25f+1.25f, 1f, -1.5f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes3.model.translate(2.25f + 0.5f, 1.1f, -2f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         notes4.model.translate(0, 1.1f, -1f).rotateZ(-90*3.1415f/180).scale(0.85f, 0.25f, 0.85f);
         poster.model.translate(2.25f + 3.5f, 1.1f, -2f).rotateZ(0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.75f, 0.05f, 0.75f);
         poster1.model.translate(2.25f + 4.75f, 1.0f, -2f).rotateZ(-0.1f).rotateX(90*3.1415f/180).rotateY(-90*3.1415f/180).scale(0.65f, 0.05f, 0.65f);
-
         door1 = new DecalActor(door1Mat);
         door1.model.translate(0, 0.85f + 1e-3f, -1).rotateY(180*3.1415f/180).rotateZ(90*3.1415f/180).scale(0.85f, 0.1f, 0.85f);
-
         door2 = new DecalActor(door2Mat);
         door2.model.translate(1, 0.85f + 1e-3f, -2).rotateY(90*3.1415f/180).rotateZ(90*3.1415f/180).scale(0.85f, 0.1f, 0.85f);
-
         wall = new GeometryActor(wallMesh, wallMat);
         wallflip = new GeometryActor(wallMesh, wallMat);
         wallflip.position.set(0, 0, 2);
         wallflip.update();
-
         wall1 = new GeometryActor(wallMesh, wallMat);
         wall1.model.translate(8, 0, -2).rotateY(180*3.1415f/180);
-
         wall1flip = new GeometryActor(wallMesh, wallMat);
         wall1flip.rotation.rotateY((float)Math.toRadians(180));
         wall1flip.position.set(8,0,0);
         wall1flip.update();
-
         pc = new GeometryActor(pcMesh, pcMat);
         pc.model.translate(3.5f, 0.675f, -1.5f).rotateY(0.25f);
         chair = new GeometryActor(chairMesh, pcMat);
         chair.model.translate(5f, 0, -2.25f).rotateY(0.25f).scale(0.85f);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(4f, 0, -2).rotateY(-0.1f);
-
         tile0 = new GeometryActor(tileMesh, tileMat);
-
         tile0flip = new GeometryActor(tileMesh, tileMat);
         tile0flip.rotation.rotateY((float)Math.toRadians(180));
         tile0flip.position.set(4, 0, 0);
         tile0flip.update();
-
         tile1flip = new GeometryActor(tileMesh, tileMat);
         tile1flip.rotation.rotateY((float)Math.toRadians(180));
         tile1flip.position.set(8, 0, 0);
         tile1flip.update();
-
         tile1 = new GeometryActor(tileMesh, tileMat);
         tile1.model.translate(4, 0, 0);
 
+        // set camera position
         fps.position.set(3, 1.25f, 0.5f);
     }
 
@@ -195,6 +176,7 @@ public class RoomLocation extends LocationActivity {
         Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
         context.audioRenderer.playMusic(music, true);
 
+        // add actors to the scene
         addGeometry(telf);
         addGeometry(table);
         addGeometry(chair);
@@ -210,19 +192,17 @@ public class RoomLocation extends LocationActivity {
         addDecal(door0);
         addDecal(door1);
         addDecal(door2);
-
-        //addDecal(notes0);
-        //addDecal(notes1);
-        //addDecal(notes2);
         addDecal(notes3);
         addDecal(notes4);
-
         addDecal(poster);
         addDecal(poster1);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
+            // first wait 10 teconds
             tasks.add(new DelayTask(10, context.time));
+
+            // after 10 seconds, add the clickable region and play the telf sound
             tasks.add(new DoSomethingTask(() -> {
                 phoneActive = true;
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
@@ -236,7 +216,7 @@ public class RoomLocation extends LocationActivity {
                 // add click region
                 addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
             } else {
-                // wait and then add click region
+                // wait and then add click region for the email
                 tasks.add(new DelayTask(5, context.time));
                 tasks.add(new DoSomethingTask(() -> {
                     addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");

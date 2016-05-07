@@ -1,0 +1,10 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"preview": "Go to the pub", "text": "", "data": "go_to_pub", "answer": -1},
+        {"preview": "Stay home", "text": "On second thought...", "data": "stay_home", "answer": -1}
+      ]
+    }
+  ]
+}
