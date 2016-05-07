@@ -41,13 +41,13 @@ public class LoadingActivity extends Activity {
         Game.getInstance().getResources().setListener(new ResourceManager.ResourceManagerListener() {
             @Override
             public void onLoaded(String string, Class<?> type) {
-                System.out.println("[OK] "+string);
+                //System.out.println("[OK] "+string);
                 lines.add("[OK] "+string);
             }
 
             @Override
             public void onFailed(String string, Class<?> type, Exception e) {
-                System.out.println("[ERR] "+string);
+                //System.out.println("[ERR] "+string);
                 lines.add("[ERR] "+string);
                 errors.add("[ERR] "+string);
                 //if (e != null) e.printStackTrace();

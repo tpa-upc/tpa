@@ -11,25 +11,18 @@ import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
 
 /**
- * Test room
- *
  * Created by germangb on 13/04/16.
  */
 public class ClubLocation extends LocationActivity {
 
-    CameraController cam;
     FpsInput fps;
 
-    GeometryActor wall;
+    GeometryActor wall0;
     GeometryActor wall1;
     GeometryActor wall2;
     GeometryActor wall3;
-    GeometryActor wall4;
-    GeometryActor wall5;
-    GeometryActor wall6;
-    GeometryActor wall7;
-    GeometryActor tile0;
-    GeometryActor tile1;
+    GeometryActor tile0, tile0flip;
+    GeometryActor tile1, tile1flip;
 
     @Override
     public void onRoomPreLoad(Context context) {
@@ -39,8 +32,6 @@ public class ClubLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/bar_texture_left.png", Texture.class);
 
         fps = new FpsInput(camera);
-        cam = new CameraController(camera);
-        cam.tiltZ = 0.025f;
     }
 
     @Override
@@ -58,64 +49,55 @@ public class ClubLocation extends LocationActivity {
         TexturedMaterial tileMat = new TexturedMaterial(tileTex);
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
 
-        wall = new GeometryActor(wallMesh, wallMat);
+        wall0 = new GeometryActor(wallMesh, wallMat);
 
         wall1 = new GeometryActor(wallMesh, wallMat);
-        wall1.model.translate(8, 0, -2).rotateY(180*3.1415f/180);
+        wall1.model.translate(8, 0, -2).rotateY((float)Math.toRadians(180));
 
         wall2 = new GeometryActor(wallMesh, wallMat);
-        wall2.model.translate(8, 2, -2).rotateY(180*3.1415f/180);
+        wall2.position.set(0, 0, 2);
+        wall2.update();
 
         wall3 = new GeometryActor(wallMesh, wallMat);
-        wall3.model.translate(6, 2, -2).rotateY(-90*3.1415f/180);
-
-        wall4 = new GeometryActor(wallMesh, wallMat);
-        wall4.model.translate(4, 2, -2).rotateY(-90*3.1415f/180);
-
-        wall5 = new GeometryActor(wallMesh, wallMat);
-        wall5.model.translate(2, 2, -2).rotateY(-90*3.1415f/180);
-
-        wall6 = new GeometryActor(wallMesh, wallMat);
-        wall6.model.translate(0, 2, 0);
-
-        wall7 = new GeometryActor(wallMesh, wallMat);
-        wall7.model.translate(0, 2, -2).rotateY(-90*3.1415f/180);
+        wall3.rotation.rotateY((float)Math.toRadians(180));
+        wall3.position.set(8, 0, 0);
+        wall3.update();
 
         tile0 = new GeometryActor(tileMesh, tileMat);
+        tile0flip = new GeometryActor(tileMesh, tileMat);
+        tile0flip.rotation.rotateY((float)Math.toRadians(180));
+        tile0flip.position.set(4, 0, 0);
+        tile0flip.update();
         tile1 = new GeometryActor(tileMesh, tileMat);
         tile1.model.translate(4,0,0);
+        tile1flip = new GeometryActor(tileMesh, tileMat);
+        tile1flip.rotation.rotateY(180*3.1415f/180);
+        tile1flip.position.set(8, 0, 0);
+        tile1flip.update();
     }
 
     @Override
     public void onEntered(Context context) {
         //addGeometry(box);
 
-        addGeometry(wall);
+        addGeometry(wall0);
         addGeometry(wall1);
         addGeometry(wall2);
         addGeometry(wall3);
-        addGeometry(wall4);
-        addGeometry(wall5);
-        addGeometry(wall6);
-        addGeometry(wall7);
         addGeometry(tile0);
         addGeometry(tile1);
+        addGeometry(tile0flip);
+        addGeometry(tile1flip);
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
-        camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
-        camera.clearColor.set(0.125f);
-        cam.position.set(4+2.45f, 1.5f, 2.5f);
-        cam.tiltZ = -0.0125f;
-        cam.tiltX = 0.1f;
+        camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
+        fps.position.set(4, 1, 0);
     }
-
-    private float time = 0;
 
     @Override
     public void onTick(Context context) {
         fps.update(context);
-        //cam.update();
     }
 
     @Override

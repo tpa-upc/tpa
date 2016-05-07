@@ -43,11 +43,11 @@ public class FpsInput {
 
         float v = 0.025f;
 
-        if (context.keyboard.isKeyDown(KeyboardInput.KEY_SPACE))
+        /*if (context.keyboard.isKeyDown(KeyboardInput.KEY_SPACE))
             position.y += v;
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_LEFT_SHIFT))
-            position.y -= v;
+            position.y -= v;*/
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_W)) {
             position.x += (float) Math.sin(sYaw) * v;
