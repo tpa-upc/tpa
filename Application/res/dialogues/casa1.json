@@ -19,7 +19,8 @@
         {"preview": "Accept the case", "text": "I understand;...;Should I go there or...?", "answer": 0}
       ],
       "answers": [
-        {"text": "EEErrr... no?;You know you are not allowed;Not with your record...;It's not my decision though, so you can't get mad at me", "data": null, "jump": 2}
+        //{"text": "EEErrr... no?;You know you are not allowed;Not with your record...;It's not my decision though, so you can't get mad at me", "data": null, "jump": 2}
+        {"text": "Good (shortcut)", "data": "finish", "jump": -1}
       ]
     },
 

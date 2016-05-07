@@ -71,7 +71,7 @@ public class ClubLocation extends LocationActivity {
         tile1 = new GeometryActor(tileMesh, tileMat);
         tile1.model.translate(4,0,0);
         tile1flip = new GeometryActor(tileMesh, tileMat);
-        tile1flip.rotation.rotateY(180*3.1415f/180);
+        tile1flip.rotation.rotateY((float)Math.toRadians(180));
         tile1flip.position.set(8, 0, 0);
         tile1flip.update();
     }

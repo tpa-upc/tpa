@@ -141,8 +141,8 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
 
     private void playMusic (Music music, boolean loop, int numBuffer) {
         //TODO Error handling
-
         if (musicIs != null) {
+            alSourceStop(musicSource);
 
             int processed = alGetSourcei(musicSource, AL_BUFFERS_PROCESSED);
             int queued = alGetSourcei(musicSource, AL_BUFFERS_QUEUED);

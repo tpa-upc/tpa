@@ -13,6 +13,7 @@ import tpa.audio.Music;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
+import tpa.graphics.texture.TextureFilter;
 import tpa.graphics.texture.TextureWrap;
 import tpa.joml.Vector3f;
 
@@ -21,13 +22,10 @@ import tpa.joml.Vector3f;
  */
 public class RoomLocation extends LocationActivity {
 
-    DecalActor door0;
-    DecalActor door1;
-    DecalActor door2;
-    DecalActor notes3;
-    DecalActor notes4;
-    DecalActor poster;
-    DecalActor poster1;
+    DecalActor door0, door1, door2;
+    DecalActor notes3, notes4;
+    DecalActor poster, poster1;
+    DecalActor window0, window1;
 
     GeometryActor telf;
     GeometryActor wall, wallflip;
@@ -46,6 +44,7 @@ public class RoomLocation extends LocationActivity {
 
     boolean phoneActive = false;
     boolean forceEmail = false;
+    boolean musicPlaying = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,6 +72,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/poster.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/poster1.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/telephone.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/window0.png", Texture.class);
         Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
     }
 
@@ -100,10 +100,16 @@ public class RoomLocation extends LocationActivity {
         Texture notesTex = Game.getInstance().getResources().get("res/textures/notes.png", Texture.class);
         Texture posterTex = Game.getInstance().getResources().get("res/textures/poster.png", Texture.class);
         Texture poster1Tex = Game.getInstance().getResources().get("res/textures/poster1.png", Texture.class);
+        Texture windowTex = Game.getInstance().getResources().get("res/textures/window0.png", Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
         tileTex.setWrapV(TextureWrap.Repeat);
+
+        windowTex.setMin(TextureFilter.Linear);
+        windowTex.setMag(TextureFilter.Linear);
+        notesTex.setMin(TextureFilter.Linear);
+        notesTex.setMag(TextureFilter.Linear);
 
         // create materials
         TexturedMaterial telfMat = new TexturedMaterial(telfTex);
@@ -117,6 +123,7 @@ public class RoomLocation extends LocationActivity {
         DecalMaterial notesMat = new DecalMaterial(notesTex, depth);
         DecalMaterial posterMat = new DecalMaterial(posterTex, depth);
         DecalMaterial poster1Mat = new DecalMaterial(poster1Tex, depth);
+        DecalMaterial windowMat = new DecalMaterial(windowTex, depth);
 
         // create everything and set its position
         telf = new GeometryActor(telfModel, telfMat);
@@ -164,6 +171,18 @@ public class RoomLocation extends LocationActivity {
         tile1 = new GeometryActor(tileMesh, tileMat);
         tile1.model.translate(4, 0, 0);
 
+        window0 = new DecalActor(windowMat);
+        window0.position.set(0, 1.1f, 0.75f);
+        window0.rotation.rotateZ((float)Math.toRadians(-90));
+        window0.scale.set(0.6f, 0.1f, 0.75f);
+        window0.update();
+
+        window1 = new DecalActor(windowMat);
+        window1.position.set(8, 1.1f, -0.75f);
+        window1.rotation.rotateZ((float)Math.toRadians(-90));
+        window1.scale.set(0.6f, 0.1f, 0.75f);
+        window1.update();
+
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
     }
@@ -173,8 +192,11 @@ public class RoomLocation extends LocationActivity {
         tasks.clear();
 
         // play music
-        Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
-        context.audioRenderer.playMusic(music, true);
+        if (!musicPlaying) {
+            musicPlaying = true;
+            Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
+            context.audioRenderer.playMusic(music, true);
+        }
 
         // add actors to the scene
         addGeometry(telf);
@@ -189,6 +211,8 @@ public class RoomLocation extends LocationActivity {
         addGeometry(tile0flip);
         addGeometry(tile1flip);
         addGeometry(tile1);
+        addDecal(window0);
+        addDecal(window1);
         addDecal(door0);
         addDecal(door1);
         addDecal(door2);
