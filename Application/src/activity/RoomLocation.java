@@ -221,7 +221,7 @@ public class RoomLocation extends LocationActivity {
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
-            tasks.add(new DelayTask(20, context.time));
+            tasks.add(new DelayTask(10, context.time));
             tasks.add(new DoSomethingTask(() -> {
                 phoneActive = true;
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
