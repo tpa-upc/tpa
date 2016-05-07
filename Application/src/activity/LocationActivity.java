@@ -164,6 +164,7 @@ public abstract class LocationActivity extends Activity {
 
         // set input listeners
         composite.setTimer(Values.LOCATION_TRANSITION_ANIMATION?0:9999);
+        context.mouse.setGrabbed(true);
         context.keyboard.setKeyboardListener(null);
         context.mouse.setMouseListener(new MouseAdapter() {
             @Override
@@ -180,6 +181,9 @@ public abstract class LocationActivity extends Activity {
     private Object pick (Context context) {
         float x = (float) context.mouse.getCursorX()/context.window.getWidth();
         float y = 1 - (float) context.mouse.getCursorY()/context.window.getHeight();
+        x = 0.5f;
+        y = 0.5f;
+
 
         Vector3f ro = new Vector3f();
         Vector3f rd = new Vector3f();
@@ -193,6 +197,7 @@ public abstract class LocationActivity extends Activity {
         onLeft(context);
         context.keyboard.setKeyboardListener(null);
         context.mouse.setMouseListener(null);
+        context.mouse.setGrabbed(false);
         geometry.clear();
         decals.clear();
         picker.clear();

@@ -65,6 +65,11 @@ public class CompositeMaterial extends Material {
             "    gl_FragColor = vec4(final_color*vignet*diff, 1.0);\n" +
             "    \n" +
             "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), exp(-u_timer * 0.35f));\n" +
+            "    \n" +
+            "    vec2 uv2 = v_uv*2-1;\n" +
+            "    uv2.x *= 4.0/3.0;\n" +
+            "    float center = smoothstep(0.02, 0.025, length(uv2));\n" +
+            "    gl_FragColor.rgb = mix(vec3(1.0) - gl_FragColor.rgb * 0.75, gl_FragColor.rgb, center);\n" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);

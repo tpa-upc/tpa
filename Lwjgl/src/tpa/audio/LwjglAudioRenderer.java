@@ -6,10 +6,14 @@ import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
 import tpa.utils.Destroyable;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +33,14 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     /** OpenAL sound sources */
     Map<Sound, Integer> sources = new HashMap<>();
 
+    /** Music playing */
+    Music music = null;
+    AudioInputStream musicIs = null;
+    ByteBuffer musicBuffer = ByteBuffer.allocateDirect(44100<<2).order(ByteOrder.nativeOrder());
+    int musicSource;
+    int musicFormat;
+    int musicSampling;
+
     /** Audio device pointer */
     long device;
 
@@ -47,6 +59,30 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         System.err.println("AL_VENDOR: " + alGetString(AL_VENDOR));
         System.err.println("AL_RENDERER: " + alGetString(AL_RENDERER));
         System.err.println("AL_VERSION: " + alGetString(AL_VERSION));
+    }
+
+    public void update () {
+        if (music != null) {
+            int processed = alGetSourcei(musicSource, AL_BUFFERS_PROCESSED);
+            int queued = alGetSourcei(musicSource, AL_BUFFERS_QUEUED);
+            //System.out.println("[MUSIC] processed="+processed+" queued="+queued);
+
+            for (int i = 0; i < processed; ++i) {
+                int buffer = alSourceUnqueueBuffers(musicSource);
+
+                // refill buffer
+                try {
+                    if (musicIs.available() > 0) {
+                        getSamples(buffer);
+                        alSourceQueueBuffers(musicSource, buffer);
+                    } else {
+                        alDeleteBuffers(buffer);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -96,6 +132,115 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         if (source != null) {
             alSourceStop(source);
         }
+    }
+
+    @Override
+    public void playMusic(Music music) {
+        //TODO Error handling
+
+        if (musicIs != null) {
+
+            int processed = alGetSourcei(musicSource, AL_BUFFERS_PROCESSED);
+            int queued = alGetSourcei(musicSource, AL_BUFFERS_QUEUED);
+
+            for (int i = 0; i < processed+queued; ++i) {
+                int buf = alSourceUnqueueBuffers(musicSource);
+                alDeleteBuffers(buf);
+            }
+
+            try {
+                musicIs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            musicIs = AudioSystem.getAudioInputStream(new File(music.getFile()));
+            AudioFormat format = musicIs.getFormat();
+            musicSampling = (int) format.getSampleRate();
+            //System.out.println("[MUSIC] SR="+musicSampling);
+            //System.out.println("[MUSIC] DEPTH="+format.getSampleSizeInBits());
+            //System.out.println("[MUSIC] CHANNELS="+format.getChannels());
+
+            boolean error = false;
+            if (format.getChannels() == 1) {
+                if (format.getSampleSizeInBits() == 8) {
+                    musicFormat = AL_FORMAT_MONO8;
+                } else if (format.getSampleSizeInBits() == 16) {
+                    musicFormat = AL_FORMAT_MONO16;
+                } else {
+                    System.err.println("Unsupported bit depth");
+                }
+            } else if (format.getChannels() == 2) {
+                if (format.getSampleSizeInBits() == 8) {
+                    musicFormat = AL_FORMAT_STEREO8;
+                } else if (format.getSampleSizeInBits() == 16) {
+                    musicFormat = AL_FORMAT_STEREO16;
+                } else {
+                    System.err.println("Unsupported bit depth");
+                }
+            } else {
+                // TODO ERROR or something
+                error = true;
+                System.err.println("Unsupported number of channels.");
+            }
+
+            if (!error) {
+                // generate a source
+                musicSource = alGenSources();
+
+                // assign a few buffers
+                for (int i = 0; i < 4; ++i) {
+                    if (musicIs.available() > 0) {
+                        int buffer = alGenBuffers();
+                        getSamples(buffer);
+                        alSourceQueueBuffers(musicSource, buffer);
+                    } else break;
+                }
+
+                // play music
+                alSourcePlay(musicSource);
+
+                this.music = music;
+            }
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+            this.music = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            this.music = null;
+        }
+    }
+
+    /**
+     * Read samples from music input stream and put them in a buffer
+     * @param buffer
+     */
+    private void getSamples (int buffer) throws IOException {
+        musicBuffer.clear();
+        byte[] readBuffer = new byte[128];
+
+        // read a chunk of the audio samples
+        while (musicBuffer.remaining() > 0) {
+            // read a bit of the file
+            int toRead = Math.min(musicBuffer.remaining(), readBuffer.length);
+            int read = musicIs.read(readBuffer, 0, toRead);
+            if (read <= 0)
+                break;
+
+            // slowly fill buffer
+            musicBuffer.put(readBuffer, 0, read);
+        }
+
+        // upload samples to the audio buffer
+        musicBuffer.flip();
+        alBufferData(buffer, musicFormat, musicBuffer, musicSampling);
+    }
+
+    @Override
+    public void stopMusic(Music music) {
+
     }
 
     @Override

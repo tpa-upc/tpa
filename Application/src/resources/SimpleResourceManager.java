@@ -1,6 +1,7 @@
 package resources;
 
 import activity.Dialog;
+import tpa.audio.Music;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -99,6 +100,17 @@ public class SimpleResourceManager implements ResourceManager {
             try {
                 Dialog dialog = ResourceUtils.loadDialog(p.path);
                 loaded.put(p.path, dialog);
+                if (listener != null)
+                    listener.onLoaded(p.path, p.type);
+            } catch (Exception e) {
+                lol.remove(p.path);
+                if (listener != null)
+                    listener.onFailed(p.path, p.type, e);
+            }
+        } else if (p.type == Music.class) {
+            try {
+                Music mus = ResourceUtils.loadMusic(p.path);
+                loaded.put(p.path, mus);
                 if (listener != null)
                     listener.onLoaded(p.path, p.type);
             } catch (Exception e) {

@@ -9,6 +9,7 @@ import game.Values;
 import rendering.*;
 import rendering.materials.*;
 import tpa.application.Context;
+import tpa.audio.Music;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -53,6 +54,7 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onRoomPreLoad(Context context) {
+        Game.getInstance().getResources().load("res/music/ambient.wav", Music.class);
         Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
@@ -78,6 +80,10 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
+        // play music
+        Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
+        context.audioRenderer.playMusic(music);
+
         emailSound = Game.getInstance().getResources().get("res/sfx/email.wav", Sound.class);
         telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
@@ -180,6 +186,8 @@ public class RoomLocation extends LocationActivity {
 
         tile1 = new GeometryActor(tileMesh, tileMat);
         tile1.model.translate(4, 0, 0);
+
+        fps.position.set(3, 1.25f, 0.5f);
     }
 
     @Override
@@ -213,7 +221,7 @@ public class RoomLocation extends LocationActivity {
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
-            tasks.add(new DelayTask(5, context.time));
+            tasks.add(new DelayTask(20, context.time));
             tasks.add(new DoSomethingTask(() -> {
                 phoneActive = true;
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
