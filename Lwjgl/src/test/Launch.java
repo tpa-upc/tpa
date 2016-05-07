@@ -48,6 +48,7 @@ public class Launch {
                 time.update();
                 program.onUpdate(con);
                 mouse.update();
+                audio.update();
             } catch (Exception e) {
                 e.printStackTrace();
                 GLFW.glfwSetWindowShouldClose(window, GLFW.GLFW_TRUE);

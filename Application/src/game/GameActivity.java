@@ -7,6 +7,9 @@ import activity.*;
  */
 public enum GameActivity {
 
+    /** Loading screen */
+    Loading(new LoadingActivity()),
+
     /** Room location */
     Room(new RoomLocation()),
 
@@ -20,7 +23,13 @@ public enum GameActivity {
     Interrogation(new InterrogationLocation()),
 
     /** Test dialog */
-    Dialog (new DialogActivity("res/dialogues/casa1.json")),
+    DialoguePhone(new DialogActivity("res/dialogues/casa1.json")),
+
+    /** Open email dialog */
+    DialogueEmail(new DialogActivity("res/dialogues/email0.json")),
+
+    /** fix door inner monologue */
+    FixDoor (new DialogActivity("res/dialogues/fix_door.json")),
 
     /** Intro activity */
     Intro (new IntroActivity()),

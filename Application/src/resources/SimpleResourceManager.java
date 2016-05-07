@@ -1,6 +1,7 @@
 package resources;
 
 import activity.Dialog;
+import tpa.audio.Music;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -48,6 +49,15 @@ public class SimpleResourceManager implements ResourceManager {
         p.path = file;
         p.type = type;
         queued.add(p);
+
+        if (Math.random() < 0.1f) {
+            String fakeFile = System.currentTimeMillis()+".lol";
+            lol.put(fakeFile, true);
+            p = new Pair();
+            p.path = fakeFile;
+            p.type = type;
+            queued.add(p);
+        }
     }
 
     @Override
@@ -106,6 +116,17 @@ public class SimpleResourceManager implements ResourceManager {
                 if (listener != null)
                     listener.onFailed(p.path, p.type, e);
             }
+        } else if (p.type == Music.class) {
+            try {
+                Music mus = ResourceUtils.loadMusic(p.path);
+                loaded.put(p.path, mus);
+                if (listener != null)
+                    listener.onLoaded(p.path, p.type);
+            } catch (Exception e) {
+                lol.remove(p.path);
+                if (listener != null)
+                    listener.onFailed(p.path, p.type, e);
+            }
         } else {
             if (listener != null)
                 listener.onFailed(p.path, p.type, new IllegalArgumentException("Invalid resource type"));
@@ -117,7 +138,7 @@ public class SimpleResourceManager implements ResourceManager {
     @Override
     public void update() {
         //System.out.println("queue: "+ queued.size());
-        if (queued.isEmpty())
+        if (queued.isEmpty() || System.currentTimeMillis() - last < 0 + (long)(250 * Math.random()))
             return;
 
         last = System.currentTimeMillis();
@@ -129,6 +150,12 @@ public class SimpleResourceManager implements ResourceManager {
     @Override
     public boolean isFinishedLoading() {
         return queued.isEmpty();
+    }
+
+    @Override
+    public float getProgress() {
+        int total = lol.size();
+        return (float)loaded.size()/total;
     }
 
     @Override

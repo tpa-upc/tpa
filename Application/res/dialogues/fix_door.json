@@ -1,0 +1,8 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "I should get this fixed...", "answer": -1}],
+      "answers": []
+    }
+  ]
+}

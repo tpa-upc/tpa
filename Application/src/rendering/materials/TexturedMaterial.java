@@ -25,6 +25,7 @@ public class TexturedMaterial extends Material {
             "\n" +
             "varying vec2 v_uv;\n" +
             "varying vec3 v_normal;\n" +
+            "varying vec3 v_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -34,6 +35,7 @@ public class TexturedMaterial extends Material {
             "    mat4 view_model = u_view * u_model;\n" +
             "    gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);\n" +
             "    v_normal = normalize((view_model * vec4(a_normal, 0.0)).xyz);\n" +
+            "    v_position = (view_model * vec4(a_position, 1.0)).xyz;\n" +
             "    v_uv = a_uv;\n" +
             "}";
 
@@ -42,6 +44,7 @@ public class TexturedMaterial extends Material {
             "\n" +
             "varying vec2 v_uv;\n" +
             "varying vec3 v_normal;\n" +
+            "varying vec3 v_position;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform vec3 u_tint;\n" +
@@ -49,7 +52,7 @@ public class TexturedMaterial extends Material {
             "void main () {\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    \n" +
-            "    gl_FragData[0] = vec4(color*u_tint, 1.0);\n" +
+            "    gl_FragData[0] = vec4(mix(color*u_tint, vec3(0.0), 1-exp(-max(0, length(v_position)-4) * 0.1)), 1.0);\n" +
             "    gl_FragData[1] = vec4(v_normal * 0.5 + 0.5, 1.0);\n" +
             "}";
 

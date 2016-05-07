@@ -12,22 +12,6 @@ import java.nio.ShortBuffer;
  */
 public class Sound {
 
-    private static ShortBuffer sine = null;
-    static {
-        int sr = 16000;
-        int samples = sr/8;
-        sine = ByteBuffer.allocateDirect(samples<<1)
-                .order(ByteOrder.nativeOrder())
-                .asShortBuffer();
-
-        int freq = 1000;
-        for (int i = 0; i < samples; ++i) {
-            float sample = (float) Math.sin(2*Math.PI*freq/sr*i) * 0.3f;
-            sine.put((short)(Short.MAX_VALUE*sample));
-        }
-        sine.flip();
-    }
-
     /** sample data */
     private Buffer samples = null;
 
@@ -41,7 +25,8 @@ public class Sound {
     private boolean dirty = true;
 
     public Sound () {
-        samples = sine;
+        this.samplingRate = 16000;
+        this.stereo = false;
     }
 
     /**
@@ -65,7 +50,7 @@ public class Sound {
      * Set samples
      * @param samples
      */
-    public void setSamples (@NotNull Buffer samples) {
+    public void setSamples (Buffer samples) {
         if (samples == null)
             throw new IllegalArgumentException();
         this.samples = samples;

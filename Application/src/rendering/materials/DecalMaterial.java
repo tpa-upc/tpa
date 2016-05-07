@@ -48,7 +48,7 @@ public class DecalMaterial extends Material {
             "    vec4 model = u_inv_mvp * clip;\n" +
             "    model.xyz /= model.w;\n" +
             "    \n" +
-            "    if (abs(model.x) > 1 || abs(model.z) > 1)\n" +
+            "    if (abs(model.x) > 1 || abs(model.z) > 1 || abs(model.y) > 1)\n" +
             "        discard;\n" +
             "        \n" +
             "    vec2 tex_uv = model.xz*0.5+0.5;\n" +

@@ -118,6 +118,11 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
     }
 
     @Override
+    public void setGrabbed(boolean grab) {
+        glfwSetInputMode(window, GLFW_CURSOR, grab ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+    }
+
+    @Override
     public boolean isButtonDown(int button) {
         if (button < GLFW_MOUSE_BUTTON_1 || button > GLFW_MOUSE_BUTTON_2)
             throw new IllegalArgumentException();

@@ -43,8 +43,8 @@ public class GrainMaterial extends Material {
             "uniform vec2 u_resolution;\n" +
             "\n" +
             "void main () {\n" +
-            "    float rand0 = texture2D(u_random, v_uv*u_resolution/4/vec2(64)).r*2-1;\n" +
-            "    float rand1 = texture2D(u_random, v_uv*u_resolution/8/vec2(64) + vec2(0.125671, 0.7235)).r*2-1;\n" +
+            "    float rand0 = texture2D(u_random, v_uv*u_resolution/1/vec2(64)).r*2-1;\n" +
+            "    float rand1 = texture2D(u_random, v_uv*u_resolution/2/vec2(64) + vec2(0.125671, 0.7235)).r*2-1;\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    color = mix(color + rand0*0.05, color*0.75, (rand0*0.5 + rand1*0.5)*0.5+0.5);\n" +
             "    gl_FragColor = vec4(pow(color, vec3(0.85)), 1.0);\n" +

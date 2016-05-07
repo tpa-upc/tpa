@@ -63,6 +63,12 @@ public interface ResourceManager {
     boolean isFinishedLoading ();
 
     /**
+     * Return getProgress
+     * @return [0-1] range, 1 being 100%
+     */
+    float getProgress();
+
+    /**
      * Block until all resources are loaded
      */
     void finishLoading ();

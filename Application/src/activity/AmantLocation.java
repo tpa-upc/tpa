@@ -77,6 +77,7 @@ public class AmantLocation extends LocationActivity {
 
         // definir perspectiva de la camara
         camera.projection.setPerspective(45f, 4/3f, 0.1f, 1000f);
+        camera.clearColor.set(1,1,1);
     }
 
     @Override
