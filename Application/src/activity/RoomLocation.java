@@ -35,6 +35,7 @@ public class RoomLocation extends LocationActivity {
     GeometryActor tile1, tile1flip;
     GeometryActor table;
     GeometryActor chair;
+    GeometryActor alterego;
 
     Sound telfSound, hangPhone, pickupPhone, emailSound;
     Sound steps;
@@ -77,6 +78,9 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/telephone.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/window0.png", Texture.class);
         Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
+        Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
+
     }
 
     @Override
@@ -93,6 +97,7 @@ public class RoomLocation extends LocationActivity {
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
         Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
         Mesh pcMesh = Game.getInstance().getResources().get("res/models/pc.json", Mesh.class);
+        Mesh capsuleModel = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class); //this is for characters
         Texture telfTex = Game.getInstance().getResources().get("res/textures/telephone.png", Texture.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/room_texture.png", Texture.class);
         Texture doorTex = Game.getInstance().getResources().get("res/textures/door0.png", Texture.class);
@@ -105,6 +110,7 @@ public class RoomLocation extends LocationActivity {
         Texture posterTex = Game.getInstance().getResources().get("res/textures/poster.png", Texture.class);
         Texture poster1Tex = Game.getInstance().getResources().get("res/textures/poster1.png", Texture.class);
         Texture windowTex = Game.getInstance().getResources().get("res/textures/window0.png", Texture.class);
+        Texture capsuleTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -121,6 +127,7 @@ public class RoomLocation extends LocationActivity {
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
         TexturedMaterial tableMat = new TexturedMaterial(telfTex);
         TexturedMaterial pcMat = new TexturedMaterial(pcTex);
+        TexturedMaterial capsuleMat = new TexturedMaterial(capsuleTex);
         DecalMaterial doorMat = new DecalMaterial(doorTex, depth);
         DecalMaterial door1Mat = new DecalMaterial(door1Tex, depth);
         DecalMaterial door2Mat = new DecalMaterial(door2Tex, depth);
@@ -128,6 +135,7 @@ public class RoomLocation extends LocationActivity {
         DecalMaterial posterMat = new DecalMaterial(posterTex, depth);
         DecalMaterial poster1Mat = new DecalMaterial(poster1Tex, depth);
         DecalMaterial windowMat = new DecalMaterial(windowTex, depth);
+
 
         // create everything and set its position
         telf = new GeometryActor(telfModel, telfMat);
@@ -187,6 +195,12 @@ public class RoomLocation extends LocationActivity {
         window1.scale.set(0.6f, 0.1f, 0.75f);
         window1.update();
 
+        capsuleMat.setTint(1,0,1);
+        alterego = new GeometryActor(capsuleModel, capsuleMat);
+        alterego.position.set(4f, 1f, 0.75f);
+        alterego.scale.set(0.25f, 0.25f, 0.25f);
+        alterego.update();
+
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
     }
@@ -225,6 +239,7 @@ public class RoomLocation extends LocationActivity {
         addDecal(poster);
         addDecal(poster1);
 
+
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
             // first wait 10 teconds
@@ -236,6 +251,7 @@ public class RoomLocation extends LocationActivity {
                 addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
                 context.audioRenderer.playSound(telfSound, false);
             }));
+            addGeometry(alterego);
         }
 
         // you will receive an email
