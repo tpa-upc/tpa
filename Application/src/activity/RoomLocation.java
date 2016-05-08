@@ -202,8 +202,8 @@ public class RoomLocation extends LocationActivity {
 
         capsuleMat.setTint(1,0,1);
         alterego = new GeometryActor(capsuleModel, capsuleMat);
-        alterego.position.set(4f, 1f, 0.75f);
-        alterego.scale.set(0.2f, 0.2f, 0.2f);
+        alterego.position.set(7.5f, 0f, 1.5f);
+        alterego.scale.set(1, 0.5f, 1f);
         alterego.update();
 
         // set camera position
@@ -285,15 +285,20 @@ public class RoomLocation extends LocationActivity {
 
         //talk to alter ego
         if(pointless_conversation == true){
-            addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(0.2f, 0.2f, 0.2f), "alter_ego_pointless");
+            addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless");
         }else{
-            addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(0.2f, 0.2f, 0.2f), "alter_ego");
+            addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego");
         }
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0.0f);
+
+        if (lol) {
+            lol = false;
+            Game.getInstance().pushActivity(GameActivity.Enemies);
+        }
     }
 
     @Override
@@ -336,6 +341,8 @@ public class RoomLocation extends LocationActivity {
 
     FpsInput fps = new FpsInput(camera);
 
+    boolean lol = false;
+
     @Override
     public void onSelected(Context context, Object data) {
         if (data.equals("pc")) {
@@ -344,6 +351,9 @@ public class RoomLocation extends LocationActivity {
                 @Override
                 public void onResult(Activity act, Object data) {
                     System.out.println(data);
+                    if (data.equals("inbox")) {
+                        lol = true;
+                    }
                 }
             });
         } else if (data.equals("notes")) {
