@@ -16,11 +16,14 @@ import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureFilter;
 import tpa.graphics.texture.TextureWrap;
 import tpa.joml.Vector3f;
+import tpa.joml.Vector4f;
 
 /**
  * Created by germangb on 13/04/16.
  */
 public class RoomLocation extends LocationActivity {
+
+    FpsInput fps = new FpsInput(camera);
 
     DecalActor door0, door1, door2;
     DecalActor notes3, notes4;
@@ -46,19 +49,20 @@ public class RoomLocation extends LocationActivity {
     TaskManager tasks = new TaskManager();
 
     boolean phoneActive = false;
-    boolean forceEmail = false;
     boolean musicPlaying = false;
     boolean walking = false;
     boolean notewallShowUp = false;
     boolean pointless_conversation = false;
     boolean bar_card = false;
+    boolean alterShowUp = false;
+    boolean perpetualPc = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/music/ambient.wav", Music.class);
-        Game.getInstance().getResources().load("res/music/music.wav", Music.class);
+        Game.getInstance().getResources().load("res/music/noise.wav", Music.class);
         Game.getInstance().getResources().load("res/sfx/telf0.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
@@ -219,8 +223,16 @@ public class RoomLocation extends LocationActivity {
         if (!musicPlaying) {
             musicPlaying = true;
             Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
-            context.audioRenderer.playMusic(music, true);
+            context.audioRenderer.playMusic(music, true, 0);
         }
+
+        if (alterShowUp) {
+            Music noise = Game.getInstance().getResources().get("res/music/noise.wav", Music.class);
+            context.audioRenderer.playMusic(noise, true, 1);
+        }
+
+        context.audioRenderer.setMusicGain(0, 1);
+        context.audioRenderer.setMusicGain(1, 0);
 
         // add actors to the scene
         addGeometry(telf);
@@ -235,7 +247,6 @@ public class RoomLocation extends LocationActivity {
         addGeometry(tile0flip);
         addGeometry(tile1flip);
         addGeometry(tile1);
-        addGeometry(alterego);
         addDecal(window0);
         addDecal(window1);
         addDecal(door0);
@@ -262,8 +273,7 @@ public class RoomLocation extends LocationActivity {
 
         // you will receive an email
         if (Values.ARGUMENTO == 1) {
-            if (forceEmail) {
-                // add click region
+            if (perpetualPc) {
                 addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
             } else {
                 // wait and then add click region for the email
@@ -271,46 +281,62 @@ public class RoomLocation extends LocationActivity {
                 tasks.add(new DoSomethingTask(() -> {
                     addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
                     context.audioRenderer.playSound(emailSound, false);
-                    bar_card = true;
+                    perpetualPc = true;
                 }));
             }
         }
 
-
-
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
-        if(notewallShowUp== true){
-            addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.3f, 0.5f, 0.5f), "notes");
+        if(notewallShowUp){
+            addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "notes");
         }
 
         //talk to alter ego
-        if(pointless_conversation == true){
-            addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless");
-        }else{
-            addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego");
+        if (alterShowUp) {
+            addGeometry(alterego);
+            if (pointless_conversation) {
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless");
+            } else {
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego");
+            }
         }
 
-        if(bar_card == true){
-            Game.getInstance().pushActivity(GameActivity.BarCard);
+        if(bar_card){
             bar_card = false;
+            Game.getInstance().pushActivity(GameActivity.BarCard);
         }
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0.0f);
-
-        if (lol) {
-            lol = false;
-            Game.getInstance().pushActivity(GameActivity.Enemies);
-        }
     }
 
     @Override
     public void onTick(Context context) {
         tasks.update();
+
+        // noise when you look at the alter ego
+        if (alterShowUp) {
+            Vector3f ref = new Vector3f(fps.position).sub(alterego.position);
+            float len = ref.length();
+            ref.normalize();
+            Vector3f look = camera.look;
+            float dot = Math.max(-look.dot(ref), 0);
+
+            if (dot > 0.85) {
+                float lenCont = Math.max(Math.min((len-3) * 0.5f, 1), 0);
+                float di = (dot - 0.85f) / (1 - 0.85f) * lenCont;
+                context.audioRenderer.setMusicGain(1, di*0.1f);
+                setNoise(di * 0.25f);
+            } else {
+                setNoise(0);
+                context.audioRenderer.setMusicGain(1, 0);
+            }
+        }
+
 
         // blinking phone
         TexturedMaterial telfMat = (TexturedMaterial) telf.getMaterial();
@@ -319,10 +345,8 @@ public class RoomLocation extends LocationActivity {
             float t = (float) Math.sin(context.time.getTime() * 64);
             telf.position.set(2.25f + t*0.0125f, 1.0f, -2f);
             telf.update();
-            if (tim == 0)
-                telfMat.setTint(1, 0.68f, 0.68f);
-            else
-                telfMat.setTint(1, 1, 1);
+            if (tim == 0) telfMat.setTint(1, 0.68f, 0.68f);
+            else telfMat.setTint(1, 1, 1);
         } else {
             telfMat.setTint(1, 1, 1);
         }
@@ -345,20 +369,15 @@ public class RoomLocation extends LocationActivity {
 
     }
 
-    FpsInput fps = new FpsInput(camera);
-
-    boolean lol = false;
-
     @Override
     public void onSelected(Context context, Object data) {
         if (data.equals("pc")) {
-            forceEmail = true;
             Game.getInstance().pushActivity(GameActivity.DialogueEmail, new ActivityListener() {
                 @Override
                 public void onResult(Activity act, Object data) {
                     System.out.println(data);
                     if (data.equals("inbox")) {
-                        lol = true;
+                        bar_card = true;
                     }
                 }
             });
@@ -373,6 +392,7 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("telf")) {
             Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
                 if (dat.equals("finish")) {
+                    alterShowUp = true;
                     Values.ARGUMENTO = 1;   // advance "plot counter"
                     context.audioRenderer.playSound(hangPhone, false);
                 } else if (dat.equals("screw_you")) {

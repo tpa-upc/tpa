@@ -158,6 +158,14 @@ public abstract class LocationActivity extends Activity {
         }
     }
 
+    /**
+     * Set strength for screen noise effect
+     * @param noise noise strength
+     */
+    protected void setNoise (float noise) {
+        this.composite.setNoise(noise);
+    }
+
     @Override
     public void onBegin(Context context) {
         onEntered(context);

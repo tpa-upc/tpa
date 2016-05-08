@@ -34,13 +34,14 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     Map<Sound, Integer> sources = new HashMap<>();
 
     /** Music playing */
-    Music music = null;
-    AudioInputStream musicIs = null;
     ByteBuffer musicBuffer = ByteBuffer.allocateDirect(44100<<2).order(ByteOrder.nativeOrder());
-    int musicSource;
-    int musicFormat;
-    int musicSampling;
-    boolean musicLoop;
+    Music music[] = new Music[2];
+    AudioInputStream[] musicIs = new AudioInputStream[2];
+    int[] musicSource = new int[2];
+    int[] musicFormat = new int[2];
+    int[] musicSampling = new int[2];
+    boolean[] musicLoop = new boolean[2];
+    float[] musicGain = {1, 1};
 
     /** Audio device pointer */
     long device;
@@ -63,28 +64,30 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     }
 
     public void update () {
-        if (music != null) {
-            int processed = alGetSourcei(musicSource, AL_BUFFERS_PROCESSED);
-            int queued = alGetSourcei(musicSource, AL_BUFFERS_QUEUED);
-            //System.out.println("[MUSIC] processed="+processed+" queued="+queued);
+        for (int i = 0; i < 2; ++i) {
+            if (music != null) {
+                int processed = alGetSourcei(musicSource[i], AL_BUFFERS_PROCESSED);
+                int queued = alGetSourcei(musicSource[i], AL_BUFFERS_QUEUED);
+                //System.out.println("[MUSIC] processed="+processed+" queued="+queued);
 
-            for (int i = 0; i < processed; ++i) {
-                int buffer = alSourceUnqueueBuffers(musicSource);
+                for (int j = 0; j < processed; ++j) {
+                    int buffer = alSourceUnqueueBuffers(musicSource[i]);
 
-                // refill buffer
-                try {
-                    if (musicIs.available() > 0) {
-                        getSamples(buffer);
-                        alSourceQueueBuffers(musicSource, buffer);
-                    } else {
-                        if (musicLoop) {
-                            playMusic(music, true, 1);
+                    // refill buffer
+                    try {
+                        if (musicIs[i].available() > 0) {
+                            getSamples(buffer, i);
+                            alSourceQueueBuffers(musicSource[i], buffer);
                         } else {
-                            alDeleteBuffers(buffer);
+                            if (musicLoop[i]) {
+                                playMusic(music[i], true, i, 1);
+                            } else {
+                                alDeleteBuffers(buffer);
+                            }
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
@@ -139,31 +142,31 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         }
     }
 
-    private void playMusic (Music music, boolean loop, int numBuffer) {
+    private void playMusic (Music music, boolean loop, int channel, int numBuffer) {
         //TODO Error handling
-        if (musicIs != null) {
-            alSourceStop(musicSource);
+        if (musicIs[channel] != null) {
+            alSourceStop(musicSource[channel]);
 
-            int processed = alGetSourcei(musicSource, AL_BUFFERS_PROCESSED);
-            int queued = alGetSourcei(musicSource, AL_BUFFERS_QUEUED);
+            int processed = alGetSourcei(musicSource[channel], AL_BUFFERS_PROCESSED);
+            int queued = alGetSourcei(musicSource[channel], AL_BUFFERS_QUEUED);
 
             for (int i = 0; i < processed+queued; ++i) {
-                int buf = alSourceUnqueueBuffers(musicSource);
+                int buf = alSourceUnqueueBuffers(musicSource[channel]);
                 alDeleteBuffers(buf);
             }
 
             try {
-                musicIs.close();
+                musicIs[channel].close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         try {
-            musicLoop = loop;
-            musicIs = AudioSystem.getAudioInputStream(new File(music.getFile()));
-            AudioFormat format = musicIs.getFormat();
-            musicSampling = (int) format.getSampleRate();
+            musicLoop[channel] = loop;
+            musicIs[channel] = AudioSystem.getAudioInputStream(new File(music.getFile()));
+            AudioFormat format = musicIs[channel].getFormat();
+            musicSampling[channel] = (int) format.getSampleRate();
             //System.out.println("[MUSIC] SR="+musicSampling);
             //System.out.println("[MUSIC] DEPTH="+format.getSampleSizeInBits());
             //System.out.println("[MUSIC] CHANNELS="+format.getChannels());
@@ -171,17 +174,17 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
             boolean error = false;
             if (format.getChannels() == 1) {
                 if (format.getSampleSizeInBits() == 8) {
-                    musicFormat = AL_FORMAT_MONO8;
+                    musicFormat[channel] = AL_FORMAT_MONO8;
                 } else if (format.getSampleSizeInBits() == 16) {
-                    musicFormat = AL_FORMAT_MONO16;
+                    musicFormat[channel] = AL_FORMAT_MONO16;
                 } else {
                     System.err.println("Unsupported bit depth");
                 }
             } else if (format.getChannels() == 2) {
                 if (format.getSampleSizeInBits() == 8) {
-                    musicFormat = AL_FORMAT_STEREO8;
+                    musicFormat[channel] = AL_FORMAT_STEREO8;
                 } else if (format.getSampleSizeInBits() == 16) {
-                    musicFormat = AL_FORMAT_STEREO16;
+                    musicFormat[channel] = AL_FORMAT_STEREO16;
                 } else {
                     System.err.println("Unsupported bit depth");
                 }
@@ -193,22 +196,24 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
 
             if (!error) {
                 // generate a source
-                musicSource = alGenSources();
+                musicSource[channel] = alGenSources();
 
                 // assign a few buffers
-                for (int i = 0; i < 4; ++i) {
-                    if (musicIs.available() > 0) {
+                for (int i = 0; i < numBuffer; ++i) {
+                    if (musicIs[channel].available() > 0) {
                         int buffer = alGenBuffers();
-                        getSamples(buffer);
-                        alSourceQueueBuffers(musicSource, buffer);
+                        getSamples(buffer, channel);
+                        alSourceQueueBuffers(musicSource[channel], buffer);
                     } else break;
                 }
 
                 // play music
-                if (alGetSourcei(musicSource, AL_SOURCE_STATE) != AL_PLAYING)
-                    alSourcePlay(musicSource);
+                if (alGetSourcei(musicSource[channel], AL_SOURCE_STATE) != AL_PLAYING) {
+                    alSourcef(musicSource[channel], AL_GAIN, musicGain[channel]);
+                    alSourcePlay(musicSource[channel]);
+                }
 
-                this.music = music;
+                this.music[channel] = music;
             }
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
@@ -220,15 +225,21 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     }
 
     @Override
-    public void playMusic(Music music, boolean loop) {
-        playMusic(music, loop, 4);
+    public void playMusic(Music music, boolean loop, int channel) {
+        playMusic(music, loop, channel, 4);
+    }
+
+    @Override
+    public void setMusicGain(int channel, float gain) {
+        musicGain[channel] = gain;
+        alSourcef(musicSource[channel], AL_GAIN, gain);
     }
 
     /**
      * Read samples from music input stream and put them in a buffer
      * @param buffer
      */
-    private void getSamples (int buffer) throws IOException {
+    private void getSamples (int buffer, int channel) throws IOException {
         musicBuffer.clear();
         byte[] readBuffer = new byte[128];
 
@@ -236,7 +247,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
         while (musicBuffer.remaining() > 0) {
             // read a bit of the file
             int toRead = Math.min(musicBuffer.remaining(), readBuffer.length);
-            int read = musicIs.read(readBuffer, 0, toRead);
+            int read = musicIs[channel].read(readBuffer, 0, toRead);
             if (read <= 0)
                 break;
 
@@ -246,7 +257,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
 
         // upload samples to the audio buffer
         musicBuffer.flip();
-        alBufferData(buffer, musicFormat, musicBuffer, musicSampling);
+        alBufferData(buffer, musicFormat[channel], musicBuffer, musicSampling[channel]);
     }
 
     @Override

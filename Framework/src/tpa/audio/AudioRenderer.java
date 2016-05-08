@@ -21,7 +21,14 @@ public interface AudioRenderer {
      * Will start streaming a music file
      * @param music music file to be streamed
      */
-    void playMusic (Music music, boolean loop);
+    void playMusic (Music music, boolean loop, int channel);
+
+    /**
+     * Set music gain in a given channel
+     * @param channel music channel
+     * @param gain gain
+     */
+    void setMusicGain (int channel, float gain);
 
     /**
      * Will stop playing a music file
