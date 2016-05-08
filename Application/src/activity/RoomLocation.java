@@ -285,11 +285,16 @@ public class RoomLocation extends LocationActivity {
             }
         }
 
+        if(Values.ARGUMENTO == 3){
+
+        }
+
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
         if(notewallShowUp){
             addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "notes");
+            Values.ARGUMENTO = 2;
         }
 
         //talk to alter ego
