@@ -224,7 +224,6 @@ public class RoomLocation extends LocationActivity {
             musicPlaying = true;
             Music music = Game.getInstance().getResources().get("res/music/ambient.wav", Music.class);
             context.audioRenderer.playMusic(music, true, 0);
-            context.audioRenderer.setMusicGain(0, 0.25f);
         }
 
         if (alterShowUp) {
