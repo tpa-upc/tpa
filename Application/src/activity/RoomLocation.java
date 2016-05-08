@@ -51,6 +51,7 @@ public class RoomLocation extends LocationActivity {
     boolean walking = false;
     boolean notewallShowUp = false;
     boolean pointless_conversation = false;
+    boolean bar_card = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -270,6 +271,7 @@ public class RoomLocation extends LocationActivity {
                 tasks.add(new DoSomethingTask(() -> {
                     addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
                     context.audioRenderer.playSound(emailSound, false);
+                    bar_card = true;
                 }));
             }
         }
@@ -288,6 +290,11 @@ public class RoomLocation extends LocationActivity {
             addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(0.2f, 0.2f, 0.2f), "alter_ego_pointless");
         }else{
             addPickerBox(new Vector3f(4f, 1f, 0.75f), new Vector3f(0.2f, 0.2f, 0.2f), "alter_ego");
+        }
+
+        if(bar_card == true){
+            Game.getInstance().pushActivity(GameActivity.BarCard);
+            bar_card = false;
         }
 
         // set camera
@@ -331,7 +338,6 @@ public class RoomLocation extends LocationActivity {
             }
         }
 
-
     }
 
     FpsInput fps = new FpsInput(camera);
@@ -348,7 +354,7 @@ public class RoomLocation extends LocationActivity {
             });
         } else if (data.equals("notes")) {
             context.audioRenderer.playSound(paper, false);
-            Game.getInstance().pushActivity(GameActivity.Note1);
+            Game.getInstance().pushActivity(GameActivity.Note0);
         } else if (data.equals("door")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);

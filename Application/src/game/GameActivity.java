@@ -52,7 +52,10 @@ public enum GameActivity {
     AlterEgo1 (new DialogActivity("res/dialogues/casa2_alter_ego.json")),
 
     /** Alter Ego first pointless conversation **/
-    AlterEgoP (new DialogActivity("res/dialogues/casa2_alter_ego_repeat.json"));
+    AlterEgoP (new DialogActivity("res/dialogues/casa2_alter_ego_repeat.json")),
+
+    /** Bar Card **/
+    BarCard (new ImageActivity("res/textures/bar_card.png"));
 
     /** referenced game activity */
     private activity.Activity activity;
