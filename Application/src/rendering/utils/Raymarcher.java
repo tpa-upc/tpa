@@ -48,6 +48,7 @@ public class Raymarcher implements RayPicker {
                 return wr.id;
             }
             h += Math.max(dist, 0.01f);
+            if (h > 2) break;
         }
         return null;
     }
