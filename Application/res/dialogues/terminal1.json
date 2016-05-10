@@ -1,0 +1,19 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {
+          "text": "Search \"Jess Brown\"",
+          "answer": -1,
+          "data": "search"
+        },
+        {
+          "text": "Play arkanoid",
+          "answer": 0,
+          "data": "It's not time for that!"
+        }
+      ],
+      "answers": [{"text":"", "jump": 0}]
+    }
+  ]
+}

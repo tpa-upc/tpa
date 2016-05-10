@@ -1,0 +1,8 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "We have something here;Let's do some research...", "data": null, "answer": -1}],
+      "answers": []
+    }
+  ]
+}
