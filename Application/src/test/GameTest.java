@@ -59,9 +59,10 @@ public class GameTest implements Application {
                     act.getActivity().onPostLoad(context);
 
                 // push some activity
-                Game.getInstance().pushActivity(GameActivity.Room);
+                //Game.getInstance().pushActivity(GameActivity.Room);
                 //Game.getInstance().pushActivity(GameActivity.Intro);
                 //Game.getInstance().pushActivity(GameActivity.Club);
+                Game.getInstance().pushActivity(GameActivity.Interrogation);
             }
 
             context.renderer.beginFrame();
