@@ -58,6 +58,7 @@ public class RoomLocation extends LocationActivity {
     boolean perpetualPc = false;
     boolean friendface_monologue = false;
     boolean dial = false;
+    boolean interrogation_room = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -294,7 +295,7 @@ public class RoomLocation extends LocationActivity {
         }
 
         if (Values.ARGUMENTO == 5) {
-            addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
+            addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf2");
         }
 
         // talk to the door
@@ -323,6 +324,12 @@ public class RoomLocation extends LocationActivity {
         if (friendface_monologue) {
             friendface_monologue = false;
             Game.getInstance().pushActivity(GameActivity.MonologueFriendface);
+        }
+
+        if(interrogation_room){
+            addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "int_room");
+            Values.ARGUMENTO = 6;
+            interrogation_room = false;
         }
 
         // set camera
@@ -467,6 +474,15 @@ public class RoomLocation extends LocationActivity {
             });
         } else if(data.equals("alter_ego_pointless")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP);
+        } else if(data.equals("telf2")){
+            Game.getInstance().pushActivity(GameActivity.Thompson, (act, dat) -> {
+                if(dat.equals("finish")){
+                    interrogation_room = true;
+                }
+            });
+        } else if(data.equals("int_room")){
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Interrogation);
         }
 
     }
