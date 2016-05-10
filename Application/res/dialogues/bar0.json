@@ -1,0 +1,32 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Can I use your bathroom?", "answer": 0},
+        {"text": "Hey there, can I have a pint of Guimess?", "answer": 1}
+      ],
+      "answers": [
+        {"text": "Sorry, it's out of order", "jump": 0},
+        {"text": "Sure, mate!", "data": null, "jump": 1}
+      ]
+    },
+
+    {
+      "questions": [
+        {"text": "I've been wondering...;How close are you to your clients?", "answer": 0}
+      ],
+      "answers": [
+        {"text": "They're like my family, mate!", "data": null, "jump": 2}
+      ]
+    },
+
+    {
+      "questions": [
+        {"text": "Then you should probably know something;about Jess Brown, right?", "answer": 0}
+      ],
+      "answers": [
+        {"text": "I Dunno mate, I just know about beers!", "data": "finish", "jump": 0}
+      ]
+    }
+  ]
+}

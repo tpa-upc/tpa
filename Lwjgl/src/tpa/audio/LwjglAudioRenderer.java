@@ -65,10 +65,10 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
 
     public void update () {
         for (int i = 0; i < 2; ++i) {
-            if (music != null) {
+            if (music[i] != null) {
                 int processed = alGetSourcei(musicSource[i], AL_BUFFERS_PROCESSED);
                 int queued = alGetSourcei(musicSource[i], AL_BUFFERS_QUEUED);
-                //System.out.println("[MUSIC] processed="+processed+" queued="+queued);
+                //System.out.println("[MUSIC] ch="+i+" processed="+processed+" queued="+queued);
 
                 for (int j = 0; j < processed; ++j) {
                     int buffer = alSourceUnqueueBuffers(musicSource[i]);
@@ -160,6 +160,8 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            alDeleteSources(musicSource[channel]);
         }
 
         try {
@@ -199,7 +201,7 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
                 musicSource[channel] = alGenSources();
 
                 // assign a few buffers
-                for (int i = 0; i < numBuffer; ++i) {
+                for (int i = 0; i < 4; ++i) {
                     if (musicIs[channel].available() > 0) {
                         int buffer = alGenBuffers();
                         getSamples(buffer, channel);
@@ -207,8 +209,10 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
                     } else break;
                 }
 
+                System.out.println("asdasdasd");
                 // play music
                 if (alGetSourcei(musicSource[channel], AL_SOURCE_STATE) != AL_PLAYING) {
+                    System.out.println("asdasdasdasdas34534535");
                     alSourcef(musicSource[channel], AL_GAIN, musicGain[channel]);
                     alSourcePlay(musicSource[channel]);
                 }

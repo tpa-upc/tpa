@@ -55,8 +55,16 @@ public enum GameActivity {
     AlterEgoP (new DialogActivity("res/dialogues/casa2_alter_ego_repeat.json")),
 
     /** Bar Card **/
-    BarCard (new ImageActivity("res/textures/bar_card.png"));
+    BarCard (new ImageActivity("res/textures/bar_card.png")),
 
+    /** Fist Bar Conversation **/
+    Bar0 (new DialogActivity("res/dialogues/bar0.json")),
+
+    /** First Bar Pointless Conversations **/
+    Bar1 (new DialogActivity("res/dialogues/bar1.json")),
+
+    /** Satan End **/
+    ShortEnd (new ImageActivity("res/textures/theend.png"));
     /** referenced game activity */
     private activity.Activity activity;
 
