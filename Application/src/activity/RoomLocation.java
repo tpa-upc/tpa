@@ -40,6 +40,8 @@ public class RoomLocation extends LocationActivity {
     GeometryActor chair;
     GeometryActor alterego;
 
+    TextActor pcText, phoneText;
+
     Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound, dialTonesSound, holsSound;
     Sound steps;
     Sound paper;
@@ -221,6 +223,14 @@ public class RoomLocation extends LocationActivity {
 
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
+
+        pcText = new TextActor("Laptop");
+        pcText.position.set(3.5f, 0.675f, -1.5f).add(0, 0.5f, 0);
+        pcText.update();
+
+        phoneText = new TextActor("Telephone");
+        phoneText.position.set(telf.position).add(0, 0.5f, 0.25f);
+        phoneText.update();
     }
 
     @Override
@@ -263,7 +273,8 @@ public class RoomLocation extends LocationActivity {
         addDecal(notes4);
         addDecal(poster);
         addDecal(poster1);
-
+        addText(pcText);
+        addText(phoneText);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
@@ -338,6 +349,12 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onTick(Context context) {
         tasks.update();
+
+        pcText.rotation.set(camera.rotation).invert();
+        pcText.update();
+
+        phoneText.rotation.set(camera.rotation).invert();
+        phoneText.update();
 
         // noise when you look at the alter ego
         if (alterShowUp) {
