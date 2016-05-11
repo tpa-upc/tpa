@@ -15,4 +15,9 @@ public class TextActor extends Actor {
     public String getText () {
         return text;
     }
+
+    public void billboard (Camera camera) {
+        rotation.set(camera.rotation).invert();
+        update();
+    }
 }

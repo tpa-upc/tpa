@@ -350,11 +350,8 @@ public class RoomLocation extends LocationActivity {
     public void onTick(Context context) {
         tasks.update();
 
-        pcText.rotation.set(camera.rotation).invert();
-        pcText.update();
-
-        phoneText.rotation.set(camera.rotation).invert();
-        phoneText.update();
+        pcText.billboard(camera);
+        phoneText.billboard(camera);
 
         // noise when you look at the alter ego
         if (alterShowUp) {
