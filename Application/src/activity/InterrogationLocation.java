@@ -37,6 +37,7 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor tile0;
     GeometryActor thompson;
     GeometryActor anthony;
+    GeometryActor chair;
 
     DecalActor albert;
     DecalActor enemies;
@@ -73,6 +74,7 @@ public class InterrogationLocation extends LocationActivity {
         Mesh windowMesh = Game.getInstance().getResources().get("res/models/window.json", Mesh.class);
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
         Mesh capsuleMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
+        Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json",Mesh.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/interrogation_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_left.png", Texture.class);
         Texture wallTopTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_top.png", Texture.class);
@@ -81,6 +83,7 @@ public class InterrogationLocation extends LocationActivity {
         Texture enemiesTex = Game.getInstance().getResources().get("res/textures/enemies.png", Texture.class);
         Texture windowTex = Game.getInstance().getResources().get("res/textures/window.png", Texture.class);
         Texture capsuleTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
+        Texture chairTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -96,7 +99,7 @@ public class InterrogationLocation extends LocationActivity {
         TexturedMaterial capsuleMat = new TexturedMaterial(capsuleTex);
         DecalMaterial albertMat = new DecalMaterial(albertTex, depth);
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
-
+        TexturedMaterial chairMat = new TexturedMaterial(chairTex);
 
         albert = new DecalActor(albertMat);
         albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f);
@@ -121,7 +124,13 @@ public class InterrogationLocation extends LocationActivity {
         tile0 = new GeometryActor(tileMesh, tileMat);
         capsuleMat.setTint(0,1,0);
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
-        anthony.position.set(5,1,-4);
+        anthony.position.set(1f,0.5f,-2);
+        anthony.update();
+        chairMat.setTint(0,0,0);
+        chair = new GeometryActor(chairMesh, chairMat);
+        chair.position.set(1f,0,-2);
+        chair.rotation.rotateY((float)Math.toRadians(90));
+        chair.update();
     }
 
     @Override
@@ -138,13 +147,13 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(table);
         addDecal(albert);
         addDecal(enemies);
-        addGeometry(anthony);
+        addGeometry(chair);
 
         // open door
         doorAnimation = 2;
 
         if(Values.ARGUMENTO == 6){
-
+            addGeometry(anthony);
 
         }
 
@@ -165,6 +174,7 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
+
         fps.update(context);
         //cam.update();
         //cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
