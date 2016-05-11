@@ -1,0 +1,14 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Do you want a cigarette?", "answer": 0},
+        {"text": "How was your relationship with your wife?", "answer": 1}
+      ],
+      "answers": [
+        {"text": "What are you saying, Mel?;You can't smoke in here!;FOCUS!!", "data": "delete2", "jump": 0},
+        {"text": "Well, we were... things weren't going;well between us. Lately, she was spending;a lot of time in some pub.", "data": "add1", "jump": 0}
+      ]
+    }
+  ]
+}
