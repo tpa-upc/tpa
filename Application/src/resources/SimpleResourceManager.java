@@ -50,14 +50,14 @@ public class SimpleResourceManager implements ResourceManager {
         p.type = type;
         queued.add(p);
 
-        if (Math.random() < 0.1f) {
+        /*if (Math.random() < 0.1f) {
             String fakeFile = System.currentTimeMillis()+".lol";
             lol.put(fakeFile, true);
             p = new Pair();
             p.path = fakeFile;
             p.type = type;
             queued.add(p);
-        }
+        }*/
     }
 
     @Override
