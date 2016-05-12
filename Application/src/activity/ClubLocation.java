@@ -143,6 +143,13 @@ public class ClubLocation extends LocationActivity {
             /**set up variable to finish the game**/
         }
 
+<<<<<<< Updated upstream
+=======
+        if(Values.ARGUMENTO == 7){
+            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman2");
+
+        }
+>>>>>>> Stashed changes
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
@@ -173,6 +180,11 @@ public class ClubLocation extends LocationActivity {
         }else if(data.equals("gohome")){
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Room);
+        }else if(data.equals("barman2")){
+            Game.getInstance().pushActivity(GameActivity.Bar2, (act, dat) -> {
+                
+            });
+
         }
     }
 

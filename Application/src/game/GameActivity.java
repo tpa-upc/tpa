@@ -73,6 +73,8 @@ public enum GameActivity {
     /** First Bar Pointless Conversations **/
     Bar1 (new DialogActivity("res/dialogues/bar1.json")),
 
+    Bar2 (new DialogActivity("res/dialogues/bar_3.json")),
+
     /** Satan End **/
     ShortEnd (new ImageActivity("res/textures/theend.png")),
 
