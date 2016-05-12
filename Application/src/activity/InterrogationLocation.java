@@ -192,18 +192,7 @@ public class InterrogationLocation extends LocationActivity {
         } else if (data.equals(32)) {
             Game.getInstance().pushActivity(GameActivity.Albert);
         } if(data.equals("anton")){
-            Game.getInstance().pushActivity(GameActivity.Interrog, (act0, dat0) -> {
-                if (dat0.equals("delete1")) {
-                    preguntas++;
-                    if (preguntas <= max_preguntas) {
-                        Game.getInstance().pushActivity(GameActivity.Delete1, (act1, dat1) -> {
 
-                        });
-                    } else {
-                        Game.getInstance().popActivity();
-                    }
-                }
-            });
         }
     }
 
