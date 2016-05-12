@@ -16,6 +16,7 @@ import tpa.graphics.render.*;
 import tpa.graphics.texture.*;
 import tpa.input.mouse.Cursor;
 import tpa.input.mouse.MouseAdapter;
+import tpa.joml.Matrix4f;
 import tpa.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -43,14 +44,20 @@ public abstract class LocationActivity extends Activity {
     /** geometry that doesn't go into the depth pass */
     private List<GeometryActor> debugGeometry = new ArrayList<>();
 
-    /** Decals visible on the screen */
+    /** Decals visible on the scene */
     private List<DecalActor> decals = new ArrayList<>();
+
+    /** Text in the scene */
+    private List<TextActor> text = new ArrayList<>();
 
     /** Framebuffer for early Z pass */
     private Framebuffer zPass;
 
     /** depth texture from early z pass */
     protected Texture depth;
+
+    /** text texture */
+    private Texture font;
 
     /** material used to render geometry */
     private DepthMaterial depthMaterial = new DepthMaterial();
@@ -104,18 +111,25 @@ public abstract class LocationActivity extends Activity {
 
         Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
+        Game.getInstance().getResources().load("res/textures/ubuntu24.png", Texture.class);
 
         onRoomPreLoad(context);
     }
 
     @Override
     public void onPostLoad(Context context) {
+        font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
+        font.setMag(TextureFilter.Linear);
         box = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
         composite = new CompositeMaterial(lowresPass.getTargets()[0], lowresPass.getTargets()[1], context.time);
         //wireframe = new WireframeMaterial();
         sprites = new SpriteBatch(context.renderer);
         onRoomPostLoad(context);
+    }
+
+    protected void addText (TextActor actor) {
+        this.text.add(actor);
     }
 
     /**
@@ -209,6 +223,7 @@ public abstract class LocationActivity extends Activity {
         geometry.clear();
         decals.clear();
         picker.clear();
+        text.clear();
         debugGeometry.clear();
         context.mouse.setCursor(Cursor.Arrow);
         Values.LOCATION_TRANSITION_ANIMATION = true;
@@ -270,6 +285,21 @@ public abstract class LocationActivity extends Activity {
             Material mat = actor.getMaterial();
             mat.render(context.renderer, camera, box, actor.model);
         }
+
+        // render text
+        float scale = 0.005f;
+        sprites.getState().depthTest = true;
+        sprites.getState().depthMask = false;
+        sprites.begin();
+        sprites.setProjection(new Matrix4f(camera.viewProjection));
+
+        for (TextActor act : text) {
+            Vector3f pos = new Vector3f(3.5f, 0.675f + 0.5f, -1.5f);
+            pos.set(act.position);
+            sprites.setModel(act.model);
+            sprites.addText(font, 0, 0 - 12 * scale, 0, act.getText(), 12, scale);
+        }
+        sprites.end();
 
         // window pass
         renderer.setFramebuffer(null);

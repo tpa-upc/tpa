@@ -36,7 +36,7 @@ public class SpriteBatch {
     private IntBuffer indices;
 
     private boolean drawing = false;
-    private Matrix4f projection = new Matrix4f();
+    private Matrix4f projection = new Matrix4f(), model = new Matrix4f();
     private int quads = 0;
 
     private Vector4f tint = new Vector4f(1);
@@ -48,9 +48,18 @@ public class SpriteBatch {
         createMesh();
     }
 
+    public RendererState getState () {
+        return state;
+    }
+
     public void setProjection (Matrix4f prj) {
         if (drawing) flush();
         program.setUniform("u_projection", UniformType.Matrix4, projection.set(prj));
+    }
+
+    public void setModel (Matrix4f mod) {
+        if (drawing) flush();
+        program.setUniform("u_model", UniformType.Matrix4, model.set(mod));
     }
 
     public void setColor (float r, float g, float b, float a) {
@@ -66,7 +75,36 @@ public class SpriteBatch {
         renderer.setState(state);
         renderer.setShaderProgram(program);
         program.setUniform("u_projection", UniformType.Matrix4, projection);
+        program.setUniform("u_model", UniformType.Matrix4, model);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
+    }
+
+    public void addText (Texture texture, float x, float y, float z, String text, float textSize, float scale) {
+        int tw = texture.getWidth();
+        int th = texture.getHeight();
+        float cw = tw/16 * scale;
+        float ch = th/16 * scale;
+        float offx = 0;
+        float offy = 0;
+
+        float width = text.length()*textSize*scale;
+
+        for (int i = 0; i < text.length(); ++i) {
+            char c = text.charAt(i);
+            if (c == '\n') {
+                offx = 0;
+                offy += ch*scale;
+                continue;
+            }
+            int row = c/16;
+            int col = c%16;
+            if (row < 16) {
+                float u = row/16f;
+                float v = col/16f;
+                add(texture, x+offx-width/2, y+offy, z, cw, ch, u+1/16f, v, -1/16f, 1/16f);
+                offx += textSize*scale;
+            }
+        }
     }
 
     /**
@@ -74,7 +112,7 @@ public class SpriteBatch {
      * @param texture text texture
      * @param text text to be renderer
      */
-    public void addText (Texture texture, int x, int y, String text, int textSize) {
+    public void addText (Texture texture, int x, int y, String text, float textSize) {
         int tw = texture.getWidth();
         int th = texture.getHeight();
         int cw = tw/16;
@@ -100,6 +138,10 @@ public class SpriteBatch {
     }
 
     public void add (Texture texture, float x, float y, float width, float height, float u, float v, float du, float dv) {
+        add(texture, x, y, 0, width, height, u, v, du, dv);
+    }
+
+    public void add (Texture texture, float x, float y, float z, float width, float height, float u, float v, float du, float dv) {
         if (texture != used && used != null)
             flush();
 
@@ -109,10 +151,10 @@ public class SpriteBatch {
 
         used = texture;
         position.put(new float[] {
-                x, y, 0,
-                x+width, y, 0,
-                x+width, y+height, 0,
-                x, y+height, 0
+                x, y, z,
+                x+width, y, z,
+                x+width, y+height, z,
+                x, y+height, z
         });
         color.put(new float[] {
                 tint.x, tint.y, tint.z, tint.w,
@@ -204,9 +246,10 @@ public class SpriteBatch {
                 "varying vec4 v_color;\n" +
                 "\n" +
                 "uniform mat4 u_projection;\n" +
+                "uniform mat4 u_model;\n" +
                 "\n" +
                 "void main () {\n" +
-                "    gl_Position = u_projection * vec4(a_position, 1.0);\n" +
+                "    gl_Position = u_projection * u_model * vec4(a_position, 1.0);\n" +
                 "    v_uv = a_uv;\n" +
                 "    v_color = a_color;\n" +
                 "}";

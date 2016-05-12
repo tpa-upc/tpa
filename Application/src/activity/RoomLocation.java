@@ -40,7 +40,9 @@ public class RoomLocation extends LocationActivity {
     GeometryActor chair;
     GeometryActor alterego;
 
-    Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound;
+    TextActor pcText, phoneText;
+
+    Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound, dialTonesSound, holsSound;
     Sound steps;
     Sound paper;
 
@@ -71,8 +73,10 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/phone_hold.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/paper_short_16.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/dial.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/dial_tones.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
@@ -104,6 +108,8 @@ public class RoomLocation extends LocationActivity {
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
         steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
         dialSound = Game.getInstance().getResources().get("res/sfx/dial.wav", Sound.class);
+        dialTonesSound = Game.getInstance().getResources().get("res/sfx/dial_tones.wav", Sound.class);
+        holsSound = Game.getInstance().getResources().get("res/sfx/phone_hold.wav", Sound.class);
         paper = Game.getInstance().getResources().get("res/sfx/paper_short_16.wav", Sound.class);
 
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
@@ -218,6 +224,14 @@ public class RoomLocation extends LocationActivity {
 
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
+
+        pcText = new TextActor("Laptop");
+        pcText.position.set(3.5f, 0.675f, -1.5f).add(0, 0.5f, 0);
+        pcText.update();
+
+        phoneText = new TextActor("Telephone");
+        phoneText.position.set(telf.position).add(0, 0.5f, 0.25f);
+        phoneText.update();
     }
 
     @Override
@@ -260,7 +274,8 @@ public class RoomLocation extends LocationActivity {
         addDecal(notes4);
         addDecal(poster);
         addDecal(poster1);
-
+        addText(pcText);
+        addText(phoneText);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
@@ -341,6 +356,9 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onTick(Context context) {
         tasks.update();
+
+        pcText.billboard(camera);
+        phoneText.billboard(camera);
 
         // noise when you look at the alter ego
         if (alterShowUp) {
@@ -444,6 +462,13 @@ public class RoomLocation extends LocationActivity {
                     dial = true;
                     context.audioRenderer.playSound(dialSound, false);
                     tasks.add(new DelayTask(4, context.time));
+                    tasks.add(new DoSomethingTask(() -> {
+                        context.audioRenderer.playSound(dialTonesSound, false);
+                    }));
+                    tasks.add(new DelayTask(1, context.time));
+                    tasks.add(new DoSomethingTask(() -> {
+                        context.audioRenderer.playSound(holsSound, false);
+                    }));
                 }
             } else {
                 Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
