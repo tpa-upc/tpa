@@ -282,10 +282,13 @@ public class RoomLocation extends LocationActivity {
                     addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
                     context.audioRenderer.playSound(emailSound, false);
                     perpetualPc = true;
+                    Values.ARGUMENTO=2;
                 }));
             }
         }
-
+        if (Values.ARGUMENTO==2){
+            addPickerBox(new Vector3f(1.0f, 1.0f, -2.0f), new Vector3f(0.25f,1.0f,0.1f), "bar");
+        }
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
@@ -417,6 +420,9 @@ public class RoomLocation extends LocationActivity {
             });
         } else if(data.equals("alter_ego_pointless")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP);
+        } else if (data.equals("bar")){
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Club);
         }
 
     }
