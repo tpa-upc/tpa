@@ -143,6 +143,10 @@ public class ClubLocation extends LocationActivity {
             /**set up variable to finish the game**/
         }
 
+        if(Values.ARGUMENTO == 7){
+
+
+        }
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
