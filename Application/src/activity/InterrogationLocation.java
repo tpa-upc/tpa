@@ -152,13 +152,8 @@ public class InterrogationLocation extends LocationActivity {
         addDecal(enemies);
         addGeometry(chair);
 
-        // open door
-        doorAnimation = 2;
-
-        if(Values.ARGUMENTO == 6){
-            addGeometry(anthony);
-            addPickerBox(new Vector3f(2,1,-2), new Vector3f(1,1,1),"int_anthony1");
-        }
+        addGeometry(anthony);
+        addPickerBox(new Vector3f(2,1,-2), new Vector3f(1,1,1),"anton");
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -196,7 +191,7 @@ public class InterrogationLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {
             Game.getInstance().pushActivity(GameActivity.Albert);
-        } if(data.equals("int_anthony1")){
+        } if(data.equals("anton")){
             Game.getInstance().pushActivity(GameActivity.Interrog, (act0, dat0) -> {
                 if (dat0.equals("delete1")) {
                     preguntas++;
@@ -209,55 +204,6 @@ public class InterrogationLocation extends LocationActivity {
                     }
                 }
             });
-
-            /*Game.getInstance().pushActivity(GameActivity.Interrog, (act, dat) -> {
-                if(dat.equals("delete1")){
-                    preguntas++;
-                    if(preguntas <= max_preguntas){
-                        Game.getInstance().pushActivity(GameActivity.Delete1, (act2, dat2) -> {
-                            if (dat2.equals("delete2")) {
-                                preguntas++;
-                                if (preguntas <= max_preguntas) {
-                                    Game.getInstance().pushActivity(GameActivity.Delete2, (act3, dat3) -> {
-                                        if(dat3.equals("unblock2")){
-                                            preguntas++;
-                                            if(preguntas <= max_preguntas){
-
-                                            }else{
-                                                Game.getInstance().popActivity();
-                                                Game.getInstance().pushActivity(GameActivity.Interrogation);
-                                            }
-
-                                        }
-                                    });
-                                } else {
-                                    Game.getInstance().popActivity();
-                                    Game.getInstance().pushActivity(GameActivity.Interrogation);
-                                }
-                            } else if (dat2.equals("unblock1")) {
-                                preguntas++;
-                                if (preguntas <= max_preguntas) {
-                                    Game.getInstance().pushActivity(GameActivity.Unblock1);
-                                } else {
-                                    Game.getInstance().popActivity();
-                                    Game.getInstance().pushActivity(GameActivity.Interrogation);
-                                }
-
-                            }
-                        });
-                    }else{
-                        Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.Interrogation);
-                    }
-                    }
-                    });
-                }else if(dat.equals("delete2")){
-                    preguntas++;
-                    if(preguntas <= max_preguntas) {
-                        Game.getInstance().pushActivity(GameActivity.Delete2);
-                    }
-                }
-            });*/
         }
     }
 
