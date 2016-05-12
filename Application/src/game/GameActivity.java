@@ -52,6 +52,7 @@ public enum GameActivity {
 
     /** Post-it note #1. */
     Note1 (new ImageActivity("res/textures/note1.png")),
+    ReactionNote2 (new DialogActivity("res/dialogues/note2_reaction.json")),
 
     /** Albert Oliveras. */
     Albert (new ImageActivity("res/textures/albert_big.png")),
@@ -90,8 +91,14 @@ public enum GameActivity {
     /**Interrogation Room Conversation - all**/
     Interrog (new DialogActivity("res/dialogues/Interrogation_Room1.json")),
     Delete1 (new DialogActivity("res/dialogues/int_room2.json")),
-    Delete2 (new DialogActivity("res/dialogues/int_room3.json"));
+    Delete2 (new DialogActivity("res/dialogues/int_room3.json")),
     /** end of interrogation room conversations **/
+
+    JamesImage (new ImageActivity("res/textures/JamesStuart.png")),
+    AfterJamesSearchDialogue (new DialogActivity("res/dialogues/reaction_james_search.json")),
+
+    /** Terminal 2 **/
+    Terminal2 (new DialogActivity("res/dialogues/terminal2.json"));
 
     /** referenced game activity */
     private activity.Activity activity;

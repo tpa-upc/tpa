@@ -40,7 +40,7 @@ public class RoomLocation extends LocationActivity {
     GeometryActor chair;
     GeometryActor alterego;
 
-    TextActor pcText, phoneText;
+    TextActor pcText, phoneText, alterText;
 
     Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound, dialTonesSound, holsSound;
     Sound steps;
@@ -62,6 +62,7 @@ public class RoomLocation extends LocationActivity {
     boolean dial = false;
     boolean interrogation_room = false;
     boolean alterShowUp2 = false;
+    boolean lover_house = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -233,6 +234,10 @@ public class RoomLocation extends LocationActivity {
         phoneText = new TextActor("Telephone");
         phoneText.position.set(telf.position).add(0, 0.5f, 0.25f);
         phoneText.update();
+
+        alterText = new TextActor("Sweetie");
+        alterText.position.set(alterego.position).add(0,0.5f,0.25f);
+        alterText.update();
     }
 
     @Override
@@ -320,11 +325,9 @@ public class RoomLocation extends LocationActivity {
 
         if(Values.ARGUMENTO == 8){
             alterShowUp2 = true;
+            addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc2");
         }
 
-        if(Values.ARGUMENTO == 9){
-
-        }
 
         if(alterShowUp2){
             addGeometry(alterego);
@@ -368,6 +371,11 @@ public class RoomLocation extends LocationActivity {
             interrogation_room = false;
         }
 
+        if(lover_house){
+            addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "lover_room");
+            Values.ARGUMENTO = 9;
+            lover_house = false;
+        }
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
@@ -530,16 +538,41 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.AlterEgo2, (act, dat) -> {
                 if(dat.equals("note2")){
                     context.audioRenderer.playSound(paper, false);
-                    Game.getInstance().pushActivity(GameActivity.Note1);
                     pointless_conversation = true;
                     Values.ARGUMENTO = 9;
+                    Game.getInstance().popActivity();
+                    Game.getInstance().pushActivity(GameActivity.Note1);
+
+
                 }
+                Game.getInstance().popActivity(); //problems!!
+                Game.getInstance().pushActivity(GameActivity.ReactionNote2);
             });
 
         }else if(data.equals("alter_ego_pointless2")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP2);
+        }else if(data.equals("pc2")){
+            Game.getInstance().pushActivity(GameActivity.Terminal2, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object data) {
+                    if (data.equals("search_anthony")) {
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.MapImage);
+                    }else if (data.equals("search_james")){
+                        lover_house = true;
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.JamesImage);
+                        Game.getInstance().pushActivity(GameActivity.AfterJamesSearchDialogue);
+                    }else if(data.equals("search_jess")){
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Friendface);
+                    }
+                }
+                });
+        }else if(data.equals("lover_room")){
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Amant);
         }
-
     }
 
     @Override

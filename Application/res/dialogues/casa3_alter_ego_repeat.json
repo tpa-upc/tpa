@@ -5,7 +5,7 @@
         {"text": "Sure your teddy is happy enough?", "answer": 0}
       ],
       "answers": [
-        {"text": "I’m gonna put my teddy bear’s hair up;in a ponytail. Maybe he’ll be happier :)", "data": "finish", "jump": -1}
+        {"text": "I'm gonna put my teddy bear's hair up;in a ponytail. Maybe he'll be happier :)", "data": "finish", "jump": -1}
       ]
     }
   ]

@@ -1,0 +1,24 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {
+          "text": "Search James Stuart",
+          "answer": -1,
+          "data": "search_james"
+        },
+        {
+          "text": "Search Jess Brown",
+          "answer": -1,
+          "data": "search_jess"
+        },
+        {
+          "text": "Search Anthony Brown",
+          "answer": -1,
+          "data": "search_anthony"
+        }
+      ],
+      "answers": []
+    }
+  ]
+}
