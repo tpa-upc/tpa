@@ -61,6 +61,7 @@ public class RoomLocation extends LocationActivity {
     boolean friendface_monologue = false;
     boolean dial = false;
     boolean interrogation_room = false;
+    boolean alterShowUp2 = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -318,10 +319,21 @@ public class RoomLocation extends LocationActivity {
         }
 
         if(Values.ARGUMENTO == 8){
-            addGeometry(alterego);
-            addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego2");
+            alterShowUp2 = true;
         }
 
+        if(Values.ARGUMENTO == 9){
+
+        }
+
+        if(alterShowUp2){
+            addGeometry(alterego);
+            if(pointless_conversation){
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless2");
+            }else{
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego2");
+            }
+        }
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
@@ -517,9 +529,15 @@ public class RoomLocation extends LocationActivity {
         }else if(data.equals("alter_ego2")){
             Game.getInstance().pushActivity(GameActivity.AlterEgo2, (act, dat) -> {
                 if(dat.equals("note2")){
+                    context.audioRenderer.playSound(paper, false);
                     Game.getInstance().pushActivity(GameActivity.Note1);
+                    pointless_conversation = true;
+                    Values.ARGUMENTO = 9;
                 }
             });
+
+        }else if(data.equals("alter_ego_pointless2")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgoP2);
         }
 
     }

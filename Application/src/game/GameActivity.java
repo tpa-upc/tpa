@@ -66,7 +66,7 @@ public enum GameActivity {
 
     /** Second conversation with alter ego **/
     AlterEgo2 (new DialogActivity("res/dialogues/casa3_alter_ego.json")),
-    AlterEgoP2 (new DialogActivity("res/dialogies/casa3_alter_ego_repeat.json")),
+    AlterEgoP2 (new DialogActivity("res/dialogues/casa3_alter_ego_repeat.json")),
 
     /** Bar Card **/
     BarCard (new ImageActivity("res/textures/bar_card.png")),
