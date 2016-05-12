@@ -124,11 +124,6 @@ public class ClubLocation extends LocationActivity {
         addGeometry(barman);
         addDecal(door1);
 
-        //check if Values is working --> has to be erased
-        if(Values.ARGUMENTO == 0) {Values.ARGUMENTO = 2;
-
-        }
-
         if(Values.ARGUMENTO == 2){
                 addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
         }

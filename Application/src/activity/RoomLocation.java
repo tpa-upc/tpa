@@ -418,6 +418,7 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onSelected(Context context, Object data) {
         if (data.equals("pc")) {
+            System.out.println("pc "+Values.ARGUMENTO);
             if (Values.ARGUMENTO == 1) {
                 Game.getInstance().pushActivity(GameActivity.DialogueEmail, new ActivityListener() {
                     @Override
@@ -430,6 +431,7 @@ public class RoomLocation extends LocationActivity {
                     }
                 });
             } else if (Values.ARGUMENTO == 3) {
+                System.out.println("SEARCH");
                 Game.getInstance().pushActivity(GameActivity.DialogueFriendface, new ActivityListener() {
                     @Override
                     public void onResult(Activity act, Object data) {
