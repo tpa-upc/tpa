@@ -1,10 +1,15 @@
 package activity;
 
+import activity.tasks.DoSomethingTask;
+import activity.tasks.Task;
+import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
+import game.Values;
 import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
+import rendering.TextActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
 import tpa.application.Context;
@@ -35,6 +40,9 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor anthony;
     GeometryActor chair, chair2;
 
+    TextActor antonText;
+    TextActor thomText;
+
     DecalActor albert;
     DecalActor enemies;
 
@@ -43,6 +51,7 @@ public class InterrogationLocation extends LocationActivity {
     int round = 0;
 
     private float doorAnimation = 1;
+    boolean youFuckedUp = false;
 
     @Override
     public void onRoomPreLoad(Context context) {
@@ -130,10 +139,25 @@ public class InterrogationLocation extends LocationActivity {
         tile1.position.set(4, 0, 0);
         tile1.update();
         capsuleMat.setTint(0,1,0);
+
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
         anthony.position.set(3,0,0);
         anthony.update();
-        chairMat.setTint(0,0,0);
+
+        thompson = new GeometryActor(capsuleMesh, capsuleMat);
+        thompson.position.set(0.25f, 0, 1.5f);
+        thompson.scale.set(1, 1.2f, 1);
+        thompson.update();
+
+        antonText = new TextActor("Anthony guy");
+        antonText.position.set(3, 1.25f, 0);
+        antonText.update();
+
+        thomText = new TextActor("Thompson");
+        thomText.position.set(0.25f, 1.5f, 1.5f);
+        thomText.update();
+
+        chairMat.setTint(0.2f, 0.2f, 0.2f);
         chair = new GeometryActor(chairMesh, chairMat);
         chair.position.set(1,0,0);
         chair.rotation.rotateY((float)Math.toRadians(-90));
@@ -144,6 +168,8 @@ public class InterrogationLocation extends LocationActivity {
         chair2.rotation.rotateY((float)Math.toRadians(90));
         chair2.update();
     }
+
+    private TaskManager tasks = new TaskManager();
 
     @Override
     public void onEntered(Context context) {
@@ -160,9 +186,49 @@ public class InterrogationLocation extends LocationActivity {
         addDecal(enemies);
         addGeometry(chair);
         addGeometry(chair2);
+        addText(antonText);
+        addText(thomText);
+
+        /*
+Do you have a child?
+Yeah, his name is Alex. I hope he’s fine… I don’t want to talk about this now.
+(Thompson: Don’t worry, we’ll do our best to find Alex).
+Do you think she was having an affair with someone?
+What?!? Well… maybe… I mean, I didn’t know where she has been most of the time so… why not…. Maybe she met someone in the pub… (sniff sniff)
+         */
 
         addGeometry(anthony);
-        addPickerBox(new Vector3f(3,0.2f,0), new Vector3f(0.2f,1,0.2f),"anton");
+
+        if (!youFuckedUp) {
+            addPickerBox(new Vector3f(3, 0.2f, 0), new Vector3f(0.2f, 1, 0.2f), "anton");
+        } else {
+            round = 0;
+            questionCount = 0;
+            composite.setTimer(1);
+            tasks.add(new Task() {
+                float t = 1;
+                @Override
+                public void onBegin() {
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    t -= context.time.getFrameTime() * 0.25f;
+                    composite.setTimer(Math.max(t, 0));
+                    return t < 0;
+                }
+            });
+
+            tasks.add(new DoSomethingTask(() -> {
+                // Go back to room :)
+                youFuckedUp = false;
+                Game.getInstance().popActivity();
+                Game.getInstance().pushActivity(GameActivity.Room);
+                Values.ARGUMENTO = 3;
+            }));
+        }
+
+        addGeometry(thompson);
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -171,6 +237,9 @@ public class InterrogationLocation extends LocationActivity {
         //cam.position.set(cam.position.x, 1.5f, 2.5f);
         //cam.tiltX = 0.1f;
         fps.position.y=1.25f;
+        fps.position.x = 1;
+        fps.position.z = 0;
+        fps.setMovable(false);
 
         // test ray picker
         addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
@@ -181,8 +250,12 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-
+        tasks.update();
         fps.update(context);
+
+        antonText.billboard(camera);
+        thomText.billboard(camera);
+
         //cam.update();
         //cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
         time += context.time.getFrameTime();
@@ -207,10 +280,20 @@ public class InterrogationLocation extends LocationActivity {
                     if (d0.equals("nope")) {
                         if (questionCount >= MAX_QUESTIONS) {
                             // :(
+                            youFuckedUp = true;
                             Game.getInstance().popActivity();
                         }
                     } else if (d0.equals("sip")) {
                         round++;
+                    }
+                });
+            } else if (round == 2) {
+                Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
+                    questionCount++;
+                    if (d0.equals("nope")) {
+
+                    } else if (d0.equals("sip")) {
+
                     }
                 });
             }

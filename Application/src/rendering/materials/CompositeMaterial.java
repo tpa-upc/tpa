@@ -67,7 +67,7 @@ public class CompositeMaterial extends Material {
             "    \n" +
             "    gl_FragColor = vec4(final_color*vignet*diff + rand*u_noise, 1.0);\n" +
             "    \n" +
-            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), exp(-u_timer * 0.35f));\n" +
+            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), smoothstep(1, 0, u_timer));\n" +
             "    \n" +
             "    vec2 uv2 = v_uv*2-1;\n" +
             "    uv2.x *= u_aspect;\n" +
@@ -102,7 +102,7 @@ public class CompositeMaterial extends Material {
 
     @Override
     public void render(Renderer renderer, Camera camera, Mesh mesh, Matrix4f model) {
-        timer += time.getFrameTime();
+        //timer += time.getFrameTime();
         updateRandom();
         renderer.setState(state);
         renderer.setShaderProgram(program);

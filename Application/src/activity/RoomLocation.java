@@ -224,6 +224,7 @@ public class RoomLocation extends LocationActivity {
 
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
+        fps.setMovable(true);
 
         pcText = new TextActor("Laptop");
         pcText.position.set(3.5f, 0.675f, -1.5f).add(0, 0.5f, 0);
@@ -466,6 +467,7 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("telf")) {
             if (Values.ARGUMENTO == 5) {
                 if (!dial) {
+                    fps.setMovable(false);
                     dial = true;
                     context.audioRenderer.playSound(dialSound, false);
                     tasks.add(new DelayTask(4, context.time));

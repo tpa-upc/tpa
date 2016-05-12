@@ -1,0 +1,21 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Do you have a child", "answer": 0},
+        {"text": "Do you think she was having an affair with someone?", "answer": 1},
+        {"text": "Do you like fishsticks?", "answer": 2}
+      ],
+      "answers": [
+        {"text": "Where the hell would I ve?! At home, of course!", "data": "nope", "jump": 0},
+        {"text": "The big guy behind you told me it's not allowed...", "data": "nope", "jump": 0},
+        {"text": "Well, we were...;things weren’t going well between us to be honest.;She was spending a lot of time in some god awful pub.", "data": "sep", "jump": 1}
+      ]
+    },
+
+    {
+      "questions": [{"text": "Really? What was the name of it?", "answer": 0}],
+      "answers": [{"text": "I think \"malibu\" rings a bell", "jump": -1}]
+    }
+  ]
+}
