@@ -2,13 +2,11 @@ package activity;
 
 import game.Game;
 import game.GameActivity;
-import game.Values;
 import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
-import rendering.utils.CameraController;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -28,22 +26,21 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor window;
     GeometryActor door;
     GeometryActor table;
-    GeometryActor wall;
+    GeometryActor wall0;
     GeometryActor wall1;
     GeometryActor wall2;
     GeometryActor wall3;
-    GeometryActor wall4;
-    GeometryActor wall5;
-    GeometryActor tile0;
+    GeometryActor tile0, tile1;
     GeometryActor thompson;
     GeometryActor anthony;
-    GeometryActor chair;
+    GeometryActor chair, chair2;
 
     DecalActor albert;
     DecalActor enemies;
 
-    int preguntas = 0;
-    int max_preguntas = 5; //4 questions maximum
+    final static int MAX_QUESTIONS = 3;
+    int questionCount = 0;
+    int round = 0;
 
     private float doorAnimation = 1;
 
@@ -105,55 +102,67 @@ public class InterrogationLocation extends LocationActivity {
         TexturedMaterial chairMat = new TexturedMaterial(chairTex);
 
         albert = new DecalActor(albertMat);
-        albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f);
+        albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f, 0.1f, 0.35f);
         enemies = new DecalActor(enemiesMat);
-        enemies.model.translate(0, 1, -1.25f).rotateY(180*3.1415f/180).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.05f).scale(0.45f);
+        enemies.model.translate(0, 1, -1.25f).rotateY(180*3.1415f/180).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.05f).scale(0.45f, 0.1f, 0.45f);
         door = new GeometryActor(doorMesh, doorMat);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(1.5f, 0, 0.5f).rotateY(95*3.1415f/180);
         window = new GeometryActor(windowMesh, windowMat);
         window.model.translate(1.5f, 0.5f, -2f);
-        wall = new GeometryActor(wallMesh, wallMat);
+        wall0 = new GeometryActor(wallMesh, wallMat);
+
+        wall2 = new GeometryActor(wallMesh, wallMat);
+        wall2.position.set(0, 0, 2);
+        wall2.update();
+
         wall1 = new GeometryActor(wallMesh, wallMat);
         wall1.model.translate(4, 0, -2).rotateY(180*3.1415f/180);
-        wall2 = new GeometryActor(wallMesh, wallTopMat);
-        wall2.model.translate(0, 2, 0);
-        wall3 = new GeometryActor(wallMesh, wallTopMat);
-        wall3.model.translate(0, 2, -2).rotateY(-90*3.1415f/180);
-        wall4 = new GeometryActor(wallMesh, wallTopMat);
-        wall4.model.translate(2, 2, -2).rotateY(-90*3.1415f/180);
-        wall5 = new GeometryActor(wallMesh, wallTopMat);
-        wall5.model.translate(4, 2, -2).rotateY(180*3.1415f/180);
+
+        wall3 = new GeometryActor(wallMesh, wallMat);
+        wall3.rotation.rotateY((float)Math.toRadians(180));
+        wall3.position.set(4, 0, 0);
+        wall3.update();
+
         tile0 = new GeometryActor(tileMesh, tileMat);
+        tile1 = new GeometryActor(tileMesh, tileMat);
+        tile1.rotation.rotateY((float)Math.toRadians(180));
+        tile1.position.set(4, 0, 0);
+        tile1.update();
         capsuleMat.setTint(0,1,0);
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
-        anthony.position.set(1,0.5f,-2);
+        anthony.position.set(3,0,0);
         anthony.update();
         chairMat.setTint(0,0,0);
         chair = new GeometryActor(chairMesh, chairMat);
-        chair.position.set(1,0,-2);
-        chair.rotation.rotateY((float)Math.toRadians(90));
+        chair.position.set(1,0,0);
+        chair.rotation.rotateY((float)Math.toRadians(-90));
         chair.update();
+
+        chair2 = new GeometryActor(chairMesh, chairMat);
+        chair2.position.set(3,0,0);
+        chair2.rotation.rotateY((float)Math.toRadians(90));
+        chair2.update();
     }
 
     @Override
     public void onEntered(Context context) {
-        addGeometry(wall);
+        addGeometry(wall0);
         addGeometry(wall1);
         addGeometry(wall2);
         addGeometry(wall3);
-        addGeometry(wall4);
-        addGeometry(wall5);
         addGeometry(tile0);
+        addGeometry(tile1);
         //addGeometry(door);
         addGeometry(window);
         addGeometry(table);
         addDecal(albert);
         addDecal(enemies);
         addGeometry(chair);
+        addGeometry(chair2);
 
         addGeometry(anthony);
-        addPickerBox(new Vector3f(2,1,-2), new Vector3f(1,1,1),"anton");
+        addPickerBox(new Vector3f(3,0.2f,0), new Vector3f(0.2f,1,0.2f),"anton");
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -161,7 +170,7 @@ public class InterrogationLocation extends LocationActivity {
         camera.clearColor.set(0.125f);
         //cam.position.set(cam.position.x, 1.5f, 2.5f);
         //cam.tiltX = 0.1f;
-        fps.position.y=1;
+        fps.position.y=1.25f;
 
         // test ray picker
         addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
@@ -191,8 +200,20 @@ public class InterrogationLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {
             Game.getInstance().pushActivity(GameActivity.Albert);
-        } if(data.equals("anton")){
-
+        } if(data.equals("anton") && questionCount < MAX_QUESTIONS){
+            if (round == 0) {
+                Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
+                    questionCount++;
+                    if (d0.equals("nope")) {
+                        if (questionCount >= MAX_QUESTIONS) {
+                            // :(
+                            Game.getInstance().popActivity();
+                        }
+                    } else if (d0.equals("sip")) {
+                        round++;
+                    }
+                });
+            }
         }
     }
 

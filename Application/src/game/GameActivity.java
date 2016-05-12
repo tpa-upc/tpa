@@ -81,7 +81,7 @@ public enum GameActivity {
     /**Thompson conversation by phone**/
     Thompson (new DialogActivity("res/dialogues/casa2_after_search.json")),
 
-    Interrogation0 (new DialogActivity("res/dialogues/interr_round0.json.json"));
+    Interrogation0 (new DialogActivity("res/dialogues/interr_round0.json"));
 
     /** referenced game activity */
     private activity.Activity activity;
