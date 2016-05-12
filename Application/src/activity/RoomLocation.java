@@ -304,6 +304,10 @@ public class RoomLocation extends LocationActivity {
             }
         }
 
+        if (Values.ARGUMENTO == 2) {
+            addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.1f), "leave");
+        }
+
         if(Values.ARGUMENTO == 3 || Values.ARGUMENTO == 4){
             addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
         }
@@ -317,7 +321,6 @@ public class RoomLocation extends LocationActivity {
 
         if(notewallShowUp){
             addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "notes");
-            Values.ARGUMENTO = 2;
         }
 
         //talk to alter ego
@@ -414,6 +417,7 @@ public class RoomLocation extends LocationActivity {
                         System.out.println(data);
                         if (data.equals("inbox")) {
                             bar_card = true;
+                            Values.ARGUMENTO = 2;
                         }
                     }
                 });
@@ -492,6 +496,9 @@ public class RoomLocation extends LocationActivity {
             });
         } else if(data.equals("alter_ego_pointless")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP);
+        } else if (data.equals("leave")) {
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Club);
         }
 
     }
