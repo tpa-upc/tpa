@@ -144,7 +144,7 @@ public class ClubLocation extends LocationActivity {
         }
 
         if(Values.ARGUMENTO == 7){
-
+            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman2");
 
         }
         // set camera
@@ -177,7 +177,11 @@ public class ClubLocation extends LocationActivity {
         }else if(data.equals("gohome")){
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Room);
-        }
+        }/*else if(data.equals("barman2")){
+            Game.getInstance().pushActivity(GameActivity.Bar2, (act, dat) -> {
+                //do sth here
+            });
+        }*/
     }
 
     @Override

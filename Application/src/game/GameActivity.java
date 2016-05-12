@@ -64,6 +64,10 @@ public enum GameActivity {
     /** Alter Ego first pointless conversation **/
     AlterEgoP (new DialogActivity("res/dialogues/casa2_alter_ego_repeat.json")),
 
+    /** Second conversation with alter ego **/
+    AlterEgo2 (new DialogActivity("res/dialogues/casa3_alter_ego.json")),
+    AlterEgoP2 (new DialogActivity("res/dialogies/casa3_alter_ego_repeat.json")),
+
     /** Bar Card **/
     BarCard (new ImageActivity("res/textures/bar_card.png")),
 
@@ -73,7 +77,7 @@ public enum GameActivity {
     /** First Bar Pointless Conversations **/
     Bar1 (new DialogActivity("res/dialogues/bar1.json")),
 
-    Bar2 (new DialogActivity("res/dialogues/bar_3.json")),
+    Bar2 (new DialogActivity("res/dialogues/bar3.json")),
 
     /** Satan End **/
     ShortEnd (new ImageActivity("res/textures/theend.png")),

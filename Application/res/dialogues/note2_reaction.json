@@ -1,0 +1,10 @@
+{
+  "dialog": [
+    {
+      "questions": [],
+      "answers": [
+        {"text": "I don’t really understand what’s going on with these fucking messages.", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}
