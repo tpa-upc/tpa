@@ -60,6 +60,7 @@ public class RoomLocation extends LocationActivity {
     boolean perpetualPc = false;
     boolean friendface_monologue = false;
     boolean dial = false;
+    boolean interrogation_room = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -321,6 +322,7 @@ public class RoomLocation extends LocationActivity {
 
         if(notewallShowUp){
             addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "notes");
+            Values.ARGUMENTO = 2;
         }
 
         //talk to alter ego
@@ -341,6 +343,12 @@ public class RoomLocation extends LocationActivity {
         if (friendface_monologue) {
             friendface_monologue = false;
             Game.getInstance().pushActivity(GameActivity.MonologueFriendface);
+        }
+
+        if(interrogation_room){
+            addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "int_room");
+            Values.ARGUMENTO = 6;
+            interrogation_room = false;
         }
 
         // set camera

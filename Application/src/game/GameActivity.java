@@ -76,10 +76,20 @@ public enum GameActivity {
     /** Satan End **/
     ShortEnd (new ImageActivity("res/textures/theend.png")),
 
-    MonologueFriendface(new DialogActivity("res/dialogues/mono_friendface.json"));
+    MonologueFriendface(new DialogActivity("res/dialogues/mono_friendface.json")),
+
+    /**Thompson conversation by phone**/
+    Thompson (new DialogActivity("res/dialogues/casa2_after_search.json")),
+
+    /**Interrogation Room Conversation - all**/
+    Interrog (new DialogActivity("res/dialogues/Interrogation_Room1.json")),
+    Delete1 (new DialogActivity("res/dialogues/int_room2.json")),
+    Delete2 (new DialogActivity("res/dialogues/int_room3.json"));
+    /** end of interrogation room conversations **/
 
     /** referenced game activity */
     private activity.Activity activity;
+
 
     GameActivity(activity.Activity activity) {
         this.activity = activity;
