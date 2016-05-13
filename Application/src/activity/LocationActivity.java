@@ -1,5 +1,7 @@
 package activity;
 
+import activity.tasks.Task;
+import activity.tasks.TaskManager;
 import game.Game;
 import game.Values;
 import rendering.*;
@@ -72,7 +74,7 @@ public abstract class LocationActivity extends Activity {
     private Mesh quad;
 
     /** material for rendering framebuffer */
-    private CompositeMaterial composite;
+    protected CompositeMaterial composite;
 
     /** Wireframe material for debugging */
     //private WireframeMaterial wireframe;
@@ -180,12 +182,34 @@ public abstract class LocationActivity extends Activity {
         this.composite.setNoise(noise);
     }
 
+    private TaskManager taks = new TaskManager();
+
     @Override
     public void onBegin(Context context) {
         onEntered(context);
 
         // set input listeners
-        composite.setTimer(Values.LOCATION_TRANSITION_ANIMATION?0:9999);
+        //composite.setTimer(Values.LOCATION_TRANSITION_ANIMATION?0:9999);
+
+        taks.clear();
+        if (Values.LOCATION_TRANSITION_ANIMATION) {
+            composite.setTimer(0);
+            taks.add(new Task() {
+                float t = 0;
+                @Override
+                public void onBegin() {
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    t += context.time.getFrameTime() * 0.25f;
+                    composite.setTimer(Math.min(t, 1));
+                    return t >= 1;
+                }
+            });
+        } else {
+            composite.setTimer(1);
+        }
         context.mouse.setGrabbed(true);
         context.keyboard.setKeyboardListener(null);
         context.mouse.setMouseListener(new MouseAdapter() {
@@ -232,6 +256,8 @@ public abstract class LocationActivity extends Activity {
     @Override
     public void onUpdate(Context context) {
         onTick(context);
+
+        taks.update();
 
         if (pick(context) != null) context.mouse.setCursor(Cursor.Hand);
         else context.mouse.setCursor(Cursor.Arrow);

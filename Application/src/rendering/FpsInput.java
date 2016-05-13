@@ -21,6 +21,7 @@ public class FpsInput {
     private float forward = 0;
     private float left = 0;
     private boolean walking = false;
+    private boolean movable = true;
 
     public FpsInput (Camera camera) {
         this.camera = camera;
@@ -28,6 +29,10 @@ public class FpsInput {
 
     public boolean isWalking () {
         return walking;
+    }
+
+    public void setMovable (boolean mov) {
+        movable = mov;
     }
 
     public void update (Context context) {
@@ -49,34 +54,37 @@ public class FpsInput {
 
         float v = 0.025f;
 
+        if (movable) {
+
         /*if (context.keyboard.isKeyDown(KeyboardInput.KEY_SPACE))
             position.y += v;
 
         if (context.keyboard.isKeyDown(KeyboardInput.KEY_LEFT_SHIFT))
             position.y -= v;*/
 
-        if (context.keyboard.isKeyDown(KeyboardInput.KEY_W)) {
-            position.x += (float) Math.sin(sYaw) * v;
-            position.z -= (float) Math.cos(sYaw) * v;
-            walking = true;
-        }
+            if (context.keyboard.isKeyDown(KeyboardInput.KEY_W)) {
+                position.x += (float) Math.sin(sYaw) * v;
+                position.z -= (float) Math.cos(sYaw) * v;
+                walking = true;
+            }
 
-        if (context.keyboard.isKeyDown(KeyboardInput.KEY_S)) {
-            position.x -= (float) Math.sin(sYaw) * v;
-            position.z += (float) Math.cos(sYaw) * v;
-            walking = true;
-        }
+            if (context.keyboard.isKeyDown(KeyboardInput.KEY_S)) {
+                position.x -= (float) Math.sin(sYaw) * v;
+                position.z += (float) Math.cos(sYaw) * v;
+                walking = true;
+            }
 
-        if (context.keyboard.isKeyDown(KeyboardInput.KEY_D)) {
-            position.z += (float) Math.sin(sYaw) * v;
-            position.x += (float) Math.cos(sYaw) * v;
-            walking = true;
-        }
+            if (context.keyboard.isKeyDown(KeyboardInput.KEY_D)) {
+                position.z += (float) Math.sin(sYaw) * v;
+                position.x += (float) Math.cos(sYaw) * v;
+                walking = true;
+            }
 
-        if (context.keyboard.isKeyDown(KeyboardInput.KEY_A)) {
-            position.z -= (float) Math.sin(sYaw) * v;
-            position.x -= (float) Math.cos(sYaw) * v;
-            walking = true;
+            if (context.keyboard.isKeyDown(KeyboardInput.KEY_A)) {
+                position.z -= (float) Math.sin(sYaw) * v;
+                position.x -= (float) Math.cos(sYaw) * v;
+                walking = true;
+            }
         }
 
         sPitch += (pitch - sPitch) * context.time.getFrameTime() * 16;

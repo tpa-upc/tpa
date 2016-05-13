@@ -1,14 +1,17 @@
 package activity;
 
+import activity.tasks.DoSomethingTask;
+import activity.tasks.Task;
+import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
 import game.Values;
 import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
+import rendering.TextActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
-import rendering.utils.CameraController;
 import tpa.application.Context;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
@@ -28,24 +31,27 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor window;
     GeometryActor door;
     GeometryActor table;
-    GeometryActor wall;
+    GeometryActor wall0;
     GeometryActor wall1;
     GeometryActor wall2;
     GeometryActor wall3;
-    GeometryActor wall4;
-    GeometryActor wall5;
-    GeometryActor tile0;
+    GeometryActor tile0, tile1;
     GeometryActor thompson;
     GeometryActor anthony;
-    GeometryActor chair;
+    GeometryActor chair, chair2;
+
+    TextActor antonText;
+    TextActor thomText;
 
     DecalActor albert;
     DecalActor enemies;
 
-    int preguntas = 0;
-    int max_preguntas = 5; //4 questions maximum
+    final static int MAX_QUESTIONS = 3;
+    int questionCount = 0;
+    int round = 0;
 
     private float doorAnimation = 1;
+    boolean youFuckedUp = false;
 
     @Override
     public void onRoomPreLoad(Context context) {
@@ -105,60 +111,124 @@ public class InterrogationLocation extends LocationActivity {
         TexturedMaterial chairMat = new TexturedMaterial(chairTex);
 
         albert = new DecalActor(albertMat);
-        albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f);
+        albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f, 0.1f, 0.35f);
         enemies = new DecalActor(enemiesMat);
-        enemies.model.translate(0, 1, -1.25f).rotateY(180*3.1415f/180).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.05f).scale(0.45f);
+        enemies.model.translate(0, 1, -1.25f).rotateY(180*3.1415f/180).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.05f).scale(0.45f, 0.1f, 0.45f);
         door = new GeometryActor(doorMesh, doorMat);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(1.5f, 0, 0.5f).rotateY(95*3.1415f/180);
         window = new GeometryActor(windowMesh, windowMat);
         window.model.translate(1.5f, 0.5f, -2f);
-        wall = new GeometryActor(wallMesh, wallMat);
+        wall0 = new GeometryActor(wallMesh, wallMat);
+
+        wall2 = new GeometryActor(wallMesh, wallMat);
+        wall2.position.set(0, 0, 2);
+        wall2.update();
+
         wall1 = new GeometryActor(wallMesh, wallMat);
         wall1.model.translate(4, 0, -2).rotateY(180*3.1415f/180);
-        wall2 = new GeometryActor(wallMesh, wallTopMat);
-        wall2.model.translate(0, 2, 0);
-        wall3 = new GeometryActor(wallMesh, wallTopMat);
-        wall3.model.translate(0, 2, -2).rotateY(-90*3.1415f/180);
-        wall4 = new GeometryActor(wallMesh, wallTopMat);
-        wall4.model.translate(2, 2, -2).rotateY(-90*3.1415f/180);
-        wall5 = new GeometryActor(wallMesh, wallTopMat);
-        wall5.model.translate(4, 2, -2).rotateY(180*3.1415f/180);
+
+        wall3 = new GeometryActor(wallMesh, wallMat);
+        wall3.rotation.rotateY((float)Math.toRadians(180));
+        wall3.position.set(4, 0, 0);
+        wall3.update();
+
         tile0 = new GeometryActor(tileMesh, tileMat);
+        tile1 = new GeometryActor(tileMesh, tileMat);
+        tile1.rotation.rotateY((float)Math.toRadians(180));
+        tile1.position.set(4, 0, 0);
+        tile1.update();
         capsuleMat.setTint(0,1,0);
+
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
-        anthony.position.set(1,0.5f,-2);
+        anthony.position.set(3,0,0);
         anthony.update();
-        chairMat.setTint(0,0,0);
+
+        thompson = new GeometryActor(capsuleMesh, capsuleMat);
+        thompson.position.set(0.25f, 0, 1.5f);
+        thompson.scale.set(1, 1.2f, 1);
+        thompson.update();
+
+        antonText = new TextActor("Anthony guy");
+        antonText.position.set(3, 1.25f, 0);
+        antonText.update();
+
+        thomText = new TextActor("Thompson");
+        thomText.position.set(0.25f, 1.5f, 1.5f);
+        thomText.update();
+
+        chairMat.setTint(0.2f, 0.2f, 0.2f);
         chair = new GeometryActor(chairMesh, chairMat);
-        chair.position.set(1,0,-2);
-        chair.rotation.rotateY((float)Math.toRadians(90));
+        chair.position.set(1,0,0);
+        chair.rotation.rotateY((float)Math.toRadians(-90));
         chair.update();
+
+        chair2 = new GeometryActor(chairMesh, chairMat);
+        chair2.position.set(3,0,0);
+        chair2.rotation.rotateY((float)Math.toRadians(90));
+        chair2.update();
     }
+
+    private TaskManager tasks = new TaskManager();
 
     @Override
     public void onEntered(Context context) {
-        addGeometry(wall);
+        addGeometry(wall0);
         addGeometry(wall1);
         addGeometry(wall2);
         addGeometry(wall3);
-        addGeometry(wall4);
-        addGeometry(wall5);
         addGeometry(tile0);
+        addGeometry(tile1);
         //addGeometry(door);
         addGeometry(window);
         addGeometry(table);
         addDecal(albert);
         addDecal(enemies);
         addGeometry(chair);
+        addGeometry(chair2);
+        addText(antonText);
+        addText(thomText);
 
-        // open door
-        doorAnimation = 2;
+        /*
+Do you have a child?
+Yeah, his name is Alex. I hope he’s fine… I don’t want to talk about this now.
+(Thompson: Don’t worry, we’ll do our best to find Alex).
+Do you think she was having an affair with someone?
+What?!? Well… maybe… I mean, I didn’t know where she has been most of the time so… why not…. Maybe she met someone in the pub… (sniff sniff)
+         */
 
-        if(Values.ARGUMENTO == 6){
-            addGeometry(anthony);
-            addPickerBox(new Vector3f(2,1,-2), new Vector3f(1,1,1),"int_anthony1");
+        addGeometry(anthony);
+
+        if (!youFuckedUp) {
+            addPickerBox(new Vector3f(3, 0.2f, 0), new Vector3f(0.2f, 1, 0.2f), "anton");
+        } else {
+            round = 0;
+            questionCount = 0;
+            composite.setTimer(1);
+            tasks.add(new Task() {
+                float t = 1;
+                @Override
+                public void onBegin() {
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    t -= context.time.getFrameTime() * 0.25f;
+                    composite.setTimer(Math.max(t, 0));
+                    return t < 0;
+                }
+            });
+
+            tasks.add(new DoSomethingTask(() -> {
+                // Go back to room :)
+                youFuckedUp = false;
+                Game.getInstance().popActivity();
+                Game.getInstance().pushActivity(GameActivity.Room);
+                Values.ARGUMENTO = 3;
+            }));
         }
+
+        addGeometry(thompson);
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
@@ -166,7 +236,10 @@ public class InterrogationLocation extends LocationActivity {
         camera.clearColor.set(0.125f);
         //cam.position.set(cam.position.x, 1.5f, 2.5f);
         //cam.tiltX = 0.1f;
-        fps.position.y=1;
+        fps.position.y=1.25f;
+        fps.position.x = 1;
+        fps.position.z = 0;
+        fps.setMovable(false);
 
         // test ray picker
         addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
@@ -177,8 +250,12 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-
+        tasks.update();
         fps.update(context);
+
+        antonText.billboard(camera);
+        thomText.billboard(camera);
+
         //cam.update();
         //cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
         time += context.time.getFrameTime();
@@ -196,68 +273,30 @@ public class InterrogationLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {
             Game.getInstance().pushActivity(GameActivity.Albert);
-        } if(data.equals("int_anthony1")){
-            Game.getInstance().pushActivity(GameActivity.Interrog, (act0, dat0) -> {
-                if (dat0.equals("delete1")) {
-                    preguntas++;
-                    if (preguntas <= max_preguntas) {
-                        Game.getInstance().pushActivity(GameActivity.Delete1, (act1, dat1) -> {
-
-                        });
-                    } else {
-                        Game.getInstance().popActivity();
+        } if(data.equals("anton") && questionCount < MAX_QUESTIONS){
+            if (round == 0) {
+                Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
+                    questionCount++;
+                    if (d0.equals("nope")) {
+                        if (questionCount >= MAX_QUESTIONS) {
+                            // :(
+                            youFuckedUp = true;
+                            Game.getInstance().popActivity();
+                        }
+                    } else if (d0.equals("sip")) {
+                        round++;
                     }
-                }
-            });
+                });
+            } else if (round == 2) {
+                Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
+                    questionCount++;
+                    if (d0.equals("nope")) {
 
-            /*Game.getInstance().pushActivity(GameActivity.Interrog, (act, dat) -> {
-                if(dat.equals("delete1")){
-                    preguntas++;
-                    if(preguntas <= max_preguntas){
-                        Game.getInstance().pushActivity(GameActivity.Delete1, (act2, dat2) -> {
-                            if (dat2.equals("delete2")) {
-                                preguntas++;
-                                if (preguntas <= max_preguntas) {
-                                    Game.getInstance().pushActivity(GameActivity.Delete2, (act3, dat3) -> {
-                                        if(dat3.equals("unblock2")){
-                                            preguntas++;
-                                            if(preguntas <= max_preguntas){
+                    } else if (d0.equals("sip")) {
 
-                                            }else{
-                                                Game.getInstance().popActivity();
-                                                Game.getInstance().pushActivity(GameActivity.Interrogation);
-                                            }
-
-                                        }
-                                    });
-                                } else {
-                                    Game.getInstance().popActivity();
-                                    Game.getInstance().pushActivity(GameActivity.Interrogation);
-                                }
-                            } else if (dat2.equals("unblock1")) {
-                                preguntas++;
-                                if (preguntas <= max_preguntas) {
-                                    Game.getInstance().pushActivity(GameActivity.Unblock1);
-                                } else {
-                                    Game.getInstance().popActivity();
-                                    Game.getInstance().pushActivity(GameActivity.Interrogation);
-                                }
-
-                            }
-                        });
-                    }else{
-                        Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.Interrogation);
                     }
-                    }
-                    });
-                }else if(dat.equals("delete2")){
-                    preguntas++;
-                    if(preguntas <= max_preguntas) {
-                        Game.getInstance().pushActivity(GameActivity.Delete2);
-                    }
-                }
-            });*/
+                });
+            }
         }
     }
 
