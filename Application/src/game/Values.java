@@ -9,7 +9,7 @@ public class Values {
     public static boolean LOCATION_TRANSITION_ANIMATION = true;
 
     /** estado global del argumento */
-    public static int ARGUMENTO = 3;
+    public static int ARGUMENTO = 8;
 
     private Values () {}
 }
