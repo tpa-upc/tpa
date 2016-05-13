@@ -329,6 +329,14 @@ public class RoomLocation extends LocationActivity {
             addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc2");
         }
 
+        if (Values.ARGUMENTO==20){
+            addGeometry(alterego);
+            if(!pointless_conversation){
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_3");
+            }else{
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless3");
+            }
+        }
 
         if(alterShowUp2){
             addGeometry(alterego);
@@ -481,6 +489,7 @@ public class RoomLocation extends LocationActivity {
                     }
                 });
             }
+
         } else if (data.equals("notes")) {
             context.audioRenderer.playSound(paper, false);
             Game.getInstance().pushActivity(GameActivity.Note0);
@@ -574,6 +583,11 @@ public class RoomLocation extends LocationActivity {
         }else if(data.equals("lover_room")){
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Amant);
+        }else if (data.equals("alter_ego_3")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgo4);
+            pointless_conversation=true;
+        }else if (data.equals("alter_ego_pointless3")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgoRep4);
         }
     }
 
