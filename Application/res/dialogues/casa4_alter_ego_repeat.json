@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Any news?", "answer":0}
+      ],
+      "answers": [
+        {"text": "The good news is, she can't have babies :)", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}

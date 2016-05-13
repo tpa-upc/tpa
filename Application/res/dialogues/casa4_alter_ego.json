@@ -1,0 +1,30 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Hey sweetie, have you found something interesting;today?", "answer": 0}
+      ],
+      "answers": [
+        {"text": "I met a man today... Now I can understand Jess.", "data": null, "jump": 1}
+      ]
+    },
+
+    {
+      "questions": [
+        {"text": "What do you mean?", "answer": 0}
+      ],
+      "answers": [
+        {"text": "My teddy bear says that stealing is wrong.", "data": null, "jump": 2}
+      ]
+    },
+
+    {
+      "questions": [
+        {"text": "Okay...", "answer": 0}
+      ],
+      "answers": [
+        {"text": "Wanna play with his head?", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}

@@ -317,6 +317,14 @@ public class RoomLocation extends LocationActivity {
             addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
         }
 
+        if (Values.ARGUMENTO==20){
+            addGeometry(alterego);
+            if(!pointless_conversation){
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_3");
+            }else{
+                addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless3");
+            }
+        }
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
@@ -509,6 +517,11 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("leave")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Club);
+        }else if (data.equals("alter_ego_3")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgo4);
+            pointless_conversation=true;
+        }else if (data.equals("alter_ego_pointless3")){
+            Game.getInstance().pushActivity(GameActivity.AlterEgoRep4);
         }
 
     }

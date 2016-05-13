@@ -34,6 +34,15 @@ public enum GameActivity {
     /** toggle */
     DialogueToggle(new DialogActivity("res/dialogues/terminal0.json")),
 
+    /** Alter ego dialogue**/
+    AlterEgo4(new DialogActivity("res/dialogues/casa4_alter_ego.json")),
+
+    /** Alter ego repeat dialogue**/
+    AlterEgoRep4(new DialogActivity("res/dialogues/casa4_alter_ego_repeat.json")),
+
+    /**After search Forensic card**/
+    AfterSearchCard(new DialogActivity("res/dialogues/casa4_after_search.json")),
+
     /** fix door inner monologue */
     FixDoor (new DialogActivity("res/dialogues/fix_door.json")),
 
