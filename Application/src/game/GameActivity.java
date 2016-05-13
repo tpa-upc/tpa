@@ -89,7 +89,7 @@ public enum GameActivity {
     Thompson (new DialogActivity("res/dialogues/casa2_after_search.json")),
 
     Interrogation0 (new DialogActivity("res/dialogues/interr_round0.json")),
-    Interrogation1 (new DialogActivity("res/dialogues/interr_round1.json"));
+    Interrogation1 (new DialogActivity("res/dialogues/interr_round1.json")),
 
     JamesImage (new ImageActivity("res/textures/JamesStuart.png")),
     AfterJamesSearchDialogue (new DialogActivity("res/dialogues/reaction_james_search.json")),
