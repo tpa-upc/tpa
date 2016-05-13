@@ -94,6 +94,8 @@ public enum GameActivity {
     JamesImage (new ImageActivity("res/textures/JamesStuart.png")),
     AfterJamesSearchDialogue (new DialogActivity("res/dialogues/reaction_james_search.json")),
 
+    WantInterrogation (new DialogActivity("res/dialogues/want_to_interrogate.json")),
+
     /** Terminal 2 **/
     Terminal2 (new DialogActivity("res/dialogues/terminal2.json"));
 

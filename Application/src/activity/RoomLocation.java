@@ -63,6 +63,7 @@ public class RoomLocation extends LocationActivity {
     boolean interrogation_room = false;
     boolean alterShowUp2 = false;
     boolean lover_house = false;
+    boolean goToInterrogation = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -329,7 +330,6 @@ public class RoomLocation extends LocationActivity {
             addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc2");
         }
 
-
         if(alterShowUp2){
             addGeometry(alterego);
             if(pointless_conversation){
@@ -503,6 +503,19 @@ public class RoomLocation extends LocationActivity {
                     tasks.add(new DoSomethingTask(() -> {
                         context.audioRenderer.playSound(holsSound, false);
                     }));
+                    tasks.add(new DelayTask(10, context.time));
+                    tasks.add(new DoSomethingTask(() -> {
+                        Game.getInstance().pushActivity(GameActivity.WantInterrogation, new ActivityListener() {
+                            @Override
+                            public void onResult(Activity act, Object data) {
+                                if (data.equals("finish")) {
+                                    interrogation_room = true;
+                                    fps.setMovable(true);
+                                    Values.ARGUMENTO = 5;
+                                }
+                            }
+                        });
+                    }));
                 }
             } else {
                 Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
@@ -544,8 +557,6 @@ public class RoomLocation extends LocationActivity {
                     Values.ARGUMENTO = 9;
                     Game.getInstance().popActivity();
                     Game.getInstance().pushActivity(GameActivity.Note1);
-
-
                 }
                 Game.getInstance().popActivity(); //problems!!
                 Game.getInstance().pushActivity(GameActivity.ReactionNote2);
@@ -574,6 +585,9 @@ public class RoomLocation extends LocationActivity {
         }else if(data.equals("lover_room")){
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Amant);
+        } else if(data.equals("int_room")){
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Interrogation);
         }
     }
 

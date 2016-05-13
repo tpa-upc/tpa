@@ -1,0 +1,23 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "Hey Thompson! I need a favour", "answer": 0}],
+      "answers": [{"text": "What is it going to be this time?", "jump": 1}]
+    },
+
+    {
+      "questions": [{"text": "Out victim was married;Can you arrest him or something?;I want to interrogate him", "answer": 0}],
+      "answers": [{"text": "You know how the law works, right?", "jump": 2}]
+    },
+
+    {
+      "questions": [{"text": "Sure, I believe it goes something like this;1. You break into his house;2. You take him into custody in his underwear;3. I speak with him", "answer": 0}],
+      "answers": [{"text": "Close enough;Tell you what...;We can get hold of him for a few hours only;So you'd better prepare something", "jump": 3}]
+    },
+
+    {
+      "questions": [{"text": "What?;I need more time!", "answer": 0}],
+      "answers": [{"text": "Sorry, It's a no.", "data": "finish", "jump": -1}]
+    }
+  ]
+}
