@@ -101,6 +101,8 @@ public enum GameActivity {
     /** After looking for the Forensic card**/
     afterSearchForensic(new DialogActivity("res/dialogues/casa4_after_search.json")),
 
+    WantToInterrogate (new DialogActivity("res/dialogues/want_to_interrogate.json")),
+
     /** Terminal 2 **/
     Terminal2 (new DialogActivity("res/dialogues/terminal2.json"));
 

@@ -42,7 +42,6 @@ public class RoomLocation extends LocationActivity {
     TextActor pcText, phoneText, alterText;
 
     Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound, dialTonesSound, holsSound;
-    Sound steps;
     Sound paper;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,11 +106,13 @@ public class RoomLocation extends LocationActivity {
         telfSound = Game.getInstance().getResources().get("res/sfx/telf0.wav", Sound.class);
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
-        steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
+        Sound steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
         dialSound = Game.getInstance().getResources().get("res/sfx/dial.wav", Sound.class);
         dialTonesSound = Game.getInstance().getResources().get("res/sfx/dial_tones.wav", Sound.class);
         holsSound = Game.getInstance().getResources().get("res/sfx/phone_hold.wav", Sound.class);
         paper = Game.getInstance().getResources().get("res/sfx/paper_short_16.wav", Sound.class);
+
+        fps.setSteps(steps);
 
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
@@ -434,20 +435,6 @@ public class RoomLocation extends LocationActivity {
 
         // update camera
         fps.update(context);
-
-        // check if walking to play walking sound effect
-        if (fps.isWalking()) {
-            if (!walking) {
-                context.audioRenderer.playSound(steps, true);
-                walking = true;
-            }
-        } else {
-            if (walking) {
-                walking = false;
-                context.audioRenderer.stopSound(steps);
-            }
-        }
-
     }
 
     @Override
@@ -512,6 +499,18 @@ public class RoomLocation extends LocationActivity {
                     tasks.add(new DelayTask(1, context.time));
                     tasks.add(new DoSomethingTask(() -> {
                         context.audioRenderer.playSound(holsSound, false);
+                    }));
+                    tasks.add(new DelayTask(10, context.time));
+                    tasks.add(new DoSomethingTask(() -> {
+                        Game.getInstance().pushActivity(GameActivity.WantToInterrogate, new ActivityListener() {
+                            @Override
+                            public void onResult(Activity act, Object data) {
+                                if (data.equals("finish")) {
+                                    interrogation_room = true;
+                                    fps.setMovable(true);
+                                }
+                            }
+                        });
                     }));
                 }
             } else {

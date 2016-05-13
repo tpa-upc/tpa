@@ -202,6 +202,7 @@ What?!? Well… maybe… I mean, I didn’t know where she has been most of the 
         if (!youFuckedUp) {
             addPickerBox(new Vector3f(3, 0.2f, 0), new Vector3f(0.2f, 1, 0.2f), "anton");
         } else {
+            youFuckedUp = false;
             round = 0;
             questionCount = 0;
             composite.setTimer(1);
@@ -221,7 +222,6 @@ What?!? Well… maybe… I mean, I didn’t know where she has been most of the 
 
             tasks.add(new DoSomethingTask(() -> {
                 // Go back to room :)
-                youFuckedUp = false;
                 Game.getInstance().popActivity();
                 Game.getInstance().pushActivity(GameActivity.Room);
                 Values.ARGUMENTO = 3;
