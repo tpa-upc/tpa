@@ -16,7 +16,6 @@ import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureFilter;
 import tpa.graphics.texture.TextureWrap;
 import tpa.joml.Vector3f;
-import tpa.joml.Vector4f;
 
 /**
  * Created by germangb on 13/04/16.
@@ -550,14 +549,10 @@ public class RoomLocation extends LocationActivity {
                 if(dat.equals("note2")){
                     context.audioRenderer.playSound(paper, false);
                     pointless_conversation = true;
-                    Values.ARGUMENTO = 9;
                     Game.getInstance().popActivity();
+                    Game.getInstance().pushActivity(GameActivity.ReactionNote2);
                     Game.getInstance().pushActivity(GameActivity.Note1);
-
-
                 }
-                Game.getInstance().popActivity(); //problems!!
-                Game.getInstance().pushActivity(GameActivity.ReactionNote2);
             });
 
         }else if(data.equals("alter_ego_pointless2")){
@@ -572,8 +567,8 @@ public class RoomLocation extends LocationActivity {
                     }else if (data.equals("search_james")){
                         lover_house = true;
                         Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.JamesImage);
                         Game.getInstance().pushActivity(GameActivity.AfterJamesSearchDialogue);
+                        Game.getInstance().pushActivity(GameActivity.JamesImage);
                     }else if(data.equals("search_jess")){
                         Game.getInstance().popActivity();
                         Game.getInstance().pushActivity(GameActivity.Friendface);
@@ -582,7 +577,7 @@ public class RoomLocation extends LocationActivity {
                 });
         }else if(data.equals("lover_room")){
             Game.getInstance().popActivity();
-            Game.getInstance().pushActivity(GameActivity.Amant);
+            Game.getInstance().pushActivity(GameActivity.Acid);
         } else if(data.equals("int_room")){
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);

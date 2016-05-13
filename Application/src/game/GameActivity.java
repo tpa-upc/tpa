@@ -13,8 +13,8 @@ public enum GameActivity {
     /** Room location */
     Room(new RoomLocation()),
 
-    /** Amant location */
-    Amant(new AmantLocation()),
+    /** Acid location */
+    Acid(new AcidLocation()),
 
     /** Club location */
     Club(new ClubLocation()),

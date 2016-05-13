@@ -17,7 +17,7 @@ import tpa.joml.Vector3f;
 /**
  * Created by german on 04/05/2016.
  */
-public class AmantLocation extends LocationActivity {
+public class AcidLocation extends LocationActivity {
 
     FpsInput fps;
     Sound telf, hang;
