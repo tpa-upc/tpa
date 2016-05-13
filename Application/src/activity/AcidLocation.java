@@ -30,6 +30,7 @@ public class AcidLocation extends LocationActivity {
     public void onRoomPreLoad(Context context) {
         fps = new FpsInput(camera);
 
+        Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/girl.jpg", Texture.class);
@@ -41,6 +42,7 @@ public class AcidLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
+        Sound steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
         Mesh personMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
         Mesh cuboMEsh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Texture texture = Game.getInstance().getResources().get("res/textures/girl.jpg", Texture.class);
@@ -48,6 +50,8 @@ public class AcidLocation extends LocationActivity {
         Texture personTexture = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         telf = Game.getInstance().getResources().get("res/sfx/telf.wav", Sound.class);
         hang = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
+
+        fps.setSteps(steps);
 
         DecalMaterial decMat = new DecalMaterial(notesTexture, depth);
 

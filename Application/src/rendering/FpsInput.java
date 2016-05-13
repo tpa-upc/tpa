@@ -1,6 +1,7 @@
 package rendering;
 
 import tpa.application.Context;
+import tpa.audio.Sound;
 import tpa.input.keyboard.KeyboardInput;
 import tpa.joml.Vector3f;
 
@@ -23,8 +24,14 @@ public class FpsInput {
     private boolean walking = false;
     private boolean movable = true;
 
+    private Sound steps = null;
+
     public FpsInput (Camera camera) {
         this.camera = camera;
+    }
+
+    public void setSteps (Sound steps) {
+        this.steps = steps;
     }
 
     public boolean isWalking () {
@@ -102,8 +109,23 @@ public class FpsInput {
                 .rotate(sPitch, 1, 0, 0)
                 .rotate(sYaw, 0, 1, 0)
                 .translate(-position.x, -position.y-off, -position.z);
+
+        // play sound
+        // check if walking to play walking sound effect
+        if (isWalking()) {
+            if (!tog) {
+                context.audioRenderer.playSound(steps, true);
+                tog = true;
+            }
+        } else {
+            if (tog) {
+                tog = false;
+                context.audioRenderer.stopSound(steps);
+            }
+        }
     }
 
+    private boolean tog = false;
     private float off = 0;
     private float time = 0;
 
