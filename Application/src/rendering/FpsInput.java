@@ -112,15 +112,17 @@ public class FpsInput {
 
         // play sound
         // check if walking to play walking sound effect
-        if (isWalking()) {
-            if (!tog) {
-                context.audioRenderer.playSound(steps, true);
-                tog = true;
-            }
-        } else {
-            if (tog) {
-                tog = false;
-                context.audioRenderer.stopSound(steps);
+        if (steps != null) {
+            if (isWalking()) {
+                if (!tog) {
+                    context.audioRenderer.playSound(steps, true);
+                    tog = true;
+                }
+            } else {
+                if (tog) {
+                    tog = false;
+                    context.audioRenderer.stopSound(steps);
+                }
             }
         }
     }
