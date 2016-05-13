@@ -17,6 +17,9 @@ public abstract class Activity {
         void onResult (Activity act, Object data);
     }
 
+    // FIXME uuuuuuugh!!!
+    public boolean begun = false;
+
     /** Activity's listener */
     private ActivityListener listener;
 

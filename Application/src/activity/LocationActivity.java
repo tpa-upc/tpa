@@ -28,7 +28,7 @@ import java.util.List;
  * Created by germangb on 13/04/16.
  */
 public abstract class LocationActivity extends Activity {
-
+    
     private static final boolean DEBUG = true;
 
     /** low res scale */

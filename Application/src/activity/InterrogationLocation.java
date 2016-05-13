@@ -46,7 +46,7 @@ public class InterrogationLocation extends LocationActivity {
     DecalActor albert;
     DecalActor enemies;
 
-    final static int MAX_QUESTIONS = 3;
+    final static int MAX_QUESTIONS = 1;
     int questionCount = 0;
     int round = 0;
 
@@ -142,19 +142,21 @@ public class InterrogationLocation extends LocationActivity {
 
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
         anthony.position.set(3,0,0);
+        anthony.rotation.rotateY((float)Math.toRadians(-90));
         anthony.update();
 
         thompson = new GeometryActor(capsuleMesh, capsuleMat);
         thompson.position.set(0.25f, 0, 1.5f);
+        thompson.rotation.rotateY((float)Math.toRadians(120));
         thompson.scale.set(1, 1.2f, 1);
         thompson.update();
 
         antonText = new TextActor("Anthony guy");
-        antonText.position.set(3, 1.25f, 0);
+        antonText.position.set(3, 1.5f, 0);
         antonText.update();
 
         thomText = new TextActor("Thompson");
-        thomText.position.set(0.25f, 1.5f, 1.5f);
+        thomText.position.set(0.25f, 1.75f, 1.5f);
         thomText.update();
 
         chairMat.setTint(0.2f, 0.2f, 0.2f);
@@ -276,6 +278,7 @@ What?!? Well… maybe… I mean, I didn’t know where she has been most of the 
         } if(data.equals("anton") && questionCount < MAX_QUESTIONS){
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
+                    System.out.println(d0);
                     questionCount++;
                     if (d0.equals("nope")) {
                         if (questionCount >= MAX_QUESTIONS) {
@@ -283,17 +286,21 @@ What?!? Well… maybe… I mean, I didn’t know where she has been most of the 
                             youFuckedUp = true;
                             Game.getInstance().popActivity();
                         }
-                    } else if (d0.equals("sip")) {
-                        round++;
+                    } else if (d0.equals("sep")) {
+                        round = 1;
                     }
                 });
-            } else if (round == 2) {
+            } else if (round == 1) {
                 Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
                     questionCount++;
                     if (d0.equals("nope")) {
-
-                    } else if (d0.equals("sip")) {
-
+                        if (questionCount >= MAX_QUESTIONS) {
+                            // :(
+                            youFuckedUp = true;
+                            Game.getInstance().popActivity();
+                        }
+                    } else if (d0.equals("sep")) {
+                        round = 2;
                     }
                 });
             }

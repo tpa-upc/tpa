@@ -222,6 +222,7 @@ public class RoomLocation extends LocationActivity {
         alterego = new GeometryActor(capsuleModel, capsuleMat);
         alterego.position.set(7.5f, 0f, 1.5f);
         alterego.scale.set(1, 0.5f, 1f);
+        alterego.rotation.rotateY((float)Math.toRadians(-110));
         alterego.update();
 
         // set camera position
@@ -283,7 +284,6 @@ public class RoomLocation extends LocationActivity {
         addDecal(poster1);
         addText(pcText);
         addText(phoneText);
-        addText(alterText);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
@@ -332,6 +332,7 @@ public class RoomLocation extends LocationActivity {
 
         if (Values.ARGUMENTO==20){
             addGeometry(alterego);
+            addText(alterText);
             if(!pointless_conversation){
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_3");
             }else{
@@ -341,6 +342,7 @@ public class RoomLocation extends LocationActivity {
 
         if(alterShowUp2){
             addGeometry(alterego);
+            addText(alterText);
             if(pointless_conversation){
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless2");
             }else{
@@ -357,6 +359,7 @@ public class RoomLocation extends LocationActivity {
 
         //talk to alter ego
         if (alterShowUp) {
+            addText(alterText);
             addGeometry(alterego);
             if (pointless_conversation) {
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless");

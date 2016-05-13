@@ -7,15 +7,10 @@
         {"text": "Do you like fishsticks?", "answer": 2}
       ],
       "answers": [
-        {"text": "Where the hell would I ve?! At home, of course!", "data": "nope", "jump": 0},
-        {"text": "The big guy behind you told me it's not allowed...", "data": "nope", "jump": 0},
-        {"text": "Well, we were...;things weren’t going well between us to be honest.;She was spending a lot of time in some god awful pub.", "data": "sep", "jump": 1}
+        {"text": "Oh, yes;Alex;I hope he’s fine…;I don’t want to talk about this now.", "data": "nope", "jump": -1},
+        {"text": "What?!?;Well... maybe...;I mean, I didn’t know where she has been most of the time so…;Who knows...;Maybe she met someone in that pub...", "data": "sep", "jump": -1},
+        {"text": "I thought this would be a serious meeting...;I feel insulted", "data": "nope", "jump": -1}
       ]
-    },
-
-    {
-      "questions": [{"text": "Really? What was the name of it?", "answer": 0}],
-      "answers": [{"text": "I think \"malibu\" rings a bell", "jump": -1}]
     }
   ]
 }

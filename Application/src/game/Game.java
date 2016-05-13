@@ -20,7 +20,6 @@ public class Game {
 
     /** Stack of activities */
     private Stack<GameActivity> activities = new Stack<>();
-    private Stack<Boolean> actState = new Stack<>();
 
     /** Resource manager */
     private ResourceManager resources = new SimpleResourceManager();
@@ -45,10 +44,9 @@ public class Game {
 
         // update activity
         Activity top = activities.peek().getActivity();
-        if (!actState.peek()) {
+        if (!top.begun) {
+            top.begun = true;
             top.onBegin(context);
-            actState.pop();
-            actState.push(true);
         }
         top.onUpdate(context);
     }
@@ -68,14 +66,15 @@ public class Game {
      */
     public void pushActivity (GameActivity activity, Activity.ActivityListener listener) {
         if (!activities.isEmpty()) {
-            if (actState.peek())
+            if (activities.peek().getActivity().begun) {
                 activities.peek().getActivity().onEnd(context);
+                activities.peek().getActivity().begun = false;
+            }
         }
 
         activities.push(activity);
-        actState.push(false);
         activity.getActivity().setListener(listener);
-        //activity.getActivity().onBegin(context);
+        activity.getActivity().begun = false;
     }
 
     /**
@@ -85,13 +84,6 @@ public class Game {
         if (!activities.isEmpty()) {
             GameActivity activity = activities.pop();
             activity.getActivity().onEnd(context);
-
-            if (!activities.isEmpty()) {
-                actState.pop();
-                actState.pop();
-                actState.push(false);
-                activities.peek().getActivity().onBegin(context);
-            }
         }
     }
 
