@@ -76,7 +76,7 @@ public class AcidLocation extends LocationActivity {
         smallPerson.update();   // actualiza transformación
 
         // definir perspectiva de la camara
-        camera.projection.setPerspective(45f, 4/3f, 0.1f, 1000f);
+        camera.projection.setPerspective((float) Math.toRadians(120), 4/3f, 0.1f, 1000f);
         camera.clearColor.set(1,1,1);
     }
 
@@ -92,6 +92,8 @@ public class AcidLocation extends LocationActivity {
         if (dialogoOn) {
             addPickerBox(new Vector3f(0.35f, 1, -2), new Vector3f(0.25f), "caja!");
         }
+
+        fps.position.y = 1;
     }
 
     @Override

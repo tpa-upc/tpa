@@ -236,7 +236,7 @@ public class RoomLocation extends LocationActivity {
         phoneText.update();
 
         alterText = new TextActor("Sweetie");
-        alterText.position.set(alterego.position).add(0,0.5f,0.25f);
+        alterText.position.set(alterego.position).add(0,0.75f,0);
         alterText.update();
     }
 
@@ -282,6 +282,7 @@ public class RoomLocation extends LocationActivity {
         addDecal(poster1);
         addText(pcText);
         addText(phoneText);
+        addText(alterText);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
@@ -395,6 +396,7 @@ public class RoomLocation extends LocationActivity {
         tasks.update();
 
         pcText.billboard(camera);
+        alterText.billboard(camera);
         phoneText.billboard(camera);
 
         // noise when you look at the alter ego
@@ -574,7 +576,7 @@ public class RoomLocation extends LocationActivity {
                         Game.getInstance().pushActivity(GameActivity.Friendface);
                     }
                 }
-                });
+            });
         }else if(data.equals("lover_room")){
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Acid);
