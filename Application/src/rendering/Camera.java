@@ -1,6 +1,7 @@
 package rendering;
 
 import tpa.joml.Matrix4f;
+import tpa.joml.Quaternionf;
 import tpa.joml.Vector3f;
 import tpa.joml.Vector4f;
 
@@ -30,6 +31,9 @@ public class Camera {
     /** view projection matrix */
     public final Matrix4f invViewProjection = new Matrix4f();
 
+    /** camera rotation */
+    public final Quaternionf rotation = new Quaternionf();
+
     /** look direction */
     public Vector3f look = new Vector3f();
 
@@ -44,6 +48,9 @@ public class Camera {
         invView.set(view).invert();
         invProjection.set(projection).invert();
         invViewProjection.set(viewProjection).invert();
+
+        // get rotation
+        view.getNormalizedRotation(rotation);
 
         // get look direction
         invView.transformDirection(look.set(0, 0, -1)).normalize();

@@ -39,6 +39,7 @@ public class ClubLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/bar_texture.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/cara_sup.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/bar_texture_left.png", Texture.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Texture.class);
         Game.getInstance().getResources().load("res/models/chair.json", Texture.class);
@@ -122,11 +123,6 @@ public class ClubLocation extends LocationActivity {
         addGeometry(tile1flip);
         addGeometry(barman);
         addDecal(door1);
-
-        //check if Values is working --> has to be erased
-        if(Values.ARGUMENTO == 0) {Values.ARGUMENTO = 2;
-
-        }
 
         if(Values.ARGUMENTO == 2){
                 addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");

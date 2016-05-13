@@ -40,7 +40,9 @@ public class RoomLocation extends LocationActivity {
     GeometryActor chair;
     GeometryActor alterego;
 
-    Sound telfSound, hangPhone, pickupPhone, emailSound;
+    TextActor pcText, phoneText;
+
+    Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound, dialTonesSound, holsSound;
     Sound steps;
     Sound paper;
 
@@ -56,6 +58,9 @@ public class RoomLocation extends LocationActivity {
     boolean bar_card = false;
     boolean alterShowUp = false;
     boolean perpetualPc = false;
+    boolean friendface_monologue = false;
+    boolean dial = false;
+    boolean interrogation_room = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -68,7 +73,10 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/sfx/email.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/pickup_phone_16.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/phone_hold.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/paper_short_16.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/dial.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/dial_tones.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
@@ -99,6 +107,9 @@ public class RoomLocation extends LocationActivity {
         hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         pickupPhone = Game.getInstance().getResources().get("res/sfx/pickup_phone_16.wav", Sound.class);
         steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
+        dialSound = Game.getInstance().getResources().get("res/sfx/dial.wav", Sound.class);
+        dialTonesSound = Game.getInstance().getResources().get("res/sfx/dial_tones.wav", Sound.class);
+        holsSound = Game.getInstance().getResources().get("res/sfx/phone_hold.wav", Sound.class);
         paper = Game.getInstance().getResources().get("res/sfx/paper_short_16.wav", Sound.class);
 
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
@@ -213,6 +224,14 @@ public class RoomLocation extends LocationActivity {
 
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
+
+        pcText = new TextActor("Laptop");
+        pcText.position.set(3.5f, 0.675f, -1.5f).add(0, 0.5f, 0);
+        pcText.update();
+
+        phoneText = new TextActor("Telephone");
+        phoneText.position.set(telf.position).add(0, 0.5f, 0.25f);
+        phoneText.update();
     }
 
     @Override
@@ -231,7 +250,6 @@ public class RoomLocation extends LocationActivity {
             context.audioRenderer.playMusic(noise, true, 1);
         }
 
-        context.audioRenderer.setMusicGain(0, 1);
         context.audioRenderer.setMusicGain(1, 0);
 
         // add actors to the scene
@@ -256,7 +274,8 @@ public class RoomLocation extends LocationActivity {
         addDecal(notes4);
         addDecal(poster);
         addDecal(poster1);
-
+        addText(pcText);
+        addText(phoneText);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
@@ -282,18 +301,28 @@ public class RoomLocation extends LocationActivity {
                     addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
                     context.audioRenderer.playSound(emailSound, false);
                     perpetualPc = true;
-                    Values.ARGUMENTO=2;
                 }));
             }
         }
-        if (Values.ARGUMENTO==2){
-            addPickerBox(new Vector3f(1.0f, 1.0f, -2.0f), new Vector3f(0.25f,1.0f,0.1f), "bar");
+
+        if (Values.ARGUMENTO == 2) {
+            addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.1f), "leave");
         }
+
+        if(Values.ARGUMENTO == 3 || Values.ARGUMENTO == 4){
+            addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
+        }
+
+        if (Values.ARGUMENTO == 5) {
+            addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
+        }
+
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
         if(notewallShowUp){
             addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "notes");
+            Values.ARGUMENTO = 2;
         }
 
         //talk to alter ego
@@ -311,6 +340,17 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.BarCard);
         }
 
+        if (friendface_monologue) {
+            friendface_monologue = false;
+            Game.getInstance().pushActivity(GameActivity.MonologueFriendface);
+        }
+
+        if(interrogation_room){
+            addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "int_room");
+            Values.ARGUMENTO = 6;
+            interrogation_room = false;
+        }
+
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
@@ -320,6 +360,9 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onTick(Context context) {
         tasks.update();
+
+        pcText.billboard(camera);
+        phoneText.billboard(camera);
 
         // noise when you look at the alter ego
         if (alterShowUp) {
@@ -375,15 +418,43 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onSelected(Context context, Object data) {
         if (data.equals("pc")) {
-            Game.getInstance().pushActivity(GameActivity.DialogueEmail, new ActivityListener() {
-                @Override
-                public void onResult(Activity act, Object data) {
-                    System.out.println(data);
-                    if (data.equals("inbox")) {
-                        bar_card = true;
+            System.out.println("pc "+Values.ARGUMENTO);
+            if (Values.ARGUMENTO == 1) {
+                Game.getInstance().pushActivity(GameActivity.DialogueEmail, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity act, Object data) {
+                        System.out.println(data);
+                        if (data.equals("inbox")) {
+                            bar_card = true;
+                            Values.ARGUMENTO = 2;
+                        }
                     }
-                }
-            });
+                });
+            } else if (Values.ARGUMENTO == 3) {
+                System.out.println("SEARCH");
+                Game.getInstance().pushActivity(GameActivity.DialogueFriendface, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity act, Object data) {
+                        if (data.equals("search")) {
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.Friendface);
+                            friendface_monologue = true;
+                            Values.ARGUMENTO = 4;
+                        }
+                    }
+                });
+            } else if (Values.ARGUMENTO == 4) {
+                Game.getInstance().pushActivity(GameActivity.DialogueToggle, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity act, Object data) {
+                        if (data.equals("search")) {
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.MapImage);
+                            Values.ARGUMENTO = 5;
+                        }
+                    }
+                });
+            }
         } else if (data.equals("notes")) {
             context.audioRenderer.playSound(paper, false);
             Game.getInstance().pushActivity(GameActivity.Note0);
@@ -393,24 +464,39 @@ public class RoomLocation extends LocationActivity {
         } else if (data.equals("fix_it")) {
             Game.getInstance().pushActivity(GameActivity.FixDoor);
         } else if (data.equals("telf")) {
-            Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
-                if (dat.equals("finish")) {
-                    alterShowUp = true;
-                    Values.ARGUMENTO = 1;   // advance "plot counter"
-                    context.audioRenderer.playSound(hangPhone, false);
-                } else if (dat.equals("screw_you")) {
-                    phoneActive = false;
-                    context.audioRenderer.playSound(hangPhone, false);
-                } else if (dat.equals("ignore")) {
-                    phoneActive = false;
-                    context.audioRenderer.playSound(hangPhone, false);
-                    context.audioRenderer.stopSound(telfSound);
-                } else if (dat.equals("pickup")) {
-                    phoneActive = false;
-                    context.audioRenderer.stopSound(telfSound);
-                    context.audioRenderer.playSound(pickupPhone,false);
+            if (Values.ARGUMENTO == 5) {
+                if (!dial) {
+                    dial = true;
+                    context.audioRenderer.playSound(dialSound, false);
+                    tasks.add(new DelayTask(4, context.time));
+                    tasks.add(new DoSomethingTask(() -> {
+                        context.audioRenderer.playSound(dialTonesSound, false);
+                    }));
+                    tasks.add(new DelayTask(1, context.time));
+                    tasks.add(new DoSomethingTask(() -> {
+                        context.audioRenderer.playSound(holsSound, false);
+                    }));
                 }
-            });
+            } else {
+                Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
+                    if (dat.equals("finish")) {
+                        alterShowUp = true;
+                        Values.ARGUMENTO = 1;   // advance "plot counter"
+                        context.audioRenderer.playSound(hangPhone, false);
+                    } else if (dat.equals("screw_you")) {
+                        phoneActive = false;
+                        context.audioRenderer.playSound(hangPhone, false);
+                    } else if (dat.equals("ignore")) {
+                        phoneActive = false;
+                        context.audioRenderer.playSound(hangPhone, false);
+                        context.audioRenderer.stopSound(telfSound);
+                    } else if (dat.equals("pickup")) {
+                        phoneActive = false;
+                        context.audioRenderer.stopSound(telfSound);
+                        context.audioRenderer.playSound(pickupPhone, false);
+                    }
+                });
+            }
         }  else if(data.equals("alter_ego")){
             Game.getInstance().pushActivity(GameActivity.AlterEgo1, (act, dat) -> {
                 if(dat.equals("note_wall")){
@@ -420,7 +506,7 @@ public class RoomLocation extends LocationActivity {
             });
         } else if(data.equals("alter_ego_pointless")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP);
-        } else if (data.equals("bar")){
+        } else if (data.equals("leave")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Club);
         }

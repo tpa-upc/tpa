@@ -2,6 +2,7 @@ package activity;
 
 import game.Game;
 import game.GameActivity;
+import game.Values;
 import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
@@ -21,7 +22,7 @@ import tpa.joml.Vector3f;
  */
 public class InterrogationLocation extends LocationActivity {
 
-    CameraController cam;
+    //CameraController cam;
     FpsInput fps;
 
     GeometryActor window;
@@ -34,9 +35,15 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor wall4;
     GeometryActor wall5;
     GeometryActor tile0;
+    GeometryActor thompson;
+    GeometryActor anthony;
+    GeometryActor chair;
 
     DecalActor albert;
     DecalActor enemies;
+
+    int preguntas = 0;
+    int max_preguntas = 5; //4 questions maximum
 
     private float doorAnimation = 1;
 
@@ -47,6 +54,7 @@ public class InterrogationLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/heavy_door.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/window.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_left.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_top.png", Texture.class);
@@ -54,10 +62,11 @@ public class InterrogationLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/albert.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/enemies.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/window.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
 
         fps = new FpsInput(camera);
-        cam = new CameraController(camera);
-        cam.tiltZ = 0.025f;
+        //cam = new CameraController(camera);
+        //cam.tiltZ = 0.025f;
     }
 
     @Override
@@ -67,6 +76,8 @@ public class InterrogationLocation extends LocationActivity {
         Mesh doorMesh = Game.getInstance().getResources().get("res/models/heavy_door.json", Mesh.class);
         Mesh windowMesh = Game.getInstance().getResources().get("res/models/window.json", Mesh.class);
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
+        Mesh capsuleMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
+        Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json",Mesh.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/interrogation_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_left.png", Texture.class);
         Texture wallTopTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_top.png", Texture.class);
@@ -74,6 +85,8 @@ public class InterrogationLocation extends LocationActivity {
         Texture albertTex = Game.getInstance().getResources().get("res/textures/albert.png", Texture.class);
         Texture enemiesTex = Game.getInstance().getResources().get("res/textures/enemies.png", Texture.class);
         Texture windowTex = Game.getInstance().getResources().get("res/textures/window.png", Texture.class);
+        Texture capsuleTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
+        Texture chairTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -86,8 +99,10 @@ public class InterrogationLocation extends LocationActivity {
         TexturedMaterial doorMat = new TexturedMaterial(doorTex);
         TexturedMaterial windowMat = new TexturedMaterial(windowTex);
         TexturedMaterial tableMat = new TexturedMaterial(doorTex);
+        TexturedMaterial capsuleMat = new TexturedMaterial(capsuleTex);
         DecalMaterial albertMat = new DecalMaterial(albertTex, depth);
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
+        TexturedMaterial chairMat = new TexturedMaterial(chairTex);
 
         albert = new DecalActor(albertMat);
         albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f);
@@ -110,6 +125,15 @@ public class InterrogationLocation extends LocationActivity {
         wall5 = new GeometryActor(wallMesh, wallTopMat);
         wall5.model.translate(4, 2, -2).rotateY(180*3.1415f/180);
         tile0 = new GeometryActor(tileMesh, tileMat);
+        capsuleMat.setTint(0,1,0);
+        anthony = new GeometryActor(capsuleMesh, capsuleMat);
+        anthony.position.set(1,0.5f,-2);
+        anthony.update();
+        chairMat.setTint(0,0,0);
+        chair = new GeometryActor(chairMesh, chairMat);
+        chair.position.set(1,0,-2);
+        chair.rotation.rotateY((float)Math.toRadians(90));
+        chair.update();
     }
 
     @Override
@@ -121,21 +145,28 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(wall4);
         addGeometry(wall5);
         addGeometry(tile0);
-        addGeometry(door);
+        //addGeometry(door);
         addGeometry(window);
         addGeometry(table);
         addDecal(albert);
         addDecal(enemies);
+        addGeometry(chair);
 
         // open door
         doorAnimation = 2;
+
+        if(Values.ARGUMENTO == 6){
+            addGeometry(anthony);
+            addPickerBox(new Vector3f(2,1,-2), new Vector3f(1,1,1),"int_anthony1");
+        }
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0.125f);
-        cam.position.set(cam.position.x, 1.5f, 2.5f);
-        cam.tiltX = 0.1f;
+        //cam.position.set(cam.position.x, 1.5f, 2.5f);
+        //cam.tiltX = 0.1f;
+        fps.position.y=1;
 
         // test ray picker
         addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
@@ -146,9 +177,10 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
-        //fps.update(context);
-        cam.update();
-        cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
+
+        fps.update(context);
+        //cam.update();
+        //cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
         time += context.time.getFrameTime();
 
         doorAnimation -= context.time.getFrameTime();
@@ -164,6 +196,68 @@ public class InterrogationLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {
             Game.getInstance().pushActivity(GameActivity.Albert);
+        } if(data.equals("int_anthony1")){
+            Game.getInstance().pushActivity(GameActivity.Interrog, (act0, dat0) -> {
+                if (dat0.equals("delete1")) {
+                    preguntas++;
+                    if (preguntas <= max_preguntas) {
+                        Game.getInstance().pushActivity(GameActivity.Delete1, (act1, dat1) -> {
+
+                        });
+                    } else {
+                        Game.getInstance().popActivity();
+                    }
+                }
+            });
+
+            /*Game.getInstance().pushActivity(GameActivity.Interrog, (act, dat) -> {
+                if(dat.equals("delete1")){
+                    preguntas++;
+                    if(preguntas <= max_preguntas){
+                        Game.getInstance().pushActivity(GameActivity.Delete1, (act2, dat2) -> {
+                            if (dat2.equals("delete2")) {
+                                preguntas++;
+                                if (preguntas <= max_preguntas) {
+                                    Game.getInstance().pushActivity(GameActivity.Delete2, (act3, dat3) -> {
+                                        if(dat3.equals("unblock2")){
+                                            preguntas++;
+                                            if(preguntas <= max_preguntas){
+
+                                            }else{
+                                                Game.getInstance().popActivity();
+                                                Game.getInstance().pushActivity(GameActivity.Interrogation);
+                                            }
+
+                                        }
+                                    });
+                                } else {
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().pushActivity(GameActivity.Interrogation);
+                                }
+                            } else if (dat2.equals("unblock1")) {
+                                preguntas++;
+                                if (preguntas <= max_preguntas) {
+                                    Game.getInstance().pushActivity(GameActivity.Unblock1);
+                                } else {
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().pushActivity(GameActivity.Interrogation);
+                                }
+
+                            }
+                        });
+                    }else{
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Interrogation);
+                    }
+                    }
+                    });
+                }else if(dat.equals("delete2")){
+                    preguntas++;
+                    if(preguntas <= max_preguntas) {
+                        Game.getInstance().pushActivity(GameActivity.Delete2);
+                    }
+                }
+            });*/
         }
     }
 
