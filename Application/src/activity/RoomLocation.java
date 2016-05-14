@@ -389,8 +389,7 @@ public class RoomLocation extends LocationActivity {
 
         if(interrogation_room){
             addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "int_room");
-            Values.ARGUMENTO = 6;
-            interrogation_room = false;
+            Values.ARGUMENTO = 7;
         }
 
         if(lover_house){
@@ -522,13 +521,14 @@ public class RoomLocation extends LocationActivity {
                             public void onResult(Activity act, Object data) {
                                 if (data.equals("finish")) {
                                     interrogation_room = true;
+                                    Values.ARGUMENTO = 6;
                                     fps.setMovable(true);
                                 }
                             }
                         });
                     }));
                 }
-            } else {
+            } else if (Values.ARGUMENTO == 0) {
                 Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
                     if (dat.equals("finish")) {
                         alterShowUp = true;
@@ -595,6 +595,7 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Acid);
         } else if(data.equals("int_room")){
+            interrogation_room = false;
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
         }else if (data.equals("alter_ego_3")){

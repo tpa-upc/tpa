@@ -1,0 +1,8 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "You have very pretty eyes", "answer": 0}],
+      "answers": [{"text": "Thanks;Can't say the same about you", "jump": -1}]
+    }
+  ]
+}

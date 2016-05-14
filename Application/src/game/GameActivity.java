@@ -103,6 +103,11 @@ public enum GameActivity {
 
     WantToInterrogate (new DialogActivity("res/dialogues/want_to_interrogate.json")),
 
+    InterrThompsonGTFO (new DialogActivity("res/dialogues/interr_thom0.json")),
+    InterrThompsonStart (new DialogActivity("res/dialogues/interr_thom1.json")),
+    InterrThompsonSuccess (new DialogActivity("res/dialogues/interr_thom2.json")),
+    InterrThompsonAwkward (new DialogActivity("res/dialogues/interr_thom3.json")),
+
     /** Terminal 2 **/
     Terminal2 (new DialogActivity("res/dialogues/terminal2.json"));
 

@@ -45,13 +45,14 @@ public class InterrogationLocation extends LocationActivity {
     DecalActor albert;
     DecalActor enemies;
 
-    final static int MAX_QUESTIONS = 3;
+    final static int MAX_QUESTIONS = 2;
     int questionCount = 0;
     int round = 0;
 
     private float doorAnimation = 1;
     boolean youFuckedUp = false;
-    boolean success = true;
+    boolean success = false;
+    boolean start = true;
 
     @Override
     public void onRoomPreLoad(Context context) {
@@ -197,33 +198,12 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(anthonyHead);
         addGeometry(thompsonHead);
 
-        if (!youFuckedUp) {
-            addPickerBox(new Vector3f(3, 0.2f, 0), new Vector3f(0.2f, 1, 0.2f), "anton");
+        System.out.println(start+" "+success+" "+youFuckedUp);
+        if (success || start || youFuckedUp) {
+            addPickerBox(new Vector3f(0.25f, 1, 1.5f), new Vector3f(0.25f, 1, 0.25f), "thom");
         } else {
-            youFuckedUp = false;
-            round = 0;
-            questionCount = 0;
-            composite.setTimer(1);
-            tasks.add(new Task() {
-                float t = 1;
-                @Override
-                public void onBegin() {
-                }
-
-                @Override
-                public boolean onUpdate() {
-                    t -= context.time.getFrameTime() * 0.25f;
-                    composite.setTimer(Math.max(t, 0));
-                    return t < 0;
-                }
-            });
-
-            tasks.add(new DoSomethingTask(() -> {
-                // Go back to room :)
-                Game.getInstance().popActivity();
-                Game.getInstance().pushActivity(GameActivity.Room);
-                Values.ARGUMENTO = 3;
-            }));
+            addPickerBox(new Vector3f(3, 0.2f, 0), new Vector3f(0.2f, 1, 0.2f), "anton");
+            addPickerBox(new Vector3f(0.25f, 1, 1.5f), new Vector3f(0.25f, 1, 0.25f), "thom");
         }
 
         addGeometry(thompson);
@@ -272,30 +252,106 @@ public class InterrogationLocation extends LocationActivity {
                 Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
                     System.out.println(d0);
                     questionCount++;
-                    if (d0.equals("nope")) {
-                        if (questionCount >= MAX_QUESTIONS) {
-                            // :(
-                            youFuckedUp = true;
-                            Game.getInstance().popActivity();
-                        }
-                    } else if (d0.equals("sep")) {
+                    if (d0.equals("sep")) {
                         round = 1;
+                    }
+
+                    if (questionCount >= MAX_QUESTIONS) {
+                        // :(
+                        youFuckedUp = true;
+                        Game.getInstance().popActivity();
                     }
                 });
             } else if (round == 1) {
                 System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
                 Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
                     questionCount++;
-                    if (d0.equals("nope")) {
-                        if (questionCount >= MAX_QUESTIONS) {
-                            // :(
-                            youFuckedUp = true;
-                            Game.getInstance().popActivity();
-                        }
-                    } else if (d0.equals("sep")) {
+                    if (d0.equals("sep")) {
                         round = 2;
+                        success = true;
+                    }
+
+                    if (questionCount >= MAX_QUESTIONS) {
+                        // :(
+                        youFuckedUp = true;
+                        Game.getInstance().popActivity();
                     }
                 });
+            }
+        } else if (data.equals("thom")) {
+            if (start) {
+                start = false;
+                Game.getInstance().pushActivity(GameActivity.InterrThompsonStart);
+            } else if (success) {
+                    Game.getInstance().pushActivity(GameActivity.InterrThompsonSuccess, new ActivityListener() {
+                        @Override
+                        public void onResult(Activity act, Object data) {
+                            youFuckedUp = false;
+                            round = 0;
+                            questionCount = 0;
+                            composite.setTimer(1);
+                            tasks.add(new Task() {
+                                float t = 1;
+
+                                @Override
+                                public void onBegin() {
+                                }
+
+                                @Override
+                                public boolean onUpdate() {
+                                    t -= context.time.getFrameTime() * 0.25f;
+                                    composite.setTimer(Math.max(t, 0));
+                                    return t < 0;
+                                }
+                            });
+
+                            tasks.add(new DoSomethingTask(() -> {
+                                // Go back to room :)
+                                Game.getInstance().popActivity();
+                                Game.getInstance().pushActivity(GameActivity.Club);
+                                Values.ARGUMENTO = 7;
+                                start = false;
+                            }));
+                        }
+                    });
+            } else if (youFuckedUp) {
+                Game.getInstance().pushActivity(GameActivity.InterrThompsonGTFO, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity act, Object data) {
+                        youFuckedUp = false;
+                        round = 0;
+                        questionCount = 0;
+                        composite.setTimer(1);
+                        tasks.add(new Task() {
+                            float t = 1;
+
+                            @Override
+                            public void onBegin() {
+                            }
+
+                            @Override
+                            public boolean onUpdate() {
+                                t -= context.time.getFrameTime() * 0.25f;
+                                composite.setTimer(Math.max(t, 0));
+                                return t < 0;
+                            }
+                        });
+
+                        tasks.add(new DoSomethingTask(() -> {
+                            // Go back to room :)
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.Room);
+                            Values.ARGUMENTO = 3;
+                            round = 0;
+                            questionCount = 0;
+                            start = true;
+                            youFuckedUp = false;
+                            success = false;
+                        }));
+                    }
+                });
+            } else {
+                Game.getInstance().pushActivity(GameActivity.InterrThompsonAwkward);
             }
         }
     }
