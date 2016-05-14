@@ -28,7 +28,7 @@ public class ClubLocation extends LocationActivity {
     GeometryActor wall3;
     GeometryActor tile0, tile0flip;
     GeometryActor tile1, tile1flip;
-    GeometryActor barman;
+    GeometryActor barman, barmanHead;
     DecalActor door1;
 
     int count = 0;
@@ -41,10 +41,11 @@ public class ClubLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/bar_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/cara_sup.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/bar_texture_left.png", Texture.class);
-        Game.getInstance().getResources().load("res/models/capsule.json", Texture.class);
+        Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/chair.json", Texture.class);
         Game.getInstance().getResources().load("res/models/heavy_door.json", Texture.class);
         Game.getInstance().getResources().load("res/models/box.json", Texture.class);
+        Game.getInstance().getResources().load("res/models/monkey.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/door0.png", Texture.class);
 
@@ -59,6 +60,7 @@ public class ClubLocation extends LocationActivity {
         Texture wallTex = Game.getInstance().getResources().get("res/textures/bar_texture_left.png", Texture.class);
         Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
         Mesh barmanMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
+        Mesh monkeyMesh = Game.getInstance().getResources().get("res/models/monkey.json", Mesh.class);
         Texture barmanTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         //Texture chairTex = Game.getInstance().getResources().get(, Texture.class);
         //Mesh doorMesh = Game.getInstance().getResources().get("res/models/heavy_door.json", Mesh.class);
@@ -105,8 +107,14 @@ public class ClubLocation extends LocationActivity {
         barman.position.set(5,0,1);
         barman.update();
 
+        barmanHead = new GeometryActor(monkeyMesh, barmanMat);
+        barmanHead.position.set(5,1.15f,1);
+        barmanHead.update();
+
         door1 = new DecalActor(doorMat);
         door1.model.translate(0, 0.85f + 1e-3f, -1).rotateY(180*3.1415f/180).rotateZ(90*3.1415f/180).scale(0.85f, 0.1f, 0.85f);
+
+        fps.position.set(4, 1f, 0);
     }
 
     @Override
@@ -122,6 +130,7 @@ public class ClubLocation extends LocationActivity {
         addGeometry(tile0flip);
         addGeometry(tile1flip);
         addGeometry(barman);
+        addGeometry(barmanHead);
         addDecal(door1);
 
         if(Values.ARGUMENTO == 2){
@@ -145,13 +154,14 @@ public class ClubLocation extends LocationActivity {
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
-        fps.position.set(4, 1, 0);
-
     }
 
     @Override
     public void onTick(Context context) {
         fps.update(context);
+        barmanHead.rotation.set(camera.rotation).invert();
+        barmanHead.rotation.identity().lookRotate(new Vector3f(fps.position).sub(barmanHead.position).normalize(), new Vector3f(0, 1, 0)).invert();
+        barmanHead.update();
     }
 
     @Override

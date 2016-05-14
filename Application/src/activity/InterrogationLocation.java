@@ -29,15 +29,14 @@ public class InterrogationLocation extends LocationActivity {
     FpsInput fps;
 
     GeometryActor window;
-    GeometryActor door;
     GeometryActor table;
     GeometryActor wall0;
     GeometryActor wall1;
     GeometryActor wall2;
     GeometryActor wall3;
     GeometryActor tile0, tile1;
-    GeometryActor thompson;
-    GeometryActor anthony;
+    GeometryActor thompson, thompsonHead;
+    GeometryActor anthony, anthonyHead;
     GeometryActor chair, chair2;
 
     TextActor antonText;
@@ -57,14 +56,13 @@ public class InterrogationLocation extends LocationActivity {
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
-        Game.getInstance().getResources().load("res/models/heavy_door.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/monkey.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/window.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_left.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_top.png", Texture.class);
-        Game.getInstance().getResources().load("res/textures/heavy_door.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/albert.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/enemies.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/window.png", Texture.class);
@@ -77,17 +75,16 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onRoomPostLoad(Context context) {
+        Mesh monkeyMesh = Game.getInstance().getResources().get("res/models/monkey.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
-        Mesh doorMesh = Game.getInstance().getResources().get("res/models/heavy_door.json", Mesh.class);
         Mesh windowMesh = Game.getInstance().getResources().get("res/models/window.json", Mesh.class);
         Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
         Mesh capsuleMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
         Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json",Mesh.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/interrogation_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_left.png", Texture.class);
-        Texture wallTopTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_top.png", Texture.class);
-        Texture doorTex = Game.getInstance().getResources().get("res/textures/heavy_door.png", Texture.class);
+        Texture doorTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         Texture albertTex = Game.getInstance().getResources().get("res/textures/albert.png", Texture.class);
         Texture enemiesTex = Game.getInstance().getResources().get("res/textures/enemies.png", Texture.class);
         Texture windowTex = Game.getInstance().getResources().get("res/textures/window.png", Texture.class);
@@ -101,11 +98,10 @@ public class InterrogationLocation extends LocationActivity {
         // create materials
         TexturedMaterial tileMat = new TexturedMaterial(tileTex);
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
-        TexturedMaterial wallTopMat = new TexturedMaterial(wallTopTex);
-        TexturedMaterial doorMat = new TexturedMaterial(doorTex);
         TexturedMaterial windowMat = new TexturedMaterial(windowTex);
         TexturedMaterial tableMat = new TexturedMaterial(doorTex);
         TexturedMaterial capsuleMat = new TexturedMaterial(capsuleTex);
+        TexturedMaterial capsuleMat2 = new TexturedMaterial(capsuleTex);
         DecalMaterial albertMat = new DecalMaterial(albertTex, depth);
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
         TexturedMaterial chairMat = new TexturedMaterial(chairTex);
@@ -114,7 +110,6 @@ public class InterrogationLocation extends LocationActivity {
         albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f, 0.1f, 0.35f);
         enemies = new DecalActor(enemiesMat);
         enemies.model.translate(0, 1, -1.25f).rotateY(180*3.1415f/180).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.05f).scale(0.45f, 0.1f, 0.45f);
-        door = new GeometryActor(doorMesh, doorMat);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(1.5f, 0, 0.5f).rotateY(95*3.1415f/180);
         window = new GeometryActor(windowMesh, windowMat);
@@ -138,18 +133,26 @@ public class InterrogationLocation extends LocationActivity {
         tile1.rotation.rotateY((float)Math.toRadians(180));
         tile1.position.set(4, 0, 0);
         tile1.update();
+
         capsuleMat.setTint(0,1,0);
+        capsuleMat2.setTint(0.8f,0.2f,0.5f);
 
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
         anthony.position.set(3,0,0);
-        anthony.rotation.rotateY((float)Math.toRadians(-90));
         anthony.update();
 
-        thompson = new GeometryActor(capsuleMesh, capsuleMat);
+        anthonyHead = new GeometryActor(monkeyMesh, capsuleMat);
+        anthonyHead.position.set(3,1.1f,0);
+        anthonyHead.update();
+
+        thompson = new GeometryActor(capsuleMesh, capsuleMat2);
         thompson.position.set(0.25f, 0, 1.5f);
-        thompson.rotation.rotateY((float)Math.toRadians(120));
         thompson.scale.set(1, 1.2f, 1);
         thompson.update();
+
+        thompsonHead = new GeometryActor(monkeyMesh, capsuleMat2);
+        thompsonHead.position.set(0.25f, 1.25f, 1.5f);
+        thompsonHead.update();
 
         antonText = new TextActor("Anthony guy");
         antonText.position.set(3, 1.5f, 0);
@@ -181,7 +184,6 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(wall3);
         addGeometry(tile0);
         addGeometry(tile1);
-        //addGeometry(door);
         addGeometry(window);
         addGeometry(table);
         addDecal(albert);
@@ -190,16 +192,9 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(chair2);
         addText(antonText);
         addText(thomText);
-
-        /*
-Do you have a child?
-Yeah, his name is Alex. I hope he’s fine… I don’t want to talk about this now.
-(Thompson: Don’t worry, we’ll do our best to find Alex).
-Do you think she was having an affair with someone?
-What?!? Well… maybe… I mean, I didn’t know where she has been most of the time so… why not…. Maybe she met someone in the pub… (sniff sniff)
-         */
-
         addGeometry(anthony);
+        addGeometry(anthonyHead);
+        addGeometry(thompsonHead);
 
         if (!youFuckedUp) {
             addPickerBox(new Vector3f(3, 0.2f, 0), new Vector3f(0.2f, 1, 0.2f), "anton");
@@ -252,21 +247,17 @@ What?!? Well… maybe… I mean, I didn’t know where she has been most of the 
 
     @Override
     public void onTick(Context context) {
+        anthonyHead.rotation.set(camera.rotation).invert();
+        anthonyHead.update();
+
+        thompsonHead.rotation.set(camera.rotation).invert();
+        thompsonHead.update();
+
         tasks.update();
         fps.update(context);
 
         antonText.billboard(camera);
         thomText.billboard(camera);
-
-        //cam.update();
-        //cam.position.x = 2.45f;// + 0.05f * (float) Math.sin(time);
-        time += context.time.getFrameTime();
-
-        doorAnimation -= context.time.getFrameTime();
-        if (doorAnimation < 0) doorAnimation = 0;
-        door.model.identity()
-                .translate(3, 0, -2)
-                .rotateY(-2.5f*Math.min(doorAnimation, 1));
     }
 
     @Override

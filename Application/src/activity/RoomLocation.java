@@ -37,7 +37,7 @@ public class RoomLocation extends LocationActivity {
     GeometryActor tile1, tile1flip;
     GeometryActor table;
     GeometryActor chair;
-    GeometryActor alterego;
+    GeometryActor alterego, alteregoHead;
 
     TextActor pcText, phoneText, alterText;
 
@@ -78,6 +78,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/sfx/dial.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/dial_tones.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/monkey.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
@@ -114,6 +115,7 @@ public class RoomLocation extends LocationActivity {
 
         fps.setSteps(steps);
 
+        Mesh monkeyMesh = Game.getInstance().getResources().get("res/models/monkey.json", Mesh.class);
         Mesh telfModel = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
@@ -225,6 +227,11 @@ public class RoomLocation extends LocationActivity {
         alterego.rotation.rotateY((float)Math.toRadians(-110));
         alterego.update();
 
+        alteregoHead = new GeometryActor(monkeyMesh, capsuleMat);
+        alteregoHead.position.set(7.5f, 0.5f, 1.5f);
+        alteregoHead.scale.set(0.75f);
+        alteregoHead.update();
+
         // set camera position
         fps.position.set(3, 1.25f, 0.5f);
         fps.setMovable(true);
@@ -238,7 +245,7 @@ public class RoomLocation extends LocationActivity {
         phoneText.update();
 
         alterText = new TextActor("Sweetie");
-        alterText.position.set(alterego.position).add(0,0.75f,0);
+        alterText.position.set(alterego.position).add(0,0.8f,0);
         alterText.update();
     }
 
@@ -332,6 +339,7 @@ public class RoomLocation extends LocationActivity {
 
         if (Values.ARGUMENTO==20){
             addGeometry(alterego);
+            addGeometry(alteregoHead);
             addText(alterText);
             if(!pointless_conversation){
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_3");
@@ -342,6 +350,7 @@ public class RoomLocation extends LocationActivity {
 
         if(alterShowUp2){
             addGeometry(alterego);
+            addGeometry(alteregoHead);
             addText(alterText);
             if(pointless_conversation){
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless2");
@@ -398,6 +407,9 @@ public class RoomLocation extends LocationActivity {
     @Override
     public void onTick(Context context) {
         tasks.update();
+
+        alteregoHead.rotation.identity().lookRotate(new Vector3f(fps.position).sub(alteregoHead.position).normalize(), new Vector3f(0, 1, 0)).invert();
+        alteregoHead.update();
 
         pcText.billboard(camera);
         alterText.billboard(camera);
