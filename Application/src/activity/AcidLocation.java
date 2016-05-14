@@ -1,5 +1,9 @@
 package activity;
 
+import activity.tasks.DelayTask;
+import activity.tasks.DoSomethingTask;
+import activity.tasks.Task;
+import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
 import rendering.DecalActor;
@@ -20,7 +24,7 @@ import tpa.joml.Vector3f;
 public class AcidLocation extends LocationActivity {
 
     FpsInput fps;
-    Sound telf, hang;
+    Sound telf, hang, violin;
     GeometryActor cubo;
     GeometryActor person, smallPerson;
     DecalActor notas;
@@ -37,12 +41,15 @@ public class AcidLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/debug.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/telf.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/violin0.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
     }
 
     @Override
     public void onRoomPostLoad(Context context) {
+        setNoise(0.5f);
         Sound steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
+        violin = Game.getInstance().getResources().get("res/sfx/violin0.wav", Sound.class);
         Mesh personMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
         Mesh cuboMEsh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Texture texture = Game.getInstance().getResources().get("res/textures/girl.jpg", Texture.class);
@@ -84,12 +91,37 @@ public class AcidLocation extends LocationActivity {
         camera.clearColor.set(1,1,1);
     }
 
+    TaskManager task = new TaskManager();
+
     @Override
     public void onEntered(Context context) {
+        task.clear();
+        task.add(new DelayTask(13, context.time));
+        task.add(new Task() {
+            float t = 1;
+            @Override
+            public void onBegin() {
+                composite.setTimer(1);
+            }
+
+            @Override
+            public boolean onUpdate() {
+                t -= context.time.getFrameTime() * 0.25f;
+                composite.setTimer(Math.max(t, 0));
+                return t < 0;
+            }
+        });
+        task.add(new DoSomethingTask(() -> {
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Room);
+        }));
+
         addGeometry(cubo);
         addGeometry(person);
         addGeometry(smallPerson);
         addDecal(notas);
+
+        context.audioRenderer.playSound(violin, false);
 
         addPickerBox(new Vector3f(0, 0.6f, 0), new Vector3f(0.2f, 0.6f, 0.2f), "persona");
 
@@ -103,13 +135,14 @@ public class AcidLocation extends LocationActivity {
     @Override
     public void onTick(Context context) {
         fps.update(context);
+        task.update();
     }
 
     @Override
     public void onSelected(Context context, Object data) {
         if (data.equals("caja!")) {
             context.audioRenderer.playSound(telf, false);
-            Game.getInstance().pushActivity(GameActivity.Note0);
+            //Game.getInstance().pushActivity(GameActivity.Note0);
         } else if (data.equals("persona")) {
             context.audioRenderer.playSound(hang, false);
         }
