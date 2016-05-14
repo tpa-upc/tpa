@@ -2,13 +2,13 @@
   "dialog": [
     {
       "questions": [
-        {"text": "Do you have a child", "answer": 0},
+        {"text": "Do you have a child?", "answer": 0},
         {"text": "Do you think she was having an affair with someone?", "answer": 1},
         {"text": "Do you like fishsticks?", "answer": 2}
       ],
       "answers": [
-        {"text": "Oh, yes;Alex;I hope he’s fine…;I don’t want to talk about this now.", "data": "nope", "jump": -1},
-        {"text": "What?!?;Well... maybe...;I mean, I didn’t know where she has been most of the time so…;Who knows...;Maybe she met someone in that pub...", "data": "sep", "jump": -1},
+        {"text": "Oh, yes... His name is Alex;I hope he’s fine...;I don’t want to talk about this now.", "data": "nope", "jump": -1},
+        {"text": "What?!?;Well... maybe...;I mean, I didn't know where she has been most of the time so...;Who knows...;Maybe she met someone in that pub...", "data": "sep", "jump": -1},
         {"text": "I thought this would be a serious meeting...;I feel insulted", "data": "nope", "jump": -1}
       ]
     }

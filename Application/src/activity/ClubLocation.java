@@ -140,7 +140,7 @@ public class ClubLocation extends LocationActivity {
                 addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
                 addPickerBox(new Vector3f(0,0,-1), new Vector3f(0.1f, 1.75f, 0.5f), "gohome");
         }
-        if(count == 6){ /*change to 666*/
+        if(count == 666){ /*change to 666*/
             System.out.println("You're the killer. The end.");
             Game.getInstance().pushActivity(GameActivity.ShortEnd);
             count = 0;
