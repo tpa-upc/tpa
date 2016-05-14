@@ -1,0 +1,22 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "So in the end that Paul McCarthy;may be the guy we are looking for...", "answer": 0}
+      ],
+      "answers": [
+        {"text": "", "data": "first", "jump": 1}
+      ]
+    },
+    {
+      "questions": [
+        {"text": "Accuse Paul McCarthy", "answer": 0 },
+        {"text": "Keep investigating", "answer": 1 }
+      ],
+      "answers": [
+        {"text": "", "data": "yes", "jump":-1},
+        {"text": "", "data": "no", "jump": -1}
+      ]
+    }
+  ]
+}

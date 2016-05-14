@@ -1,0 +1,24 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {
+          "text": "Police Warning Database",
+          "answer": -1,
+          "data": "database"
+        },
+        {
+          "text": "Play Pacman",
+          "answer": -1,
+          "data": "pacman"
+        },
+        {
+          "text": "New Email",
+          "answer": -1,
+          "data": "email"
+        }
+      ],
+      "answers": []
+    }
+  ]
+}

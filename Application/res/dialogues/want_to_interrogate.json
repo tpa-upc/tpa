@@ -6,7 +6,7 @@
     },
 
     {
-      "questions": [{"text": "Out victim was married;Can you arrest him or something?;I want to interrogate him", "answer": 0}],
+      "questions": [{"text": "Our victim was married;Can you arrest him or something?;I want to interrogate him", "answer": 0}],
       "answers": [{"text": "You know how the law works, right?", "jump": 2}]
     },
 

@@ -61,6 +61,7 @@ public class RoomLocation extends LocationActivity {
     boolean interrogation_room = false;
     boolean alterShowUp2 = false;
     boolean lover_house = false;
+    boolean keepinvestigating = false;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -292,6 +293,11 @@ public class RoomLocation extends LocationActivity {
         addText(pcText);
         addText(phoneText);
 
+        // set camera
+        float aspect = (float) context.window.getWidth() / context.window.getHeight();
+        camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
+        camera.clearColor.set(0.2f);
+
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
             // first wait 10 seconds
@@ -346,6 +352,16 @@ public class RoomLocation extends LocationActivity {
             }else{
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless3");
             }
+            if(!keepinvestigating) {
+                addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc3");
+            }
+        }
+
+        if(Values.ARGUMENTO == 21){
+            //this.setNoise((float)Math.random());
+            //set projection to crazy mode
+            camera.projection.setPerspective((float) Math.toRadians(140), aspect, 0.01f, 100f);
+            addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "goodend");
         }
 
         if(alterShowUp2){
@@ -358,6 +374,7 @@ public class RoomLocation extends LocationActivity {
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego2");
             }
         }
+
         // talk to the door
         addPickerBox(new Vector3f(1, 0, -1), new Vector3f(0.5f, 0.1f, 1), "fix_it");
 
@@ -398,10 +415,7 @@ public class RoomLocation extends LocationActivity {
             Values.ARGUMENTO = 9;
             lover_house = false;
         }
-        // set camera
-        float aspect = (float) context.window.getWidth() / context.window.getHeight();
-        camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
-        camera.clearColor.set(0.2f);
+
     }
 
     @Override
@@ -602,6 +616,36 @@ public class RoomLocation extends LocationActivity {
             pointless_conversation=true;
         }else if (data.equals("alter_ego_pointless3")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoRep4);
+        }else if(data.equals("pc3")){
+            Game.getInstance().pushActivity(GameActivity.Terminal3, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object data) {
+                    if (data.equals("database")) {
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.LogWarning, (act2, dat) -> {
+                            if (dat.equals("paul")) {
+                                Game.getInstance().popActivity();
+                                Game.getInstance().pushActivity(GameActivity.Ending1, (act3, dat3) -> {
+                                    if(dat3.equals("yes")) {
+                                        keepinvestigating = true;
+                                        Game.getInstance().popActivity();
+                                        Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                                    }
+                                });
+                            }
+                        });
+                    }else if(data.equals("pacman")){
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Pacman);
+                    }else if(data.equals("email")){
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.EmailTB);
+                    }
+                }
+            });
+        }else if(data.equals("goodend")){
+            Game.getInstance().pushActivity(GameActivity.NewspaperGood);
+            Game.getInstance().pushActivity(GameActivity.ShortEnd);
         }
     }
 

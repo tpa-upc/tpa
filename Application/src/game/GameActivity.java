@@ -104,7 +104,23 @@ public enum GameActivity {
     WantToInterrogate (new DialogActivity("res/dialogues/want_to_interrogate.json")),
 
     /** Terminal 2 **/
-    Terminal2 (new DialogActivity("res/dialogues/terminal2.json"));
+    Terminal2 (new DialogActivity("res/dialogues/terminal2.json")),
+
+    /**Police Warning Database **/
+    Terminal3 (new DialogActivity("res/dialogues/terminal3.json")),
+    LogWarning (new DialogActivity("res/dialogues/LogWarning.json")),
+    Pacman (new DialogActivity("res/dialogues/pacman.json")),
+
+    /** First Bad Ending **/
+    Ending1 (new DialogActivity("res/dialogues/firstending.json")),
+
+    /**Newspapers**/
+    NewspaperBad (new ImageActivity("res/textures/newspaper_FINALDOLENT.png")),
+    NewspaperGood (new ImageActivity("res/textures/newspaper_FINALBO.png")),
+
+    /**Teddy Bear Email**/
+    EmailTB (new ImageActivity("res/textures/emailTeddyBear.png"));
+
 
     /** referenced game activity */
     private activity.Activity activity;
