@@ -45,12 +45,13 @@ public class InterrogationLocation extends LocationActivity {
     DecalActor albert;
     DecalActor enemies;
 
-    final static int MAX_QUESTIONS = 1;
+    final static int MAX_QUESTIONS = 3;
     int questionCount = 0;
     int round = 0;
 
     private float doorAnimation = 1;
     boolean youFuckedUp = false;
+    boolean success = true;
 
     @Override
     public void onRoomPreLoad(Context context) {
@@ -282,6 +283,7 @@ public class InterrogationLocation extends LocationActivity {
                     }
                 });
             } else if (round == 1) {
+                System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
                 Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
                     questionCount++;
                     if (d0.equals("nope")) {
