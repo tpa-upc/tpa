@@ -2,10 +2,10 @@
   "dialog": [
     {
       "questions": [
-        {"text": "Hey mate, another Guimess?", "answer": 0}
+        {"text": "Hey, may I have another Guimess?", "answer": 0}
       ],
       "answers": [
-        {"text": "Sure.", "data": null, "jump": 1}
+        {"text": "Sure, love.", "data": null, "jump": 1}
       ]
     },
 

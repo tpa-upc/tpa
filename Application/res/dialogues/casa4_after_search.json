@@ -2,10 +2,10 @@
   "dialog": [
     {
       "questions": [
-        {"text": "Uhm...", "answer":0}
+        {"text": "Uhm...;Paul McCarthy has just got into trouble… ;Maybe he was the murderer since the beginning...", "answer":0}
       ],
       "answers": [
-        {"text": "Paul McCarthy has just got into trouble… ;Maybe he was the murderer since the beginning...", "data": "first_ending", "jump": -1}
+        {"text": "", "data": "first_ending", "jump": -1}
       ]
     }
   ]

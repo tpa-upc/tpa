@@ -7,7 +7,7 @@
       ],
       "answers": [
         {"text": "Sorry, it's out of order", "jump": 0},
-        {"text": "Sure, mate!", "data": null, "jump": 1}
+        {"text": "Sure, darling!", "data": null, "jump": 1}
       ]
     },
 
@@ -16,7 +16,7 @@
         {"text": "I've been wondering...;How close are you to your clients?", "answer": 0}
       ],
       "answers": [
-        {"text": "They're like my family, mate!", "data": null, "jump": 2}
+        {"text": "They're like my family, darling!", "data": null, "jump": 2}
       ]
     },
 
@@ -25,7 +25,7 @@
         {"text": "Then you should probably know something;about Jess Brown, right?", "answer": 0}
       ],
       "answers": [
-        {"text": "I Dunno mate, I just know about beers!", "data": "finish", "jump": 0}
+        {"text": "I Dunno darling, I just know about beers!", "data": "finish", "jump": 0}
       ]
     }
   ]

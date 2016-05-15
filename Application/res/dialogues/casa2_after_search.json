@@ -2,19 +2,27 @@
   "dialog": [
     {
       "questions": [
-        {"text": "Thompson.", "answer": 0}
+        {"text": "", "answer": 0}
       ],
       "answers": [
-        {"text": "Here Smith. I've found information;about Brown's husband. His name is;Anthony Brown. Bring him to the;Interrogation Room.", "data": null, "jump": 1}
+        {"text": "Thompson", "data": null, "jump": 1}
       ]
     },
 
     {
       "questions":[
-        {"text": "Sure. It won't take too much;time to get him here.", "answer": 0}
+        {"text": "Here Smith. I've found information;about Brown's husband. His name is;Anthony Brown. Bring him to the;Interrogation Room.", "answer": 0}
       ],
       "answers": [
-        {"text": "I'm on my way.", "data": "finish", "jump": -1}
+        {"text": "Sure. It won't take too much;time to get him here.", "data": null, "jump": 2}
+      ]
+    },
+    {
+      "questions":[
+        {"text": "I'm on my way.", "answer": 0}
+      ],
+      "answers": [
+        {"text": "", "data": "finish", "jump":-1}
       ]
     }
   ]

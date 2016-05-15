@@ -1,9 +1,11 @@
 {
   "dialog": [
     {
-      "questions": [],
+      "questions": [
+        {"text": "What the hell is that...?", "answer":0}
+      ],
       "answers": [
-        {"text": "What the hell is that...?", "data": "finish", "jump": -1}
+        {"text": "", "data": "finish", "jump": -1}
       ]
     }
   ]
