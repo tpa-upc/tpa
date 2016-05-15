@@ -237,10 +237,10 @@ public class ClubLocation extends LocationActivity {
 
 
         if(Values.ARGUMENTO == 2){
-            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
+            addPickerBox(new Vector3f(7,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
         }
         if(Values.ARGUMENTO == 3){
-            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
+            addPickerBox(new Vector3f(7,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
             addPickerBox(new Vector3f(0,0,-1), new Vector3f(0.1f, 1.75f, 0.5f), "gohome");
         }
 
@@ -254,7 +254,7 @@ public class ClubLocation extends LocationActivity {
         } else {
             if (Values.ARGUMENTO == 7 && questionCount <= MAX_QUESTIONS) {
                 // primer "interrogatori"
-                addPickerBox(new Vector3f(5, 0, 1), new Vector3f(0.2f, 1, 0.2f), "interrog0");
+                addPickerBox(new Vector3f(7, 0, 1), new Vector3f(0.2f, 1, 0.2f), "interrog0");
             }
         }
 
@@ -269,7 +269,7 @@ public class ClubLocation extends LocationActivity {
             if (success) {
 
             } else {
-                addPickerBox(new Vector3f(5, 0, 1), new Vector3f(0.2f, 1, 0.2f), "barman2");
+                addPickerBox(new Vector3f(7, 0, 1), new Vector3f(0.2f, 1, 0.2f), "barman2");
             }
 
         }
