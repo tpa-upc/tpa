@@ -13,11 +13,11 @@ public class FpsInput {
     private Camera camera;
     public Vector3f position = new Vector3f();
 
-    private float pitch = 0;
-    private float yaw = 0;
+    public float pitch = 0;
+    public float yaw = 0;
 
-    private float sPitch = 0;
-    private float sYaw = 0;
+    public float sPitch = 0;
+    public float sYaw = 0;
 
     private float forward = 0;
     private float left = 0;

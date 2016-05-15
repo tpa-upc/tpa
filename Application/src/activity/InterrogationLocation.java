@@ -27,6 +27,7 @@ public class InterrogationLocation extends LocationActivity {
 
     //CameraController cam;
     FpsInput fps;
+    FpsInput fpsReflect;
 
     GeometryActor window;
     GeometryActor table;
@@ -68,9 +69,11 @@ public class InterrogationLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/albert.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/enemies.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/window.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/windowReflect.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
 
         fps = new FpsInput(camera);
+        fpsReflect = new FpsInput(cameraReflect);
         //cam = new CameraController(camera);
         //cam.tiltZ = 0.025f;
     }
@@ -90,6 +93,7 @@ public class InterrogationLocation extends LocationActivity {
         Texture albertTex = Game.getInstance().getResources().get("res/textures/albert.png", Texture.class);
         Texture enemiesTex = Game.getInstance().getResources().get("res/textures/enemies.png", Texture.class);
         Texture windowTex = Game.getInstance().getResources().get("res/textures/window.png", Texture.class);
+        Texture windowTexRefl = Game.getInstance().getResources().get("res/textures/windowReflect.png", Texture.class);
         Texture capsuleTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         Texture chairTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
 
@@ -100,13 +104,17 @@ public class InterrogationLocation extends LocationActivity {
         // create materials
         TexturedMaterial tileMat = new TexturedMaterial(tileTex);
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
-        TexturedMaterial windowMat = new TexturedMaterial(windowTex);
         TexturedMaterial tableMat = new TexturedMaterial(doorTex);
         TexturedMaterial capsuleMat = new TexturedMaterial(capsuleTex);
         TexturedMaterial capsuleMat2 = new TexturedMaterial(capsuleTex);
         DecalMaterial albertMat = new DecalMaterial(albertTex, depth);
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
         TexturedMaterial chairMat = new TexturedMaterial(chairTex);
+
+        // create window material
+        TexturedMaterial windowMat = new TexturedMaterial(windowTex);
+        windowMat.discardReflectPass = true;
+        windowMat.setReflective(windowTexRefl, reflectRender);
 
         albert = new DecalActor(albertMat);
         albert.model.translate(0, 1, -0.5f).rotate(-90*3.1415f/180, 0, 0, 1).rotateY(0.15f).scale(0.35f, 0.1f, 0.35f);
@@ -213,13 +221,16 @@ public class InterrogationLocation extends LocationActivity {
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
+        cameraReflect.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
         camera.clearColor.set(0.125f);
+        cameraReflect.clearColor.set(0.125f);
         //cam.position.set(cam.position.x, 1.5f, 2.5f);
         //cam.tiltX = 0.1f;
         fps.position.y=1.25f;
         fps.position.x = 1;
         fps.position.z = 0;
-        fps.setMovable(false);
+        //fps.setMovable(false);
+        fpsReflect.setMovable(false);
 
         // test ray picker
         addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
@@ -246,7 +257,19 @@ public class InterrogationLocation extends LocationActivity {
         thompsonHead.update();
 
         tasks.update();
+
+        // update reflection
+        fpsReflect.position.x = fps.position.x;
+        fpsReflect.position.y = fps.position.y;
+        float d = 2 + fps.position.z;
+        fpsReflect.position.z = -2 - d;
+
         fps.update(context);
+
+        fpsReflect.sPitch = fpsReflect.pitch = fps.sPitch;
+        fpsReflect.sYaw = fpsReflect.yaw = (float) Math.toRadians(180) - fps.sYaw;
+
+        fpsReflect.update(context);
 
         antonText.billboard(camera);
         thomText.billboard(camera);

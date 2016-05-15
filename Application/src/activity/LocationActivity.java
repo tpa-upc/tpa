@@ -5,10 +5,7 @@ import activity.tasks.TaskManager;
 import game.Game;
 import game.Values;
 import rendering.*;
-import rendering.materials.CompositeMaterial;
-import rendering.materials.DepthMaterial;
-import rendering.materials.Material;
-import rendering.materials.WireframeMaterial;
+import rendering.materials.*;
 import rendering.utils.RayPicker;
 import rendering.utils.Raymarcher;
 import tpa.application.Context;
@@ -40,6 +37,9 @@ public abstract class LocationActivity extends Activity {
     /** Camera of the location */
     protected Camera camera = new Camera();
 
+    /** Camera used for reflection stuff */
+    protected Camera cameraReflect = new Camera();
+
     /** Geometry visible on the scene */
     private List<GeometryActor> geometry = new ArrayList<>();
 
@@ -54,6 +54,12 @@ public abstract class LocationActivity extends Activity {
 
     /** Framebuffer for early Z pass */
     private Framebuffer zPass;
+
+    /** Reflection framebuffer pass */
+    private Framebuffer reflectPass;
+
+    /** texture containing reflection */
+    protected Texture reflectRender;
 
     /** depth texture from early z pass */
     protected Texture depth;
@@ -110,6 +116,8 @@ public abstract class LocationActivity extends Activity {
         zPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{}, true);
         depth = zPass.getDepth();
         lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
+        reflectPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
+        reflectRender = reflectPass.getTargets()[0];
 
         Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
@@ -282,6 +290,32 @@ public abstract class LocationActivity extends Activity {
         for (GeometryActor actor : geometry) {
             depthMaterial.render(renderer, camera, actor.getMesh(), actor.model);
         }
+
+        // reflect pass
+        renderer.setFramebuffer(reflectPass);
+        renderer.setViewport(0, 0, reflectPass.getWidth(), reflectPass.getHeight());
+        renderer.setClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, 1);
+        renderer.clearBuffers();
+
+        RendererState stateReflect = new RendererState();
+        stateReflect.depthTest = true;
+        renderer.setState(stateReflect);
+
+        // render geometry
+        for (GeometryActor actor : geometry) {
+            Material mat = actor.getMaterial();
+            if (mat instanceof TexturedMaterial) {
+                if (((TexturedMaterial) mat).discardReflectPass)
+                    continue;
+            }
+            mat.render(renderer, cameraReflect, actor.getMesh(), actor.model);
+        }
+
+        // render decal
+        //for (DecalActor decal : decals) {
+        //    Material mat = decal.getMaterial();
+        //    mat.render(context.renderer, cameraReflect, box, decal.model);
+        //}
 
         // lowres pass
         renderer.setFramebuffer(lowresPass);
