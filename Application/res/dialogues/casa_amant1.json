@@ -2,20 +2,18 @@
   "dialog": [
     {
       "questions": [
-        {"text": "Thompson.", "answer": 0}
+        {"text": "Here Smith.;There has been another crime at James Stuart's house,;in 72 Newman Street. I've been investigating; Jess Brown's life and I found out;that this guy is...;well, was her lover.;The body I found seems to be Stuart's.", "answer": 0}
       ],
       "answers": [
-        {"text": "Here Smith.;There has been another crime at James Stuart's house,;in 72 Newman Street. I've been investigating; Jess Brown's life and I found out;that this guy is...;well, was her lover.;The body I found seems to be Stuart's.", "data": null, "jump": 1}
+        {"text": "What!?;Come on, hurry up, this case is getting out of hands.;We need to solve it as soon as possible.;If not, everything will be shown in media and this;will be the end of my career.;And you'll stay in prison the rest of your life,;as it was supposed to be.", "data": null, "jump": 1}
       ]
     },
 
     {
       "questions": [
-        {"text": "What!?;Come on, hurry up, this case is getting out of hands.;We need to solve it as soon as possible.;If not, everything will be shown in media and this;will be the end of my career.;And you'll stay in prison the rest of your life,;as it was supposed to be.", "answer": 0}
+        {"text": "Shut the fuck up, Thompson!", "answer": -1}
       ],
-      "answers": [
-        {"text": "Shut the fuck up, Thompson!", "data": "finish", "jump": -1}
-      ]
+      "answers": []
     }
   ]
 }
