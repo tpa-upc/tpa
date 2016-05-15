@@ -45,7 +45,7 @@ public class InterrogationLocation extends LocationActivity {
     DecalActor albert;
     DecalActor enemies;
 
-    final static int MAX_QUESTIONS = 2;
+    final static int MAX_QUESTIONS = 1;
     int questionCount = 0;
     int round = 0;
 
@@ -140,12 +140,8 @@ public class InterrogationLocation extends LocationActivity {
         capsuleMat2.setTint(0.8f,0.2f,0.5f);
 
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
-        anthony.position.set(3,0,0);
-        anthony.update();
-
         anthonyHead = new GeometryActor(monkeyMesh, capsuleMat);
-        anthonyHead.position.set(3,1.1f,0);
-        anthonyHead.update();
+
 
         thompson = new GeometryActor(capsuleMesh, capsuleMat2);
         thompson.position.set(0.25f, 0, 1.5f);
@@ -157,8 +153,6 @@ public class InterrogationLocation extends LocationActivity {
         thompsonHead.update();
 
         antonText = new TextActor("Anthony guy");
-        antonText.position.set(3, 1.5f, 0);
-        antonText.update();
 
         thomText = new TextActor("Thompson");
         thomText.position.set(0.25f, 1.75f, 1.5f);
@@ -180,6 +174,14 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        // place anthony in room
+        antonText.position.set(3, 1.5f, 0);
+        antonText.update();
+        anthony.position.set(3,0,0);
+        anthony.update();
+        anthonyHead.position.set(3,1.1f,0);
+        anthonyHead.update();
+
         addGeometry(wall0);
         addGeometry(wall1);
         addGeometry(wall2);
@@ -228,6 +230,15 @@ public class InterrogationLocation extends LocationActivity {
 
     @Override
     public void onTick(Context context) {
+        if (youFuckedUp) {
+            anthony.position.add(0, 0, -context.time.getFrameTime());
+            anthonyHead.position.add(0, 0, -context.time.getFrameTime());
+            antonText.position.add(0, 0, -context.time.getFrameTime());
+            antonText.update();
+            anthony.update();
+            anthonyHead.update();
+        }
+
         anthonyHead.rotation.set(camera.rotation).invert();
         anthonyHead.update();
 
@@ -286,7 +297,6 @@ public class InterrogationLocation extends LocationActivity {
                     Game.getInstance().pushActivity(GameActivity.InterrThompsonSuccess, new ActivityListener() {
                         @Override
                         public void onResult(Activity act, Object data) {
-                            youFuckedUp = false;
                             round = 0;
                             questionCount = 0;
                             composite.setTimer(1);
@@ -311,6 +321,7 @@ public class InterrogationLocation extends LocationActivity {
                                 Game.getInstance().pushActivity(GameActivity.Club);
                                 Values.ARGUMENTO = 7;
                                 start = false;
+                                youFuckedUp = false;
                             }));
                         }
                     });
