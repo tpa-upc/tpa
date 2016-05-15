@@ -1,0 +1,19 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {
+          "text": "Go to Sweet Malibu",
+          "answer": -1,
+          "data": "pub"
+        },
+        {
+          "text": "Go home",
+          "answer": 0,
+          "data": "home"
+        }
+      ],
+      "answers": [{"text":"", "jump": 0}]
+    }
+  ]
+}

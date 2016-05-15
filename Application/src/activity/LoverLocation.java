@@ -6,9 +6,11 @@ import game.Values;
 import rendering.DecalActor;
 import rendering.FpsInput;
 import rendering.GeometryActor;
+import rendering.TextActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
 import tpa.application.Context;
+import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
@@ -34,6 +36,11 @@ public class LoverLocation extends LocationActivity{
     DecalActor door1;
     DecalActor bloodWall, bloodFloor;
     DecalActor forensicCard, barCard;
+    GeometryActor phone;
+    TextActor phoneText;
+
+    Sound hangPhone;
+
     boolean forensicCardFound = false;
     boolean barCardFound = false;
     boolean phoneCallMade = false;
@@ -42,6 +49,7 @@ public class LoverLocation extends LocationActivity{
 
     @Override
     public void onRoomPreLoad(Context context) {
+        Game.getInstance().getResources().load("res/sfx/hang_phone.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
@@ -63,12 +71,15 @@ public class LoverLocation extends LocationActivity{
         Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/cone.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/sphere.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
+        Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
 
         fps = new FpsInput(camera);
     }
 
     @Override
     public void onRoomPostLoad(Context context) {
+        hangPhone = Game.getInstance().getResources().get("res/sfx/hang_phone.wav", Sound.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/room_texture.png", Texture.class);
@@ -88,6 +99,8 @@ public class LoverLocation extends LocationActivity{
         Mesh cubeMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         Mesh sphereMesh = Game.getInstance().getResources().get("res/models/sphere.json", Mesh.class);
         Mesh coneMesh = Game.getInstance().getResources().get("res/models/cone.json", Mesh.class);
+        Mesh phoneMesh = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
+        Texture phoneTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -103,6 +116,7 @@ public class LoverLocation extends LocationActivity{
         bloodFloorMat.setReflective(bloodFloorTexRefl, reflectRender);
         DecalMaterial forensicCardMat = new DecalMaterial(forensicCardTex, depth);
         DecalMaterial barCardMat = new DecalMaterial(barCardTex, depth);
+        TexturedMaterial phoneMat = new TexturedMaterial(phoneTex);
 
         /**Toys creation**/
         cube1 = new GeometryActor(cubeMesh, barmanMat);
@@ -215,6 +229,14 @@ public class LoverLocation extends LocationActivity{
         barCard.scale.set(0.1f, 0.05f, 0.1f);
         barCard.update();
 
+        phoneMat.setTint(0,0,0);
+        phone = new GeometryActor(phoneMesh, phoneMat);
+        phone.position.set(6,1,1.75f);
+        phone.update();
+
+        phoneText = new TextActor("Telephone");
+        phoneText.position.set(phone.position).add(0, 0.5f, 0);
+        phoneText.update();
 
         fps.position.set(4, 1f, 0);
     }
@@ -250,12 +272,29 @@ public class LoverLocation extends LocationActivity{
         addDecal(bloodFloor);
         addDecal(forensicCard);
         addDecal(barCard);
+        addGeometry(phone);
+        addText(phoneText);
 
         /** Adding Picker Box for forensic and bar Cards**/
         addPickerBox(new Vector3f(7,0,0), new Vector3f(0.1f,0.05f,0.1f), "forensicCard");
         addPickerBox(new Vector3f(7.5f,0,1.3f), new Vector3f(0.1f,0.05f,0.1f), "barCard");
+        addPickerBox(new Vector3f(6,1,1.75f), new Vector3f(0.25f,0.35f,0.25f), "phone");
+        addPickerBox(new Vector3f(3.3f, 0, 0.1f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(3,0,0), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(3.75f,0,1.5f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(6,0,-1.25f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(7,0,-0.25f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(1,0,-1.3f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(1.3f, 0, -0.75f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(1.15f, 0, 0.75f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(5.5f, 0, 1.15f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(3.3f, 0, 0.1f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(6.6f, 0, -0.35f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(7.75f,0.1f,1.75f), new Vector3f(0.1f,0.05f,0.1f), "kids");
+        addPickerBox(new Vector3f(5, 1.5f, 1f), new Vector3f(0.25f,0.5f,0.25f), "dead");
+
         if(forensicCardFound && barCardFound && phoneCallMade) {
-            addPickerBox(new Vector3f(0, 0.85f + 1e-3f, -1), new Vector3f(0.85f, 0.1f, 0.85f), "leaveRoom"); //Door PickerBox
+            addPickerBox(new Vector3f(0, 0.85f + 1e-3f, -1), new Vector3f(0.1f, 0.75f, 0.5f), "leaveRoom"); //Door PickerBox
         }
 
         /**Set camera position**/
@@ -279,6 +318,7 @@ public class LoverLocation extends LocationActivity{
         barmanHead.rotation.set(camera.rotation).invert();
         barmanHead.rotation.identity().lookRotate(new Vector3f(fps.position).sub(barmanHead.position).normalize(), new Vector3f(0, 1, 0)).invert();
         barmanHead.update();
+        phoneText.billboard(camera);
     }
 
     @Override
@@ -291,8 +331,33 @@ public class LoverLocation extends LocationActivity{
             Game.getInstance().pushActivity(GameActivity.BarCardFound);
             Game.getInstance().pushActivity(GameActivity.BarCard);
             barCardFound = true;
+        }else if (data.equals("phone")) {
+            phoneCallMade = true;
+            Game.getInstance().pushActivity(GameActivity.LoverHouse2);
+            Game.getInstance().pushActivity(GameActivity.LoverHouse1, (act,dat) -> {
+                if(dat.equals("finish")){
+                    context.audioRenderer.playSound(hangPhone, false);
+                }
+            });
         }else if (data.equals("leaveRoom")){
-
+            Game.getInstance().pushActivity(GameActivity.LeaveRoom, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object data) {
+                    if (data.equals("pub")) {
+                        Values.ARGUMENTO = 19;
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Club);
+                    }else if (data.equals("home")){
+                        Values.ARGUMENTO = 20;
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Room);
+                    }
+                }
+            });
+        }else if(data.equals("kids")){
+            Game.getInstance().pushActivity(GameActivity.Kids);
+        }else if(data.equals("dead")){
+            Game.getInstance().pushActivity(GameActivity.Dead);
         }
     }
 

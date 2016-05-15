@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "", "answer": 0}
+      ],
+      "answers": [
+        {"text": "How are you, James?;How rude, he doesn't even reply.;Why are you looking at me?", "data": "dead", "jump": -1}
+      ]
+    }
+  ]
+}
