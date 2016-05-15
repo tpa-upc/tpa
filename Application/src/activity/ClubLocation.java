@@ -45,7 +45,7 @@ public class ClubLocation extends LocationActivity {
 
 
     int count = 0;
-    boolean success = true;
+    boolean success = false;
 
     @Override
     public void onRoomPreLoad(Context context) {
