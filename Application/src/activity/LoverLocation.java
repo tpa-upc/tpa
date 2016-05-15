@@ -261,6 +261,7 @@ public class LoverLocation extends LocationActivity{
         /**Set camera position**/
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
+        camera.clearColor.set(0.85f);
         cameraReflect.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
     }
 
