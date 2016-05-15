@@ -380,7 +380,6 @@ public class RoomLocation extends LocationActivity {
 
         if(notewallShowUp){
             addPickerBox(new Vector3f(3f, 1.0f, -2f), new Vector3f(0.7f, 0.7f, 0.1f), "notes");
-            Values.ARGUMENTO = 2;
         }
 
         //talk to alter ego
@@ -396,6 +395,7 @@ public class RoomLocation extends LocationActivity {
 
         if(bar_card){
             bar_card = false;
+            Game.getInstance().pushActivity(GameActivity.ReactionBarCard);
             Game.getInstance().pushActivity(GameActivity.BarCard);
         }
 
@@ -499,6 +499,7 @@ public class RoomLocation extends LocationActivity {
                     public void onResult(Activity act, Object data) {
                         if (data.equals("search")) {
                             Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.AnthonyReaction);
                             Game.getInstance().pushActivity(GameActivity.MapImage);
                             Values.ARGUMENTO = 5;
                         }

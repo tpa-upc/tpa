@@ -25,7 +25,7 @@
         {"text": "Then you should probably know something;about Jess Brown, right?", "answer": 0}
       ],
       "answers": [
-        {"text": "I Dunno darling, I just know about beers!", "data": "finish", "jump": 0}
+        {"text": "I dunno darling, I just know about beers!", "data": "finish", "jump": 0}
       ]
     }
   ]
