@@ -1,0 +1,10 @@
+{
+  "dialog": [
+    {
+      "questions": [],
+      "answers": [
+        {"text": " I think that Anthony Brown didn't tell me all the truth... I need to solve this if I don't want to spend the next 40 years in prison... Why did I think it was a good idea to start working as a hit-woman?", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}
