@@ -1,0 +1,13 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "One more time Sweet Malibu...;Should I go and take one Guimess?", "data": "", "answer": 0}
+      ]
+    ,
+      "answers": [
+        {"text": "", "data": "barCard", "jump": -1 }
+      ]
+    }
+  ]
+}
