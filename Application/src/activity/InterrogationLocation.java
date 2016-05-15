@@ -46,7 +46,7 @@ public class InterrogationLocation extends LocationActivity {
     DecalActor albert;
     DecalActor enemies;
 
-    final static int MAX_QUESTIONS = 1;
+    final static int MAX_QUESTIONS = 2;
     int questionCount = 0;
     int round = 0;
 

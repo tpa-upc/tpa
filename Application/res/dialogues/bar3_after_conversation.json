@@ -1,9 +1,11 @@
 {
   "dialog": [
     {
-      "questions": [],
+      "questions": [
+        {"text": "Maybe I should go home and find out who James Stuart is... ", "data": null, "answer": 0}
+      ],
       "answers": [
-        {"text": "Maybe I should go home and find out who James Stuart is...", "data": null, "jump": -1}
+        {"text": "", "data": null, "jump": -1}
       ]
     }
   ]

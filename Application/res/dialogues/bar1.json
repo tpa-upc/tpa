@@ -5,7 +5,7 @@
         {"text": "Hey!", "answer": 0}
       ],
       "answers": [
-        {"text": "Hey mate, it's been a while! Another beer?", "data": "satan", "jump": -1}
+        {"text": "Hey love, it's been a while! Another beer?", "data": "satan", "jump": -1}
       ]
     }
   ]

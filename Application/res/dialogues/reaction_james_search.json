@@ -2,10 +2,10 @@
   "dialog": [
     {
       "questions": [
-        {"text": "", "answer":0}
+        {"text": "I should go to 72 Newman Street immediately!", "answer":0}
       ],
       "answers": [
-        {"text": "I should go to 72 Newman Street immediately!", "data": "finish", "jump": -1}
+        {"text": "", "data": "finish", "jump": -1}
       ]
     }
   ]
