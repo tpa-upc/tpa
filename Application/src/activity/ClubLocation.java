@@ -33,6 +33,16 @@ public class ClubLocation extends LocationActivity {
     GeometryActor tile1, tile1flip;
     GeometryActor barman, barmanHead;
     DecalActor door1;
+    DecalActor bottle;
+    DecalActor bottle2;
+    GeometryActor chair;
+    GeometryActor chair2,chair3,chair4;
+    GeometryActor table,table2;
+    GeometryActor bar;
+    GeometryActor bar2;
+    DecalActor darts;
+
+
 
     int count = 0;
     boolean success = true;
@@ -52,6 +62,13 @@ public class ClubLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/monkey.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/door0.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/bottles_texture.png",Texture.class);
+        Game.getInstance().getResources().load("res/models/chair.json", Mesh.class);
+        //Game.getInstance().getResources().load("res/textures/pc.png", Texture.class);
+        Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
+        Game.getInstance().getResources().load("res/textures/wood.jpg",Texture.class);
+        Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
+        Game.getInstance().getResources().load("res/textures/darts.png",Texture.class);
 
         fps = new FpsInput(camera);
     }
@@ -62,13 +79,19 @@ public class ClubLocation extends LocationActivity {
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
         Texture tileTex = Game.getInstance().getResources().get("res/textures/bar_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/bar_texture_left.png", Texture.class);
-        Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
         Mesh barmanMesh = Game.getInstance().getResources().get("res/models/capsule.json", Mesh.class);
         Mesh monkeyMesh = Game.getInstance().getResources().get("res/models/monkey.json", Mesh.class);
         Texture barmanTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
         //Texture chairTex = Game.getInstance().getResources().get(, Texture.class);
         //Mesh doorMesh = Game.getInstance().getResources().get("res/models/heavy_door.json", Mesh.class);
         Texture doorTex = Game.getInstance().getResources().get("res/textures/door0.png", Texture.class);
+        Texture bottleTex = Game.getInstance().getResources().get("res/textures/bottles_texture.png",Texture.class);
+        Mesh chairMesh = Game.getInstance().getResources().get("res/models/chair.json", Mesh.class);
+        Texture pcTex = Game.getInstance().getResources().get("res/textures/pc.png", Texture.class);
+        Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
+        Texture woodTex = Game.getInstance().getResources().get("res/textures/wood.jpg",Texture.class);
+        Mesh cubeMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
+        Texture dartsTex = Game.getInstance().getResources().get("res/textures/darts.png",Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -79,6 +102,11 @@ public class ClubLocation extends LocationActivity {
         TexturedMaterial wallMat = new TexturedMaterial(wallTex);
         TexturedMaterial barmanMat = new TexturedMaterial(barmanTex);
         DecalMaterial doorMat = new DecalMaterial(doorTex, depth);
+        DecalMaterial bottleMat = new DecalMaterial(bottleTex,depth);
+        TexturedMaterial woodMat = new TexturedMaterial(woodTex);
+        TexturedMaterial tableMat = new TexturedMaterial(woodTex);
+        DecalMaterial dartsMat = new DecalMaterial(dartsTex,depth);
+
 
         wall0 = new GeometryActor(wallMesh, wallMat);
 
@@ -108,16 +136,75 @@ public class ClubLocation extends LocationActivity {
 
         barmanMat.setTint(0,0,1);
         barman = new GeometryActor(barmanMesh, barmanMat);
-        barman.position.set(5,0,1);
+        barman.position.set(7,0,1);
         barman.update();
 
         barmanHead = new GeometryActor(monkeyMesh, barmanMat);
-        barmanHead.position.set(5,1.15f,1);
+        barmanHead.position.set(7,1.15f,1);
         barmanHead.update();
 
         door1 = new DecalActor(doorMat);
         door1.model.translate(0, 0.85f + 1e-3f, -1).rotateY(180*3.1415f/180).rotateZ(90*3.1415f/180).scale(0.85f, 0.1f, 0.85f);
 
+        bottle = new DecalActor(bottleMat);
+        bottle.rotation.rotateX((float)Math.toRadians(90));
+        bottle.rotation.rotateY((float)Math.toRadians(-90));
+        bottle.position.set(7, 1, 2);
+        bottle.scale.set(1, 0.05f, 1);
+        bottle.update();
+
+        bottle2 = new DecalActor(bottleMat);
+        bottle2.rotation.rotateX((float)Math.toRadians(180));
+        bottle2.rotation.rotateZ((float)Math.toRadians(90));
+        bottle2.position.set(8, 1, 1);
+        bottle2.scale.set(1, 0.05f, 1);
+        bottle2.update();
+
+        darts= new DecalActor(dartsMat);
+        darts.position.set(8,1.2f,-1.1f);
+        darts.scale.set(0.4f,0.05f,0.4f);
+        darts.rotation.rotateX((float)Math.toRadians(0));
+        darts.rotation.rotateZ((float)Math.toRadians(-90));
+
+        darts.update();
+
+
+        chair = new GeometryActor(chairMesh, woodMat);
+        chair.model.translate(3.5f, 0, -0.95f).rotateY(1.5f).scale(0.85f);
+
+        chair2 = new GeometryActor(chairMesh, woodMat);
+        chair2.model.translate(2.5f, 0, -0.95f).rotateY(-1.5f).scale(0.85f);
+
+        chair3 = new GeometryActor(chairMesh,woodMat);
+        chair3.model.translate(2.5f, 0, 0.95f).rotateY(-1.5f).scale(0.85f);
+
+        chair4 = new GeometryActor(chairMesh,woodMat);
+        chair4.model.translate(3.5f, 0, 0.95f).rotateY(1.5f).scale(0.85f);
+
+
+
+        table = new GeometryActor(tableMesh, tableMat);
+        table.position.set(3.1f,0,-1.45f);
+        table.scale.set(0.5f,1,1);
+        table.update();
+
+        table2 = new GeometryActor(tableMesh,tableMat);
+        table2.position.set(3.1f,0,0.45f);
+        table2.scale.set(0.5f,1,1);
+        table2.update();
+
+        bar = new GeometryActor(cubeMesh, wallMat);
+        bar.position.set(7f,0.3f,0);
+        bar.scale.set(1f,0.2f,0.3f);
+        bar.rotation.rotateX((float)Math.toRadians(90));
+        bar.update();
+
+        bar2 = new GeometryActor(cubeMesh, wallMat);
+        bar2.position.set(6f,0.3f,0.9f);
+        bar2.scale.set(1.1f,0.2f,0.3f);
+        bar2.rotation.rotateY((float)Math.toRadians(90));
+        bar2.rotation.rotateX((float)Math.toRadians(90));
+        bar2.update();
         fps.position.set(4, 1f, 0);
     }
 
@@ -136,6 +223,18 @@ public class ClubLocation extends LocationActivity {
         addGeometry(barman);
         addGeometry(barmanHead);
         addDecal(door1);
+        addDecal(bottle);
+        addDecal(bottle2);
+        addGeometry(table);
+        addGeometry(chair2);
+        addGeometry(chair);
+        addGeometry(bar);
+        addGeometry(bar2);
+        addDecal(darts);
+        addGeometry(chair3);
+        addGeometry(chair4);
+        addGeometry(table2);
+
 
         if(Values.ARGUMENTO == 2){
             addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
