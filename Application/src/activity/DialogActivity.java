@@ -16,6 +16,8 @@ import tpa.input.mouse.Cursor;
 import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Matrix4f;
 
+import java.io.BufferedInputStream;
+
 /**
  * Created by germangb on 20/04/16.
  */
@@ -23,10 +25,10 @@ public class DialogActivity extends Activity {
 
     private static SpriteBatch batch = null;
 
-    /** Dialog file */
+    /** DialoguePhone file */
     private String file;
 
-    /** Dialog */
+    /** DialoguePhone */
     private Dialog dialog;
 
     /** Current dialog node */
@@ -49,7 +51,6 @@ public class DialogActivity extends Activity {
     private int state = 0;
     private int selected = 0;
     private String[] lines;
-    private Sound click;
 
     public DialogActivity (String file) {
         this.file = file;
@@ -63,7 +64,6 @@ public class DialogActivity extends Activity {
         Game.getInstance().getResources().load(file, Dialog.class);
         Game.getInstance().getResources().load("res/textures/ubuntu24.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
-        Game.getInstance().getResources().load("res/sfx/click.wav", Sound.class);
         tasks = new TaskManager();
     }
 
@@ -72,7 +72,6 @@ public class DialogActivity extends Activity {
         dialog = Game.getInstance().getResources().get(file, Dialog.class);
         font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
         pixel = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
-        click = Game.getInstance().getResources().get("res/sfx/click.wav", Sound.class);
 
         node = dialog.dialog[0];
         state = 0;
@@ -99,7 +98,6 @@ public class DialogActivity extends Activity {
                 if (state == 0) {
                     int id = selected;
                     if (id >= 0 && id < node.questions.length) {
-                        context.audioRenderer.playSound(click, false);
                         onSelectQuestion(id);
                     }
                 }
@@ -110,6 +108,10 @@ public class DialogActivity extends Activity {
         node = dialog.dialog[0];
         state = 0;
         selected = 0;
+
+        if (node.questions.length == 1) {
+            onSelectQuestion(0);
+        }
     }
 
     @Override
@@ -130,7 +132,7 @@ public class DialogActivity extends Activity {
         //batch.add(pixel, 0, 0, w, h, 0, 0, 1, 1);
 
         batch.setColor(0, 0, 0, 1);
-        batch.add(pixel, 0, h-64, w, 64, 0, 0, 1, 1);
+        batch.add(pixel, 0, h-70, w, 70, 0, 0, 1, 1);
 
         context.mouse.setCursor(Cursor.Arrow);
         if (state == 0) {
@@ -176,10 +178,9 @@ public class DialogActivity extends Activity {
 
         if (que.data != null) report(que.data);
 
-        tasks.add(new DelayTask(0.25f, context.time));
+        //tasks.add(new DelayTask(0.25f, context.time));
         for (int i = 0; i < lines.length; ++i) {
             String str = lines[i];
-            tasks.add(new DelayTask(0.5f, context.time));
             for (int x = 0; x < str.length(); ++x) {
                 String sub = str.substring(0, x+1);
                 tasks.add(new Task() {
@@ -196,7 +197,7 @@ public class DialogActivity extends Activity {
                 tasks.add(new DelayTask(0.025f, context.time));
             }
 
-            tasks.add(new DelayTask(0.75f, context.time));
+            tasks.add(new DelayTask(0.5f, context.time));
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
@@ -210,7 +211,7 @@ public class DialogActivity extends Activity {
             });
         }
 
-        tasks.add(new DelayTask(1, context.time));
+        //tasks.add(new DelayTask(1, context.time));
 
         if (ans != null) {
             tasks.add(new Task() {

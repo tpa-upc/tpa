@@ -1,0 +1,14 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Where have you been this morning?", "answer": 0},
+        {"text": "How was your relationship with your wife?", "answer": 1}
+      ],
+      "answers": [
+        {"text": "Where the hell do you think I was? At my f*** house.", "data": "delete1", "jump": 0},
+        {"text": "Well, we were... things weren't going;well between us. Lately, she was spending;a lot of time in some pub.", "data": "add1", "jump": 0}
+      ]
+    }
+  ]
+}

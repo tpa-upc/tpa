@@ -1,0 +1,10 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"preview": "Check inbox", "text": "I hope this is not a powerpoint with music", "data": "inbox", "answer": -1},
+        {"preview": "Play Snake", "text": "...;It's not time for that;...;Or is it?", "data": "snake", "answer": -1}
+      ]
+    }
+  ]
+}

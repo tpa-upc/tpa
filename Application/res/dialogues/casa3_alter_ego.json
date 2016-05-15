@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Hey sweetie, how was your day?", "answer": 0}
+      ],
+      "answers": [
+        {"text": "I found something interesting inside;my teddy bear's head!", "data": "note2", "jump": -1}
+      ]
+    }
+  ]
+}

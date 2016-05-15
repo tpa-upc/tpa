@@ -1,0 +1,16 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Where have you been this morning?", "answer": 0},
+        {"text": "Do you want a cigarette?", "answer": 1},
+        {"text": "How was your relationship with your wife?", "answer": 2}
+      ],
+      "answers": [
+        {"text": "Where the hell would I be?! At home, of course!", "data": "nope", "jump": -1},
+        {"text": "The big guy behind you told me it's not allowed...", "data": "nope", "jump": -1},
+        {"text": "Well, we were...;things weren't going well between us to be honest.;She was spending a lot of time in some;god awful pub.", "data": "sep", "jump": -1}
+      ]
+    }
+  ]
+}

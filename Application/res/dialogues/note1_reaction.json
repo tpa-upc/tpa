@@ -1,0 +1,10 @@
+{
+  "dialog": [
+    {
+      "questions": [],
+      "answers": [
+        {"text": "What the hell is that...?", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}

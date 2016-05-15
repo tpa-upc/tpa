@@ -39,6 +39,8 @@ public class CompositeMaterial extends Material {
             "varying vec2 v_uv;\n" +
             "\n" +
             "uniform float u_timer;\n" +
+            "uniform float u_aspect;\n" +
+            "uniform float u_noise;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
             "uniform sampler2D u_normal;\n" +
@@ -53,18 +55,24 @@ public class CompositeMaterial extends Material {
             "void main () {\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    vec3 normal = texture2D(u_normal, v_uv).rgb * 2.0 - 1.0;\n" +
+            "    float rand = texture2D(u_random, v_uv*vec2(640, 480)/4/vec2(64)).r * 2 - 1;\n" +
             "    \n" +
             "    float diff = clamp(dot(normal, normalize(vec3(-1, 3, 2))), 0.0, 1.0);\n" +
             "    diff = mix(0.5, 1.0, diff);\n" +
             "    \n" +
             "    vec3 final_color = color;\n" +
-            "    float vignet = smoothstep(1.75, 0.25, length(v_uv*2-1));\n" +
+            "    float vignet = smoothstep(2.0, 0.25, length(v_uv*2-1));\n" +
             "    \n" +
-            "    float bars = smoothstep(0.7+0.01, 0.7, abs(v_uv.y*2-1));\n" +
+            "    float bars = smoothstep(0.7+0.01, 0.7, -(v_uv.y*2-1));\n" +
             "    \n" +
-            "    gl_FragColor = vec4(final_color*vignet*diff*bars, 1.0);\n" +
+            "    gl_FragColor = vec4(final_color*vignet*diff + rand*u_noise, 1.0);\n" +
             "    \n" +
-            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), exp(-u_timer * 0.35f));\n" +
+            "    gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), smoothstep(1, 0, u_timer));\n" +
+            "    \n" +
+            "    vec2 uv2 = v_uv*2-1;\n" +
+            "    uv2.x *= u_aspect;\n" +
+            "    float center = smoothstep(0.02, 0.025, length(uv2));\n" +
+            "    gl_FragColor.rgb = mix(vec3(1.0) - gl_FragColor.rgb * 0.75, gl_FragColor.rgb, center);\n" +
             "}";
 
     private static ShaderProgram PROGRAM = new ShaderProgram(VERT, FRAG, Attribute.Position);
@@ -73,7 +81,7 @@ public class CompositeMaterial extends Material {
     private Texture normal;
     private Time time;
     private Texture randTex;
-    private float timer = 0;
+    private float timer = 0, noise = 0;
 
     public CompositeMaterial (Texture diffuse, Texture normal, Time time) {
         super(PROGRAM);
@@ -88,9 +96,13 @@ public class CompositeMaterial extends Material {
         randTex.setData(ByteBuffer.allocateDirect(64*64).order(ByteOrder.nativeOrder()));
     }
 
+    public void setNoise (float noise) {
+        this.noise = noise;
+    }
+
     @Override
     public void render(Renderer renderer, Camera camera, Mesh mesh, Matrix4f model) {
-        timer += time.getFrameTime();
+        //timer += time.getFrameTime();
         updateRandom();
         renderer.setState(state);
         renderer.setShaderProgram(program);
@@ -98,6 +110,8 @@ public class CompositeMaterial extends Material {
         program.setUniform("u_normal", UniformType.Sampler2D, 1);
         program.setUniform("u_random", UniformType.Sampler2D, 2);
         program.setUniform("u_timer", UniformType.Float, timer);
+        program.setUniform("u_aspect", UniformType.Float, (float)diffuse.getWidth()/diffuse.getHeight());
+        program.setUniform("u_noise", UniformType.Float, noise);
         renderer.setTexture(0, diffuse);
         renderer.setTexture(1, normal);
         renderer.setTexture(2, randTex);

@@ -1,0 +1,8 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "And how much time did you say I have?", "answer": 0}],
+      "answers": [{"text": "We have no evidences against him;And he's been here for quite some time now;I'd say two questions...", "data": "start", "jump": -1}]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ public class Launch {
 
         // create a window
         GLFW.glfwDefaultWindowHints();
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+        //GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         long window = GLFW.glfwCreateWindow(640, 480, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwSwapInterval(1);
@@ -48,6 +48,7 @@ public class Launch {
                 time.update();
                 program.onUpdate(con);
                 mouse.update();
+                audio.update();
             } catch (Exception e) {
                 e.printStackTrace();
                 GLFW.glfwSetWindowShouldClose(window, GLFW.GLFW_TRUE);

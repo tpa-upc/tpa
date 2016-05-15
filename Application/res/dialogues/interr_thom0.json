@@ -1,0 +1,8 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "I need more time!", "answer": 0}],
+      "answers": [{"text": "NO;You had your chance;Scum like you are not over the law;Now GTFO", "data": "gtfo", "jump": -1}]
+    }
+  ]
+}

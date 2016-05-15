@@ -1,0 +1,19 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {
+          "text": "Search on Toggle",
+          "answer": -1,
+          "data": "search"
+        },
+        {
+          "text": "Play minesweeper",
+          "answer": -1,
+          "data": "It's not time for that!"
+        }
+      ],
+      "answers": []
+    }
+  ]
+}

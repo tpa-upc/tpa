@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class Obj2Json {
 
-    static String model = "capsule";
+    static String model = "cone";
 
     public static void main (String[] args) throws IOException {
         ArrayList<Float> position = new ArrayList<>();

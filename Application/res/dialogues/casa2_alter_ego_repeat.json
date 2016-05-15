@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "What have you done today?", "answer": 0}
+      ],
+      "answers": [
+        {"text": "Today I've ripped off my teddy's head.;I was expecting him to bleed to death :(", "data": null, "jump": -1}
+      ]
+    }
+  ]
+}

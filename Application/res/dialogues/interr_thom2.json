@@ -1,0 +1,13 @@
+{
+  "dialog": [
+    {
+      "questions": [{"text": "OK I've got all we need", "answer": 0}],
+      "answers": [{"text": "What are you going to do now?", "jump": 1}]
+    },
+
+    {
+      "questions": [{"text": "I think I'll go back to the pub", "answer": 0}],
+      "answers": [{"text": "Ok...;Good luck then", "data": "gtfoBar", "jump": -1}]
+    }
+  ]
+}

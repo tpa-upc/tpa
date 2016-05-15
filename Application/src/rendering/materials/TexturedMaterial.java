@@ -9,6 +9,7 @@ import tpa.graphics.shader.ShaderProgram;
 import tpa.graphics.shader.UniformType;
 import tpa.graphics.texture.Texture;
 import tpa.joml.Matrix4f;
+import tpa.joml.Vector2f;
 import tpa.joml.Vector3f;
 
 /**
@@ -25,6 +26,7 @@ public class TexturedMaterial extends Material {
             "\n" +
             "varying vec2 v_uv;\n" +
             "varying vec3 v_normal;\n" +
+            "varying vec3 v_position;\n" +
             "\n" +
             "uniform mat4 u_projection;\n" +
             "uniform mat4 u_view;\n" +
@@ -34,6 +36,7 @@ public class TexturedMaterial extends Material {
             "    mat4 view_model = u_view * u_model;\n" +
             "    gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0);\n" +
             "    v_normal = normalize((view_model * vec4(a_normal, 0.0)).xyz);\n" +
+            "    v_position = (view_model * vec4(a_position, 1.0)).xyz;\n" +
             "    v_uv = a_uv;\n" +
             "}";
 
@@ -42,14 +45,27 @@ public class TexturedMaterial extends Material {
             "\n" +
             "varying vec2 v_uv;\n" +
             "varying vec3 v_normal;\n" +
+            "varying vec3 v_position;\n" +
             "\n" +
+            "uniform vec2 u_resolution;\n" +
             "uniform sampler2D u_texture;\n" +
+            "uniform sampler2D u_reflective;\n" +
+            "uniform sampler2D u_reflective_map;\n" +
+            "uniform int u_has_reflective;\n" +
             "uniform vec3 u_tint;\n" +
             "\n" +
             "void main () {\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    \n" +
-            "    gl_FragData[0] = vec4(color*u_tint, 1.0);\n" +
+            "    if (u_has_reflective == 1) {\n" +
+            "        float cont = texture2D(u_reflective, v_uv).r;\n" +
+            "        vec2 refl_uv = gl_FragCoord.xy/u_resolution;\n" +
+            "        refl_uv.x = 1-refl_uv.x;// + sin(refl_uv.y * 256) * 0.005;\n" +
+            "        vec3 reflection = texture2D(u_reflective_map, refl_uv).rgb;\n" +
+            "        color = mix(color, reflection, cont);\n" +
+            "    }\n" +
+            "    \n" +
+            "    gl_FragData[0] = vec4(mix(color*u_tint, vec3(0.0), 1-exp(-max(0, length(v_position)-4) * 0.1)), 1.0);\n" +
             "    gl_FragData[1] = vec4(v_normal * 0.5 + 0.5, 1.0);\n" +
             "}";
 
@@ -58,6 +74,11 @@ public class TexturedMaterial extends Material {
 
     /** material texture */
     private Texture texture;
+
+    /** reflective map */
+    private Texture reflective = null;
+    private Texture reflectiveMap = null;
+    public boolean discardReflectPass = false;
 
     /** Tint */
     private Vector3f tint = new Vector3f(1);
@@ -68,6 +89,11 @@ public class TexturedMaterial extends Material {
         this.texture = texture;
         state.culling = Culling.BackFace;
         state.depthTest = true;
+    }
+
+    public void setReflective (Texture map, Texture render) {
+        reflective = map;
+        reflectiveMap = render;
     }
 
     /**
@@ -92,10 +118,20 @@ public class TexturedMaterial extends Material {
         program.setUniform("u_view", UniformType.Matrix4, camera.view);
         program.setUniform("u_model", UniformType.Matrix4, model);
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
+        program.setUniform("u_reflective", UniformType.Sampler2D, 1);
+        program.setUniform("u_reflective_map", UniformType.Sampler2D, 2);
+        program.setUniform("u_has_reflective", UniformType.Integer, reflective==null ? 0 : 1);
+        if (reflective != null)
+            program.setUniform("u_resolution", UniformType.Vector2, new Vector2f(reflectiveMap.getWidth(), reflectiveMap.getHeight()));
         program.setUniform("u_tint", UniformType.Vector3, tint);
 
         // bind texture
         renderer.setTexture(0, texture);
+
+        if (reflective != null) {
+            renderer.setTexture(1, reflective);
+            renderer.setTexture(2, reflectiveMap);
+        }
 
         // render mesh
         renderer.renderMesh(mesh);

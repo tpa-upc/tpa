@@ -36,6 +36,12 @@ public interface MouseInput {
     void setCursor (Cursor cursor);
 
     /**
+     * Grab cursor
+     * @param grab
+     */
+    void setGrabbed (boolean grab);
+
+    /**
      * Check if mouse button is being held down
      * @param button button index
      * @return true if button is being held down, false otherwise

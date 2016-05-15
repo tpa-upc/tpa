@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "I don't have time for this shit, come on...", "answer": 0}
+      ],
+      "answers": [
+        {"text": "", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}

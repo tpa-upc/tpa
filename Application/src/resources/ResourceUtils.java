@@ -2,6 +2,7 @@ package resources;
 
 import activity.Dialog;
 import com.google.gson.Gson;
+import tpa.audio.Music;
 import tpa.audio.Sound;
 import tpa.graphics.geometry.Attribute;
 import tpa.graphics.geometry.Mesh;
@@ -18,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -45,6 +47,16 @@ public class ResourceUtils {
         IndicesJson indices;
     }
 
+    public static Music loadMusic (String path) throws Exception {
+        return new Music(path);
+    }
+
+    /**
+     *
+     * @param path
+     * @return
+     * @throws Exception
+     */
     public static Dialog loadDialog (String path) throws Exception {
         FileReader reader = new FileReader(path);
         Dialog dialog = gson.fromJson(reader, Dialog.class);
