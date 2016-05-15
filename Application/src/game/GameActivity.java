@@ -150,6 +150,10 @@ public enum GameActivity {
     /**Leave Lover's House**/
     LeaveRoom (new DialogActivity("res/dialogues/leaveroom.json")),
 
+    /** bar 2 rounds */
+    Bar2Round0 (new DialogActivity("res/dialogues/bar2_round0.json")),
+    Bar2Round1 (new DialogActivity("res/dialogues/bar2_round1.json")),
+
     /**Teddy Bear Email**/
     EmailTB (new ImageActivity("res/textures/emailTeddyBear.png"));
 

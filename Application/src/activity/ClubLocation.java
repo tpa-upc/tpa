@@ -1,5 +1,8 @@
 package activity;
 
+import activity.tasks.DoSomethingTask;
+import activity.tasks.Task;
+import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
 import game.Values;
@@ -32,6 +35,7 @@ public class ClubLocation extends LocationActivity {
     DecalActor door1;
 
     int count = 0;
+    boolean success = true;
 
     @Override
     public void onRoomPreLoad(Context context) {
@@ -134,12 +138,27 @@ public class ClubLocation extends LocationActivity {
         addDecal(door1);
 
         if(Values.ARGUMENTO == 2){
-                addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
+            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
         }
         if(Values.ARGUMENTO == 3){
-                addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
-                addPickerBox(new Vector3f(0,0,-1), new Vector3f(0.1f, 1.75f, 0.5f), "gohome");
+            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
+            addPickerBox(new Vector3f(0,0,-1), new Vector3f(0.1f, 1.75f, 0.5f), "gohome");
         }
+
+        if (success) {
+            tasks.add(new DoSomethingTask(() -> {
+                Values.ARGUMENTO = 8;
+                success = false;
+                Game.getInstance().popActivity();
+                Game.getInstance().pushActivity(GameActivity.Room);
+            }));
+        } else {
+            if (Values.ARGUMENTO == 7 && questionCount <= MAX_QUESTIONS) {
+                // primer "interrogatori"
+                addPickerBox(new Vector3f(5, 0, 1), new Vector3f(0.2f, 1, 0.2f), "interrog0");
+            }
+        }
+
         if(count == 666){ /*change to 666*/
             System.out.println("You're the killer. The end.");
             Game.getInstance().pushActivity(GameActivity.ShortEnd);
@@ -148,7 +167,11 @@ public class ClubLocation extends LocationActivity {
         }
 
         if(Values.ARGUMENTO == 7){
-            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman2");
+            if (success) {
+
+            } else {
+                addPickerBox(new Vector3f(5, 0, 1), new Vector3f(0.2f, 1, 0.2f), "barman2");
+            }
 
         }
         // set camera
@@ -156,23 +179,48 @@ public class ClubLocation extends LocationActivity {
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
     }
 
+    TaskManager tasks = new TaskManager();
+
     @Override
     public void onTick(Context context) {
+        tasks.update();
         fps.update(context);
         barmanHead.rotation.set(camera.rotation).invert();
         barmanHead.rotation.identity().lookRotate(new Vector3f(fps.position).sub(barmanHead.position).normalize(), new Vector3f(0, 1, 0)).invert();
         barmanHead.update();
     }
 
+    private int MAX_QUESTIONS = 4;
+    private int round = 0;
+    private int questionCount = 0;
+    private int hehehe = 0;
+
     @Override
     public void onSelected(Context context, Object data) {
-        if(data.equals("barman")){
+        if(data.equals("barman")) {
             Game.getInstance().pushActivity(GameActivity.Bar0, (act, dat) -> {
-                if(dat.equals("finish")){
+                if (dat.equals("finish")) {
                     Values.ARGUMENTO = 3;
                     Game.getInstance().popActivity();
                 }
             });
+        } else if (data.equals("interrog0")) {
+            if (round == 0) {
+                Game.getInstance().pushActivity(GameActivity.Bar2Round0, (lol, dat) -> {
+                    questionCount++;
+                    if (dat.equals("sep0")) hehehe |= 1<<0;
+                    if (dat.equals("sep1")) hehehe |= 1<<1;
+                    if (hehehe == 3) round++;
+                });
+            } else if (round == 1) {
+                Game.getInstance().pushActivity(GameActivity.Bar2Round1, (lol, dat) -> {
+                    questionCount++;
+                    if (dat.equals("sep")) {
+                        round++;
+                        success = true;
+                    }
+                });
+            }
         }else if(data.equals("barmanp")){
             Game.getInstance().pushActivity(GameActivity.Bar1, (act, dat) -> {
                 if (dat.equals("satan")) {

@@ -1,0 +1,26 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "I think I'll have another one of those pints", "answer": 0}
+      ],
+      "answers": [
+        {"text": "sure", "jump": 1}
+      ]
+    },
+
+    {
+      "questions": [
+        {"preview": "I've been wondering...", "text": "I've been wondering...;Does the name Anthony Brown ring a bell on you?", "answer": 0},
+        {"preview": "Insist about Jess brown", "text": "It's really important;I need to know if Jess Brown has been here before!", "answer": 1},
+        {"preview": "Ask about the clients", "text": "So...;Who are your regular clients?", "answer": 2}
+      ],
+
+      "answers": [
+        {"text": "No;I've never heard that name before", "data": "sep0", "jump": -1},
+        {"text": "Okay, okay! I lied;Yes;She's been here before", "data": "sep1", "jump": -1},
+        {"text": "Anyone willing to pay me for beer is welcome", "data": "nop", "jump": -1}
+      ]
+    }
+  ]
+}

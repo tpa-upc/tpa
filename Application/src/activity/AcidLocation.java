@@ -113,7 +113,7 @@ public class AcidLocation extends LocationActivity {
         });
         task.add(new DoSomethingTask(() -> {
             Game.getInstance().popActivity();
-            Game.getInstance().pushActivity(GameActivity.Room);
+            Game.getInstance().pushActivity(GameActivity.Lover);
         }));
 
         addGeometry(cubo);
