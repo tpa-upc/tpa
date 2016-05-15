@@ -85,6 +85,9 @@ public enum GameActivity {
     /** Fist Bar Conversation **/
     Bar0 (new DialogActivity("res/dialogues/bar0.json")),
 
+    /**Reaction to Bar Card **/
+    ReactionBarCard (new DialogActivity("res/dialogues/card_bar_reaction.json")),
+
     /** First Bar Pointless Conversations **/
     Bar1 (new DialogActivity("res/dialogues/bar1.json")),
 
@@ -109,6 +112,8 @@ public enum GameActivity {
 
     /** Dialogue bar card found in LoverLocation**/
     BarCardFound(new DialogActivity("res/dialogues/lover_house_bar_card.json")),
+
+    AnthonyReaction (new DialogActivity("res/dialogues/togglereaction.json")),
 
     /** Alter ego 4 conversation. **/
     AlterEgo4 (new DialogActivity("res/dialogues/casa4_alter_ego.json")),

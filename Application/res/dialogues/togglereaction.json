@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Maybe Thompson wants to know;what I've found out...", "answer": 0}
+      ],
+      "answers": [
+        {"text": "", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}
