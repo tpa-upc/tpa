@@ -104,6 +104,12 @@ public enum GameActivity {
     JamesImage (new ImageActivity("res/textures/JamesStuart.png")),
     AfterJamesSearchDialogue (new DialogActivity("res/dialogues/reaction_james_search.json")),
 
+    /** Dialogue forensic Card found**/
+    ForensicCardFound (new DialogActivity("res/dialogues/lover_house_forensic_card.json")),
+
+    /** Dialogue bar card found in LoverLocation**/
+    BarCardFound(new DialogActivity("res/dialogues/lover_house_bar_card.json")),
+
     /** Alter ego 4 conversation. **/
     AlterEgo4 (new DialogActivity("res/dialogues/casa4_alter_ego.json")),
     AlterEgoRep4(new DialogActivity("res/dialogues/casa4_alter_ego_repeat.json")),
