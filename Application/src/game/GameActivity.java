@@ -139,6 +139,17 @@ public enum GameActivity {
     NewspaperBad (new ImageActivity("res/textures/newspaper_FINALDOLENT.png")),
     NewspaperGood (new ImageActivity("res/textures/newspaper_FINALBO.png")),
 
+    /** Dialogue with Thompson at Lover's House **/
+    LoverHouse1 (new DialogActivity("res/dialogues/casa_amant1.json")),
+    LoverHouse2 (new DialogActivity("res/dialogues/casa_amant2.json")),
+
+    /** Comments at lover's house **/
+    Kids (new DialogActivity("res/dialogues/kids.json")),
+    Dead (new DialogActivity("res/dialogues/dead.json")),
+
+    /**Leave Lover's House**/
+    LeaveRoom (new DialogActivity("res/dialogues/leaveroom.json")),
+
     /**Teddy Bear Email**/
     EmailTB (new ImageActivity("res/textures/emailTeddyBear.png"));
 

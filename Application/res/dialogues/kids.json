@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "", "answer": 0}
+      ],
+      "answers": [
+        {"text": "Toys but no kid around...;Anyway, I've never liked kids.", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}
