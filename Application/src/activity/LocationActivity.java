@@ -312,11 +312,16 @@ public abstract class LocationActivity extends Activity {
         }
 
         // render decal
-        //for (DecalActor decal : decals) {
-        //    Material mat = decal.getMaterial();
-        //    mat.render(context.renderer, cameraReflect, box, decal.model);
-        //}
+        for (DecalActor decal : decals) {
+            Material mat = decal.getMaterial();
+            mat.render(context.renderer, cameraReflect, box, decal.model);
+        }
 
+        // render debug geometry
+        for (GeometryActor actor : debugGeometry) {
+            Material mat = actor.getMaterial();
+            mat.render(context.renderer, cameraReflect, box, actor.model);
+        }
         // lowres pass
         renderer.setFramebuffer(lowresPass);
         renderer.setViewport(0, 0, lowresPass.getWidth(), lowresPass.getHeight());

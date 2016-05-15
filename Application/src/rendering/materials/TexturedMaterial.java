@@ -60,7 +60,7 @@ public class TexturedMaterial extends Material {
             "    if (u_has_reflective == 1) {\n" +
             "        float cont = texture2D(u_reflective, v_uv).r;\n" +
             "        vec2 refl_uv = gl_FragCoord.xy/u_resolution;\n" +
-            "        refl_uv.x = 1-refl_uv.x + sin(refl_uv.y * 256) * 0.005;" +
+            "        refl_uv.x = 1-refl_uv.x;// + sin(refl_uv.y * 256) * 0.005;\n" +
             "        vec3 reflection = texture2D(u_reflective_map, refl_uv).rgb;\n" +
             "        color = mix(color, reflection, cont);\n" +
             "    }\n" +
