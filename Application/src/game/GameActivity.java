@@ -16,6 +16,9 @@ public enum GameActivity {
     /** Acid location */
     Acid(new AcidLocation()),
 
+    /** Lover Location **/
+    Lover(new LoverLocation()),
+
     /** Club location */
     Club(new ClubLocation()),
 
@@ -54,10 +57,14 @@ public enum GameActivity {
     Note1 (new ImageActivity("res/textures/note1.png")),
     ReactionNote2 (new DialogActivity("res/dialogues/note2_reaction.json")),
 
-    /** Albert Oliveras. */
+    /** Albert */
     Albert (new ImageActivity("res/textures/albert_big.png")),
 
     MapImage (new ImageActivity("res/textures/map.png")),
+
+    /**Blood images for Lover Location**/
+    WallBlood (new ImageActivity("res/textures/Blood-Paret.png")),
+    FloorBlood (new ImageActivity("res/textures/Blood-Terra.png")),
 
     /** Alter Ego first conversation **/
     AlterEgo1 (new DialogActivity("res/dialogues/casa2_alter_ego.json")),
@@ -71,6 +78,9 @@ public enum GameActivity {
 
     /** Bar Card **/
     BarCard (new ImageActivity("res/textures/bar_card.png")),
+
+    /** Forensic Card**/
+    ForensicCard (new ImageActivity("res/textures/forensicCard.png")),
 
     /** Fist Bar Conversation **/
     Bar0 (new DialogActivity("res/dialogues/bar0.json")),
