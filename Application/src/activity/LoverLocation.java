@@ -57,6 +57,7 @@ public class LoverLocation extends LocationActivity{
         Game.getInstance().getResources().load("res/textures/door0.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/Blood-Paret.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/Blood-Terra.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/Blood-Terra-reflect.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/forensicCard.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/bar_card.png", Texture.class);
         Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
@@ -81,6 +82,7 @@ public class LoverLocation extends LocationActivity{
         Texture doorTex = Game.getInstance().getResources().get("res/textures/door0.png", Texture.class);
         Texture bloodWallTex = Game.getInstance().getResources().get("res/textures/Blood-Paret.png", Texture.class);
         Texture bloodFloorTex = Game.getInstance().getResources().get("res/textures/Blood-Terra.png", Texture.class);
+        Texture bloodFloorTexRefl = Game.getInstance().getResources().get("res/textures/Blood-Terra-reflect.png", Texture.class);
         Texture forensicCardTex = Game.getInstance().getResources().get("res/textures/forensicCard.png", Texture.class);
         Texture barCardTex = Game.getInstance().getResources().get("res/textures/bar_card.png", Texture.class);
         Mesh cubeMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
@@ -98,6 +100,7 @@ public class LoverLocation extends LocationActivity{
         DecalMaterial doorMat = new DecalMaterial(doorTex, depth);
         DecalMaterial bloodWallMat = new DecalMaterial(bloodWallTex, depth);
         DecalMaterial bloodFloorMat = new DecalMaterial(bloodFloorTex, depth);
+        bloodFloorMat.setReflective(bloodFloorTexRefl, reflectRender);
         DecalMaterial forensicCardMat = new DecalMaterial(forensicCardTex, depth);
         DecalMaterial barCardMat = new DecalMaterial(barCardTex, depth);
 
@@ -258,11 +261,20 @@ public class LoverLocation extends LocationActivity{
         /**Set camera position**/
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
+        cameraReflect.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
     }
+
+    private FpsInput fpsRefl = new FpsInput(cameraReflect);
 
     @Override
     public void onTick(Context context) {
+        fpsRefl.position.set(fps.position).mul(1, -1, 1);
+        fpsRefl.pitch = fpsRefl.sPitch = -fps.sPitch;
+        fpsRefl.yaw = fpsRefl.sYaw = fps.sYaw;
+
         fps.update(context);
+        fpsRefl.update(context);
+
         barmanHead.rotation.set(camera.rotation).invert();
         barmanHead.rotation.identity().lookRotate(new Vector3f(fps.position).sub(barmanHead.position).normalize(), new Vector3f(0, 1, 0)).invert();
         barmanHead.update();
