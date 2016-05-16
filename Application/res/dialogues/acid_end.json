@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Oh, I forgot about the pills...", "answer": 0}
+      ],
+      "answers": [
+        {"text": "", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}

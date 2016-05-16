@@ -95,6 +95,7 @@ public class AcidLocation extends LocationActivity {
 
     @Override
     public void onEntered(Context context) {
+        //Game.getInstance().pushActivity(GameActivity.Acid1);
         task.clear();
         task.add(new DelayTask(13, context.time));
         task.add(new Task() {
@@ -102,6 +103,7 @@ public class AcidLocation extends LocationActivity {
             @Override
             public void onBegin() {
                 composite.setTimer(1);
+
             }
 
             @Override
@@ -114,6 +116,7 @@ public class AcidLocation extends LocationActivity {
         task.add(new DoSomethingTask(() -> {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Lover);
+            Game.getInstance().pushActivity(GameActivity.Acid2);
         }));
 
         addGeometry(cubo);
@@ -122,6 +125,8 @@ public class AcidLocation extends LocationActivity {
         addDecal(notas);
 
         context.audioRenderer.playSound(violin, false);
+
+
 
         addPickerBox(new Vector3f(0, 0.6f, 0), new Vector3f(0.2f, 0.6f, 0.2f), "persona");
 

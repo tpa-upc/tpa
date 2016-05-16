@@ -1,0 +1,12 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "Where the hell am I?;What is this place?;...", "answer": 0}
+      ],
+      "answers": [
+        {"text": "", "data": "finish", "jump": -1}
+      ]
+    }
+  ]
+}

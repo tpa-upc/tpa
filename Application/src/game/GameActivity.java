@@ -159,6 +159,10 @@ public enum GameActivity {
     Bar2Round0 (new DialogActivity("res/dialogues/bar2_round0.json")),
     Bar2Round1 (new DialogActivity("res/dialogues/bar2_round1.json")),
 
+    /** Acid Room **/
+    Acid1 (new DialogActivity("res/dialogues/acid_first.json")),
+    Acid2 (new DialogActivity("res/dialogues/acid_end.json")),
+
     /**Teddy Bear Email**/
     EmailTB (new ImageActivity("res/textures/emailTeddyBear.png"));
 
