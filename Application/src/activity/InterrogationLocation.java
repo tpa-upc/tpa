@@ -37,7 +37,7 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor wall3;
     GeometryActor tile0, tile1;
     GeometryActor thompson, thompsonHead;
-    GeometryActor anthony, anthonyHead;
+    GeometryActor anthony, anthonyHead, anthonyCosmetic;
     GeometryActor chair, chair2;
 
     TextActor antonText;
@@ -58,6 +58,7 @@ public class InterrogationLocation extends LocationActivity {
     @Override
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
+        Game.getInstance().getResources().load("res/models/glasses.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/monkey.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/window.json", Mesh.class);
@@ -81,6 +82,7 @@ public class InterrogationLocation extends LocationActivity {
     @Override
     public void onRoomPostLoad(Context context) {
         Mesh monkeyMesh = Game.getInstance().getResources().get("res/models/monkey.json", Mesh.class);
+        Mesh cosmeticMesh = Game.getInstance().getResources().get("res/models/glasses.json", Mesh.class);
         Mesh tileMesh = Game.getInstance().getResources().get("res/models/room_tile.json", Mesh.class);
         Mesh wallMesh = Game.getInstance().getResources().get("res/models/wall_left.json", Mesh.class);
         Mesh windowMesh = Game.getInstance().getResources().get("res/models/window.json", Mesh.class);
@@ -107,6 +109,7 @@ public class InterrogationLocation extends LocationActivity {
         TexturedMaterial tableMat = new TexturedMaterial(doorTex);
         TexturedMaterial capsuleMat = new TexturedMaterial(capsuleTex);
         TexturedMaterial capsuleMat2 = new TexturedMaterial(capsuleTex);
+        TexturedMaterial capsuleMat3 = new TexturedMaterial(capsuleTex);
         DecalMaterial albertMat = new DecalMaterial(albertTex, depth);
         DecalMaterial enemiesMat = new DecalMaterial(enemiesTex, depth);
         TexturedMaterial chairMat = new TexturedMaterial(chairTex);
@@ -146,9 +149,11 @@ public class InterrogationLocation extends LocationActivity {
 
         capsuleMat.setTint(0,1,0);
         capsuleMat2.setTint(0.8f,0.2f,0.5f);
+        capsuleMat3.setTint(0.8f,0.2f,0.5f);
 
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
         anthonyHead = new GeometryActor(monkeyMesh, capsuleMat);
+        anthonyCosmetic = new GeometryActor(cosmeticMesh, capsuleMat3);
 
 
         thompson = new GeometryActor(capsuleMesh, capsuleMat2);
@@ -159,6 +164,8 @@ public class InterrogationLocation extends LocationActivity {
         thompsonHead = new GeometryActor(monkeyMesh, capsuleMat2);
         thompsonHead.position.set(0.25f, 1.25f, 1.5f);
         thompsonHead.update();
+
+        anthonyCosmetic = new GeometryActor(cosmeticMesh, capsuleMat3);
 
         antonText = new TextActor("Anthony guy");
 
@@ -176,6 +183,12 @@ public class InterrogationLocation extends LocationActivity {
         chair2.position.set(3,0,0);
         chair2.rotation.rotateY((float)Math.toRadians(90));
         chair2.update();
+
+        fps.position.y=1.25f;
+        fps.position.x = 1;
+        fps.position.z = 0;
+        //fps.setMovable(false);
+        fpsReflect.setMovable(false);
     }
 
     private TaskManager tasks = new TaskManager();
@@ -189,6 +202,10 @@ public class InterrogationLocation extends LocationActivity {
         anthony.update();
         anthonyHead.position.set(3,1.1f,0);
         anthonyHead.update();
+
+        anthonyCosmetic.position.set(3,1.1f,0);
+        anthonyCosmetic.scale.set(0.65f);
+        anthonyCosmetic.update();
 
         addGeometry(wall0);
         addGeometry(wall1);
@@ -206,6 +223,7 @@ public class InterrogationLocation extends LocationActivity {
         addText(thomText);
         addGeometry(anthony);
         addGeometry(anthonyHead);
+        addGeometry(anthonyCosmetic);
         addGeometry(thompsonHead);
 
         System.out.println(start+" "+success+" "+youFuckedUp);
@@ -226,11 +244,6 @@ public class InterrogationLocation extends LocationActivity {
         cameraReflect.clearColor.set(0.125f);
         //cam.position.set(cam.position.x, 1.5f, 2.5f);
         //cam.tiltX = 0.1f;
-        fps.position.y=1.25f;
-        fps.position.x = 1;
-        fps.position.z = 0;
-        //fps.setMovable(false);
-        fpsReflect.setMovable(false);
 
         // test ray picker
         addPickerBox(new Vector3f(0, 1f, -1.25f), new Vector3f(0.1f, 0.35f, 0.35f), 16);
@@ -253,6 +266,9 @@ public class InterrogationLocation extends LocationActivity {
         anthonyHead.rotation.set(camera.rotation).invert();
         anthonyHead.update();
 
+        anthonyCosmetic.rotation.set(camera.rotation).invert();
+        anthonyCosmetic.update();
+
         thompsonHead.rotation.set(camera.rotation).invert();
         thompsonHead.update();
 
@@ -260,7 +276,7 @@ public class InterrogationLocation extends LocationActivity {
 
         // update reflection
         fpsReflect.position.x = fps.position.x;
-        fpsReflect.position.y = fps.position.y;
+        fpsReflect.position.y = fps.position.y+fps.off;
         float d = 2 + fps.position.z;
         fpsReflect.position.z = -2 - d;
 

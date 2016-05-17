@@ -128,7 +128,7 @@ public class FpsInput {
     }
 
     private boolean tog = false;
-    private float off = 0;
+    public float off = 0;
     private float time = 0;
 
 }

@@ -60,6 +60,10 @@ public enum GameActivity {
     /** Albert */
     Albert (new ImageActivity("res/textures/albert_big.png")),
 
+    Poker (new ImageActivity("res/textures/poker.png")),
+    PokerReaction (new DialogActivity("res/dialogues/poker_reaction.json")),
+    Bar3Acuse (new DialogActivity("res/dialogues/bar3_acuse.json")),
+
     MapImage (new ImageActivity("res/textures/map.png")),
 
     /**Blood images for Lover Location**/
@@ -158,6 +162,9 @@ public enum GameActivity {
     /** bar 2 rounds */
     Bar2Round0 (new DialogActivity("res/dialogues/bar2_round0.json")),
     Bar2Round1 (new DialogActivity("res/dialogues/bar2_round1.json")),
+
+    /** bar3 fuck it */
+    Bar3 (new DialogActivity("res/dialogues/bat3_ini.json")),
 
     /** Acid Room **/
     Acid1 (new DialogActivity("res/dialogues/acid_first.json")),

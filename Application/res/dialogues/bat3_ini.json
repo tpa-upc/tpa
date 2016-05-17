@@ -1,0 +1,29 @@
+{
+  "dialog": [
+    {
+      "questions": [
+        {"text": "I am a VIP client am I not?", "answer": 0},
+        {"text": "You might remember I asked you about Jess Brown…;Did you know he had a lover called James Stuart?", "answer": 1}
+      ],
+      "answers": [
+        {"text": "Everyone who drinks Guimess is VIP in here.", "jump": 1},
+        {"text": "Yes, he drops by sometimes;but I don’t know anything about him;He’s not a very talkative person", "jump": 3}
+      ]
+    },
+
+    {
+      "questions": [{"text": "So do you think I could see the recordings from your security cameras?", "answer": 0}],
+      "answers": [{"text": "Hmmm.. no;Because of that privacy thing, you know?", "jump": 2}]
+    },
+
+    {
+      "questions": [{"text": "If you prefer, I can come back with a seizure order after I finish my Guimess;I'm aware of those illegal poker tournaments you organize;so...;what did you say about watching the recordings?", "answer": 0}],
+      "answers": [{"text": "Err.. OK, I’ll do it;you don’t need to threaten me. We’re friends;Right?;...;I'll take that as a Yes;I'm going to give you the recordings", "data": "recordings", "jump": -1}]
+    },
+
+    {
+      "questions": [{"text": "Well;so you must know that James has also been murdered;and your pub is a common nexus for both crimes;Are you sure you don’t know anything about him?", "answer": 0}],
+      "answers": [{"text": "Well, he likes playing poker…;I don’t know if you have seen that I have security cameras;I’ll give you the recordings;but only if you assure me you won’t tell anyone", "data": "recordings", "jump": -1}]
+    }
+  ]
+}

@@ -257,6 +257,21 @@ public class ClubLocation extends LocationActivity {
         }
 
         if (success) {
+            tasks.add(new Task() {
+                float t = 1;
+                @Override
+                public void onBegin() {
+                    composite.setTimer(1);
+
+                }
+
+                @Override
+                public boolean onUpdate() {
+                    t -= context.time.getFrameTime() * 0.25f;
+                    composite.setTimer(Math.max(t, 0));
+                    return t < 0;
+                }
+            });
             tasks.add(new DoSomethingTask(() -> {
                 Values.ARGUMENTO = 8;
                 success = false;
@@ -267,6 +282,9 @@ public class ClubLocation extends LocationActivity {
             if (Values.ARGUMENTO == 7 && questionCount <= MAX_QUESTIONS) {
                 // primer "interrogatori"
                 addPickerBox(new Vector3f(7, 0, 1), new Vector3f(0.2f, 1, 0.2f), "interrog0");
+            } else if (Values.ARGUMENTO == 19 && questionCount <= MAX_QUESTIONS) {
+                // primer "interrogatori"
+                addPickerBox(new Vector3f(7, 0, 1), new Vector3f(0.2f, 1, 0.2f), "interrog1");
             }
         }
 
@@ -277,14 +295,6 @@ public class ClubLocation extends LocationActivity {
             /**set up variable to finish the game**/
         }
 
-        if(Values.ARGUMENTO == 7){
-            if (success) {
-
-            } else {
-                addPickerBox(new Vector3f(7, 0, 1), new Vector3f(0.2f, 1, 0.2f), "barman2");
-            }
-
-        }
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
@@ -306,6 +316,8 @@ public class ClubLocation extends LocationActivity {
     private int questionCount = 0;
     private int hehehe = 0;
 
+    boolean doRecordings = false;
+
     @Override
     public void onSelected(Context context, Object data) {
         if(data.equals("barman")) {
@@ -313,6 +325,20 @@ public class ClubLocation extends LocationActivity {
                 if (dat.equals("finish")) {
                     Values.ARGUMENTO = 3;
                     Game.getInstance().popActivity();
+                }
+            });
+        } else if (data.equals("interrog1")) {
+            Game.getInstance().pushActivity(GameActivity.Bar3, (asd, dat) -> {
+                if (dat.equals("recordings")) {
+                    doRecordings = true;
+                    Game.getInstance().popActivity();
+                    Game.getInstance().pushActivity(GameActivity.Bar3Acuse, (asdasd, dd) -> {
+                        Values.ARGUMENTO = 20;
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Room);
+                    });
+                    Game.getInstance().pushActivity(GameActivity.PokerReaction);
+                    Game.getInstance().pushActivity(GameActivity.Poker);
                 }
             });
         } else if (data.equals("interrog0")) {
@@ -335,7 +361,7 @@ public class ClubLocation extends LocationActivity {
                         context.audioRenderer.playSound(floor, false);
                     } else {
                         questionCount++;
-                        if (dat.equals("sep")) {
+                        if (dat.equals("sip")) {
                             round++;
                             success = true;
                         }
