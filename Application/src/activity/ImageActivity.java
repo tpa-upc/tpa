@@ -26,6 +26,7 @@ public class ImageActivity extends Activity {
     private Sound paper1;
     private Framebuffer fbo;
     private RendererState state = new RendererState();
+    private float zoom = 1;
 
     public ImageActivity (String file) {
         this.path = file;
@@ -65,6 +66,12 @@ public class ImageActivity extends Activity {
             public void onMouseDown(int button) {
                 Game.getInstance().popActivity();
             }
+
+            @Override
+            public void onMouseScroll(int xoff, int yoff) {
+                zoom += yoff * 0.1f;
+                if (zoom < 0.1f) zoom = 0.1f;
+            }
         });
 
         time = 0;
@@ -77,8 +84,8 @@ public class ImageActivity extends Activity {
 
     @Override
     public void onUpdate(Context context) {
-        //context.renderer.clearBuffers();
-        //context.renderer.setClearColor(0, 0, 0, 1);
+        context.renderer.clearBuffers();
+        context.renderer.setClearColor(0, 0, 0, 1);
         float aspect = (float) context.window.getWidth()/context.window.getHeight();
         float s = 0.5f;
         time += context.time.getFrameTime()*16;
@@ -90,7 +97,7 @@ public class ImageActivity extends Activity {
         //drawer.setProjection(new Matrix4f());
         //drawer.setColor(0, 0, 0, 1/60f*0.35f);
         //drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
-        drawer.setProjection(new Matrix4f().setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(rot).scale((1-t) * 0.65f + t * 1).scale((float)texture.getWidth()/512f));
+        drawer.setProjection(new Matrix4f().setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(rot).scale((1-t) * 0.65f + t * 1).scale((float)texture.getWidth()/512f).scale(zoom));
         drawer.setColor(0,0,0, 0.025f);
         float off = 0 * (1-t) + 0.0125f * t;
         drawer.add(texture, -0.5f+off, -0.5f+off, 1, 1, 0, 0, 1, 1);
