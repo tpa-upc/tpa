@@ -42,7 +42,7 @@ public class ClubLocation extends LocationActivity {
     GeometryActor bar;
     GeometryActor bar2;
     DecalActor darts;
-    Sound steps, slide, open;
+    Sound steps, slide, open, floor;
 
 
 
@@ -54,6 +54,7 @@ public class ClubLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/sfx/beer_open.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/beer_slide.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/can_floor.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
@@ -98,8 +99,9 @@ public class ClubLocation extends LocationActivity {
         Mesh cubeMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         Texture dartsTex = Game.getInstance().getResources().get("res/textures/darts.png",Texture.class);
         steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
-        slide = Game.getInstance().getResources().get("res/sfx/beer_open.wav", Sound.class);
-        open = Game.getInstance().getResources().get("res/sfx/beer_slide.wav", Sound.class);
+        slide = Game.getInstance().getResources().get("res/sfx/beer_slide.wav", Sound.class);
+        open = Game.getInstance().getResources().get("res/sfx/beer_open.wav", Sound.class);
+        floor = Game.getInstance().getResources().get("res/sfx/can_floor.wav", Sound.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -317,6 +319,8 @@ public class ClubLocation extends LocationActivity {
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Bar2Round0, (lol, dat) -> {
                     if (dat.equals("slide")) {
+                        context.audioRenderer.playSound(slide, false);
+                    } else if (dat.equals("open")) {
                         context.audioRenderer.playSound(open, false);
                     } else {
                         questionCount++;
@@ -327,10 +331,14 @@ public class ClubLocation extends LocationActivity {
                 });
             } else if (round == 1) {
                 Game.getInstance().pushActivity(GameActivity.Bar2Round1, (lol, dat) -> {
-                    questionCount++;
-                    if (dat.equals("sep")) {
-                        round++;
-                        success = true;
+                    if (dat.equals("floor")) {
+                        context.audioRenderer.playSound(floor, false);
+                    } else {
+                        questionCount++;
+                        if (dat.equals("sep")) {
+                            round++;
+                            success = true;
+                        }
                     }
                 });
             }

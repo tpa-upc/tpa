@@ -33,7 +33,7 @@
     },
 
     {
-      "questions": [{"text": "Calm down;Ok. I'm going to trust you;Maybe I should go back home and find out who is this James Stuart guy", "answer": -1}],
+      "questions": [{"text": "Calm down;Ok. I'm going to trust you;Maybe I should go back home and find out who is this James Stuart guy", "data": "floor", "answer": -1}],
       "answers": []
     }
   ]

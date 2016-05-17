@@ -11,9 +11,9 @@
 
     {
       "questions": [
-        {"preview": "I've been wondering...", "text": "I've been wondering...;Does the name Anthony Brown ring a bell on you?", "answer": 0},
-        {"preview": "Insist about Jess brown", "text": "It's really important;I need to know if Jess Brown has been here before!", "answer": 1},
-        {"preview": "Ask about the clients", "text": "So...;Who are your regular clients?", "answer": 2}
+        {"preview": "I've been wondering...", "text": "I've been wondering...;Does the name Anthony Brown ring a bell on you?", "data": "open", "answer": 0},
+        {"preview": "Insist about Jess brown", "text": "It's really important;I need to know if Jess Brown has been here before!", "data": "open", "answer": 1},
+        {"preview": "Ask about the clients", "text": "So...;Who are your regular clients?", "data": "open", "answer": 2}
       ],
 
       "answers": [
