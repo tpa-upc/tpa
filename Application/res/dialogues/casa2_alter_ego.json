@@ -2,11 +2,11 @@
   "dialog": [
     {
       "questions":[
-        {"preview": "Hey!", "text": "Hey sweetie, how are you?", "answer": 0},
+        {"preview": "Hey!", "text": "Hey sweetie, how are you?", "answer": 0}
         //{"preview": "Pointless question", "text": "This is a pointless question;And it's multi line to be even more pointless", "answer": 1}
       ],
       "answers":[
-        {"text": "Fine, it was cold today in the park...", "data": null, "jump": 1},
+        {"text": "Fine, it was cold today in the park...", "data": null, "jump": 1}
         //{"text": "Pointless answer", "data": null, "jump": 0}
       ]
     },
