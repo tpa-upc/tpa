@@ -13,6 +13,7 @@ import rendering.TextActor;
 import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
 import tpa.application.Context;
+import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
@@ -58,6 +59,7 @@ public class InterrogationLocation extends LocationActivity {
     @Override
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
+        Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/glasses.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/monkey.json", Mesh.class);
@@ -189,6 +191,7 @@ public class InterrogationLocation extends LocationActivity {
         fps.position.z = 0;
         //fps.setMovable(false);
         fpsReflect.setMovable(false);
+        fps.setSteps(Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class));
     }
 
     private TaskManager tasks = new TaskManager();
