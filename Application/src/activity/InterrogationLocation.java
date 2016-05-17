@@ -299,7 +299,7 @@ public class InterrogationLocation extends LocationActivity {
         if (data.equals(16)) {
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {
-            Game.getInstance().pushActivity(GameActivity.Albert);
+
         } if(data.equals("anton") && questionCount < MAX_QUESTIONS){
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
