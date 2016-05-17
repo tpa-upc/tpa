@@ -26,7 +26,7 @@ import java.util.List;
  */
 public abstract class LocationActivity extends Activity {
     
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     /** low res scale */
     private static final int SCALE = 2;
@@ -317,11 +317,11 @@ public abstract class LocationActivity extends Activity {
             mat.render(context.renderer, cameraReflect, box, decal.model);
         }
 
-        /*// render debug geometry
+        // render debug geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
             mat.render(context.renderer, cameraReflect, box, actor.model);
-        }*/
+        }
 
         // lowres pass
         renderer.setFramebuffer(lowresPass);
@@ -346,11 +346,11 @@ public abstract class LocationActivity extends Activity {
             mat.render(context.renderer, camera, box, decal.model);
         }
 
-        /*// render debug geometry
+        // render debug geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
             mat.render(context.renderer, camera, box, actor.model);
-        }*/
+        }
 
         // render text
         float scale = 0.005f;
