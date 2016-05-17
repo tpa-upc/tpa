@@ -317,11 +317,12 @@ public abstract class LocationActivity extends Activity {
             mat.render(context.renderer, cameraReflect, box, decal.model);
         }
 
-        // render debug geometry
+        /*// render debug geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
             mat.render(context.renderer, cameraReflect, box, actor.model);
-        }
+        }*/
+
         // lowres pass
         renderer.setFramebuffer(lowresPass);
         renderer.setViewport(0, 0, lowresPass.getWidth(), lowresPass.getHeight());
@@ -345,11 +346,11 @@ public abstract class LocationActivity extends Activity {
             mat.render(context.renderer, camera, box, decal.model);
         }
 
-        // render debug geometry
+        /*// render debug geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
             mat.render(context.renderer, camera, box, actor.model);
-        }
+        }*/
 
         // render text
         float scale = 0.005f;

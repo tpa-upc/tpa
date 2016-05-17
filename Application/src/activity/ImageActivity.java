@@ -8,6 +8,7 @@ import tpa.audio.Sound;
 import tpa.graphics.render.RendererState;
 import tpa.graphics.texture.Framebuffer;
 import tpa.graphics.texture.Texture;
+import tpa.graphics.texture.TextureFilter;
 import tpa.graphics.texture.TextureFormat;
 import tpa.input.keyboard.KeyboardAdapter;
 import tpa.input.keyboard.KeyboardInput;
@@ -45,6 +46,7 @@ public class ImageActivity extends Activity {
     @Override
     public void onPostLoad(Context context) {
         texture = Game.getInstance().getResources().get(path, Texture.class);
+        texture.setMag(TextureFilter.Linear);
         paper0 = Game.getInstance().getResources().get("res/sfx/paper0.wav", Sound.class);
         paper1 = Game.getInstance().getResources().get("res/sfx/paper1.wav", Sound.class);
     }
