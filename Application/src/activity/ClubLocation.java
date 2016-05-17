@@ -13,6 +13,7 @@ import rendering.materials.DecalMaterial;
 import rendering.materials.TexturedMaterial;
 import rendering.utils.CameraController;
 import tpa.application.Context;
+import tpa.audio.Sound;
 import tpa.graphics.geometry.Mesh;
 import tpa.graphics.texture.Texture;
 import tpa.graphics.texture.TextureWrap;
@@ -41,6 +42,7 @@ public class ClubLocation extends LocationActivity {
     GeometryActor bar;
     GeometryActor bar2;
     DecalActor darts;
+    Sound steps, slide, open;
 
 
 
@@ -49,6 +51,9 @@ public class ClubLocation extends LocationActivity {
 
     @Override
     public void onRoomPreLoad(Context context) {
+        Game.getInstance().getResources().load("res/sfx/beer_open.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/beer_slide.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
         Game.getInstance().getResources().load("res/models/room_tile.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/wall_left.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
@@ -92,6 +97,9 @@ public class ClubLocation extends LocationActivity {
         Texture woodTex = Game.getInstance().getResources().get("res/textures/wood.jpg",Texture.class);
         Mesh cubeMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         Texture dartsTex = Game.getInstance().getResources().get("res/textures/darts.png",Texture.class);
+        steps = Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class);
+        slide = Game.getInstance().getResources().get("res/sfx/beer_open.wav", Sound.class);
+        open = Game.getInstance().getResources().get("res/sfx/beer_slide.wav", Sound.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -205,6 +213,8 @@ public class ClubLocation extends LocationActivity {
         bar2.rotation.rotateY((float)Math.toRadians(90));
         bar2.rotation.rotateX((float)Math.toRadians(90));
         bar2.update();
+
+        fps.setSteps(steps);
         fps.position.set(4, 1f, 0);
     }
 
@@ -306,10 +316,14 @@ public class ClubLocation extends LocationActivity {
         } else if (data.equals("interrog0")) {
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Bar2Round0, (lol, dat) -> {
-                    questionCount++;
-                    if (dat.equals("sep0")) hehehe |= 1<<0;
-                    if (dat.equals("sep1")) hehehe |= 1<<1;
-                    if (hehehe == 3) round++;
+                    if (dat.equals("slide")) {
+                        context.audioRenderer.playSound(open, false);
+                    } else {
+                        questionCount++;
+                        if (dat.equals("sep0")) hehehe |= 1 << 0;
+                        if (dat.equals("sep1")) hehehe |= 1 << 1;
+                        if (hehehe == 3) round++;
+                    }
                 });
             } else if (round == 1) {
                 Game.getInstance().pushActivity(GameActivity.Bar2Round1, (lol, dat) -> {

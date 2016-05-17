@@ -5,7 +5,7 @@
         {"text": "I think I'll have another one of those pints", "answer": 0}
       ],
       "answers": [
-        {"text": "sure", "jump": 1}
+        {"text": "sure", "data": "slide", "jump": 1}
       ]
     },
 
