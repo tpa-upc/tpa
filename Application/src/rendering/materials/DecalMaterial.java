@@ -43,6 +43,9 @@ public class DecalMaterial extends Material {
             "uniform mat4 u_inv_mvp;\n" +
             "uniform vec2 u_resolution;\n" +
             "\n" +
+            "float rand(vec2 co){\n" +
+            "    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +
+            "}\n" +
             "void main () {\n" +
             "    // reconstruct from screenspace\n" +
             "    vec2 uv = gl_FragCoord.xy / u_resolution;\n" +
@@ -61,7 +64,7 @@ public class DecalMaterial extends Material {
             "        float cont = texture2D(u_reflective, tex_uv).r;\n" +
             "        vec2 refl_uv = gl_FragCoord.xy/u_resolution;\n" +
             "        refl_uv.y = 1-refl_uv.y;// + sin(refl_uv.y * 256) * 0.005;\n" +
-            "        vec3 reflection = texture2D(u_reflective_map, refl_uv).rgb;\n" +
+            "        vec3 reflection = texture2D(u_reflective_map, refl_uv + vec2(rand(gl_FragCoord.xy)*2-1, rand(gl_FragCoord.xy)*2-1)*0.0075).rgb;\n" +
             "        diff.rgb = mix(diff.rgb, reflection, cont);\n" +
             "    }\n" +
             "    gl_FragData[0] = vec4(diff.rgb, diff.a);\n" +
