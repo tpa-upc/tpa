@@ -537,6 +537,7 @@ public class RoomLocation extends LocationActivity {
                             public void onResult(Activity act, Object data) {
                                 if (data.equals("finish")) {
                                     interrogation_room = true;
+                                    dial = false;
                                     Values.ARGUMENTO = 6;
                                     fps.setMovable(true);
                                 }
