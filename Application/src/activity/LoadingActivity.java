@@ -65,13 +65,15 @@ public class LoadingActivity extends Activity {
 
         int progress = (int) (100 * Game.getInstance().getResources().getProgress());
 
+        int xd = 10;
+
         // render dialog
         batch.begin();
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
         batch.setColor(1, 1, 1, 1);
         batch.addText(ubuntu, 32, 32, "Loading ... "+progress+"%", 12);
         int inc = 0;
-        for (int i = Math.max(lines.size()-6, 0); i < lines.size(); ++i) {
+        for (int i = Math.max(lines.size()-xd, 0); i < lines.size(); ++i) {
             String line = lines.get(i);
             if (line.startsWith("[ERR]")) batch.setColor(1, 0.5f, 0.5f, 1);
             else batch.setColor(0.5f, 1, 0.5f, 1);
@@ -81,9 +83,9 @@ public class LoadingActivity extends Activity {
 
         inc = 0;
         batch.setColor(1, 0.5f, 0.5f, 1);
-        for (int i = Math.max(errors.size()-6, 0); i < errors.size(); ++i) {
+        for (int i = Math.max(errors.size()-xd, 0); i < errors.size(); ++i) {
             String line = errors.get(i);
-            batch.addText(ubuntu, 32, 64+32 + 24*(inc+6), line, 12);
+            batch.addText(ubuntu, 32, 64+32 + 24*(inc+xd), line, 12);
             inc++;
         }
         batch.end();

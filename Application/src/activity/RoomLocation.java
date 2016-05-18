@@ -406,10 +406,10 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.BarCard);
         }
 
-        if (friendface_monologue) {
+        /*if (friendface_monologue) {
             friendface_monologue = false;
             Game.getInstance().pushActivity(GameActivity.MonologueFriendface);
-        }
+        }*/
 
         if(interrogation_room){
             addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "int_room");
@@ -497,6 +497,7 @@ public class RoomLocation extends LocationActivity {
                     public void onResult(Activity act, Object data) {
                         if (data.equals("search")) {
                             Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.MonologueFriendface);
                             Game.getInstance().pushActivity(GameActivity.Friendface);
                             friendface_monologue = true;
                             Values.ARGUMENTO = 4;

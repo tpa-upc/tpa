@@ -209,10 +209,10 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
                     } else break;
                 }
 
-                System.out.println("asdasdasd");
+                //System.out.println("asdasdasd");
                 // play music
                 if (alGetSourcei(musicSource[channel], AL_SOURCE_STATE) != AL_PLAYING) {
-                    System.out.println("asdasdasdasdas34534535");
+                    //System.out.println("asdasdasdasdas34534535");
                     alSourcef(musicSource[channel], AL_GAIN, musicGain[channel]);
                     alSourcePlay(musicSource[channel]);
                 }
