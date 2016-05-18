@@ -18,6 +18,6 @@ public class MouseAdapter implements MouseListener {
     }
 
     @Override
-    public void onMouseScroll(int xoff, int yoff) {
+    public void onMouseScroll(float xoff, float yoff) {
     }
 }

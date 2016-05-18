@@ -317,9 +317,11 @@ public class ClubLocation extends LocationActivity {
     private int hehehe = 0;
 
     boolean doRecordings = false;
+    boolean asdasdasd = false;
 
     @Override
     public void onSelected(Context context, Object data) {
+        if (asdasdasd) return;
         if(data.equals("barman")) {
             Game.getInstance().pushActivity(GameActivity.Bar0, (act, dat) -> {
                 if (dat.equals("finish")) {
@@ -333,9 +335,35 @@ public class ClubLocation extends LocationActivity {
                     doRecordings = true;
                     Game.getInstance().popActivity();
                     Game.getInstance().pushActivity(GameActivity.Bar3Acuse, (asdasd, dd) -> {
-                        Values.ARGUMENTO = 20;
-                        Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.Room);
+                        if (dd.equals("accuse")) {
+                            Values.TEXT = "The End\nSorry";
+                            Game.getInstance().popActivity();
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.Intro);
+                            Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                        } else if (dd.equals("keep")) {
+                            asdasdasd = true;
+                            Values.BAR_BIF |= 0x1;
+                            Values.ARGUMENTO = 20;
+                            Game.getInstance().popActivity();
+                            tasks.add(new Task() {
+                                float t = 1;
+                                @Override
+                                public void onBegin() {
+                                    composite.setTimer(1);
+                                }
+
+                                @Override
+                                public boolean onUpdate() {
+                                    t -= context.time.getFrameTime() * 0.25f;
+                                    composite.setTimer(Math.max(t, 0));
+                                    return t < 0;
+                                }
+                            });
+                            tasks.add(new DoSomethingTask(() -> {
+                                Game.getInstance().pushActivity(GameActivity.Room);
+                            }));
+                        }
                     });
                     Game.getInstance().pushActivity(GameActivity.PokerReaction);
                     Game.getInstance().pushActivity(GameActivity.Poker);

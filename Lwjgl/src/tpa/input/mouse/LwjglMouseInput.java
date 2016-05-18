@@ -46,7 +46,7 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
             @Override
             public void invoke(long l, double x, double y) {
                 if (mouseListener != null) {
-                    mouseListener.onMouseScroll((int) x, (int) y);
+                    mouseListener.onMouseScroll((float) x, (float) y);
                 }
             }
         });

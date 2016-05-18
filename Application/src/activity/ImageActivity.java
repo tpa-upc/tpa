@@ -14,6 +14,7 @@ import tpa.input.keyboard.KeyboardAdapter;
 import tpa.input.keyboard.KeyboardInput;
 import tpa.input.mouse.MouseAdapter;
 import tpa.joml.Matrix4f;
+import tpa.joml.Vector3f;
 
 /**
  * Created by germangb on 30/04/2016.
@@ -28,6 +29,7 @@ public class ImageActivity extends Activity {
     private Framebuffer fbo;
     private RendererState state = new RendererState();
     private float zoom = 1;
+    private float offX = 0, offY = 0;
 
     public ImageActivity (String file) {
         this.path = file;
@@ -47,12 +49,16 @@ public class ImageActivity extends Activity {
     public void onPostLoad(Context context) {
         texture = Game.getInstance().getResources().get(path, Texture.class);
         texture.setMag(TextureFilter.Linear);
+        texture.setMin(TextureFilter.MipmapLinear);
+        texture.setGenerateMipmaps(true);
         paper0 = Game.getInstance().getResources().get("res/sfx/paper0.wav", Sound.class);
         paper1 = Game.getInstance().getResources().get("res/sfx/paper1.wav", Sound.class);
     }
 
     @Override
     public void onBegin(Context context) {
+        offX = 0;
+        offY = 0;
         context.audioRenderer.playSound(paper1, false);
 
         context.keyboard.setKeyboardListener(new KeyboardAdapter() {
@@ -64,21 +70,35 @@ public class ImageActivity extends Activity {
         });
 
         context.mouse.setMouseListener(new MouseAdapter() {
-            @Override
+            /*@Override
             public void onMouseDown(int button) {
                 Game.getInstance().popActivity();
+            }*/
+
+            @Override
+            public void onMouseScroll(float xoff, float yoff) {
+                zoom += yoff * 0.1f;
+                if (zoom < 0.1f) zoom = 0.1f;
             }
 
             @Override
-            public void onMouseScroll(int xoff, int yoff) {
-                zoom += yoff * 0.1f;
-                if (zoom < 0.1f) zoom = 0.1f;
+            public void onMouseDrag(int button) {
+                float x = context.mouse.getCursorX();
+                float y = context.mouse.getCursorY();
+                float dx = context.mouse.getCursorDX();
+                float dy = context.mouse.getCursorDY();
+                int w = context.window.getWidth();
+                int h = context.window.getHeight();
+                Vector3f u = projection.unproject(x-dx, y-dy, 0, new int[]{0, 0, w, h}, new Vector3f());
+                Vector3f v = projection.unproject(x, y, 0, new int[]{0, 0, w, h}, new Vector3f());
+                offX += v.x - u.x;
+                offY -= v.y - u.y;
             }
         });
 
         time = 0;
         rot = (float) Math.random()*2-1;
-        rot *= 0.1f;
+        rot *= 0.05f;
     }
 
     float time = 0;
@@ -92,21 +112,18 @@ public class ImageActivity extends Activity {
         float s = 0.5f;
         time += context.time.getFrameTime()*16;
 
-        drawer.begin();
-        //drawer.setProjection(new Matrix4f());
-        //drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
         float t = 1-(float)Math.exp(-time);
-        //drawer.setProjection(new Matrix4f());
-        //drawer.setColor(0, 0, 0, 1/60f*0.35f);
-        //drawer.add(fbo.getTargets()[0], -1, -1, 2, 2, 0, 0, 1, 1);
-        drawer.setProjection(new Matrix4f().setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(rot).scale((1-t) * 0.65f + t * 1).scale((float)texture.getWidth()/512f).scale(zoom));
+        projection.setOrtho2D(-aspect*s, +aspect*s, s, -s).rotateZ(rot).scale((1-t) * 0.65f + t * 1).scale((float)texture.getWidth()/512f).scale(zoom);
+
+        drawer.begin();
+        drawer.setProjection(projection);
         drawer.setColor(0,0,0, 0.025f);
-        float off = 0 * (1-t) + 0.0125f * t;
-        drawer.add(texture, -0.5f+off, -0.5f+off, 1, 1, 0, 0, 1, 1);
         drawer.setColor(1,1,1,1);
-        drawer.add(texture, -0.5f, -0.5f, 1, 1, 0, 0, 1, 1);
+        drawer.add(texture, offX-0.5f, offY-0.5f, 1, 1, 0, 0, 1, 1);
         drawer.end();
     }
+
+    Matrix4f projection = new Matrix4f();
 
     @Override
     public void onEnd(Context context) {

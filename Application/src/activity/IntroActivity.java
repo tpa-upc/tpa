@@ -4,6 +4,7 @@ import activity.tasks.DelayTask;
 import activity.tasks.Task;
 import activity.tasks.TaskManager;
 import game.Game;
+import game.Values;
 import rendering.SpriteBatch;
 import tpa.application.Context;
 import tpa.audio.Sound;
@@ -17,8 +18,8 @@ import tpa.joml.Matrix4f;
  */
 public class IntroActivity extends Activity {
 
-    static float DELAY = 0.05f;
-    static float JITTER = 0.125f;
+    static float DELAY = 0.1f;
+    static float JITTER = 0.5f;
 
     SpriteBatch batch = null;
     String text = "";
@@ -56,7 +57,7 @@ public class IntroActivity extends Activity {
 
         alpha = 1;
         text = "";
-        String show = "Some_location\n10:20AM\nHello_world...";
+        String show = Values.TEXT;
         blink = false;
         tasks.add(new DelayTask(2, context.time));
         for (int i = 0; i < 7; ++i) {

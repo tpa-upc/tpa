@@ -28,5 +28,5 @@ public interface MouseListener {
      * @param xoff
      * @param yoff
      */
-    void onMouseScroll (int xoff, int yoff);
+    void onMouseScroll (float xoff, float yoff);
 }

@@ -2,7 +2,7 @@
   "dialog": [
     {
       "questions": [
-        {"data": "keep", "preview": "Keep investigating", "text": "I'd better go back home and find out more;once and for all", "answer": -1},
+        {"data": "keep", "preview": "Keep investigating", "text": "I'd better go back home and find out more;once and for all", "data": "keep", "answer": -1},
         {"preview": "Accuse people already", "text": "Temporary text", "data": "accuse", "answer": -1}
       ],
       "answers": []
