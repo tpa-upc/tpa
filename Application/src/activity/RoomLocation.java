@@ -386,6 +386,7 @@ public class RoomLocation extends LocationActivity {
         if (alterShowUp) {
             addText(alterText);
             addGeometry(alterego);
+            addGeometry(alteregoHead);
             if (pointless_conversation) {
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless");
             } else {
