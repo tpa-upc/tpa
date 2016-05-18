@@ -2,6 +2,7 @@ package activity;
 
 import activity.tasks.DelayTask;
 import activity.tasks.DoSomethingTask;
+import activity.tasks.Task;
 import activity.tasks.TaskManager;
 import game.Game;
 import game.GameActivity;
@@ -250,9 +251,14 @@ public class RoomLocation extends LocationActivity {
         alterText.update();
     }
 
+    boolean asdasd = false;
+
     @Override
     public void onEntered(Context context) {
-        tasks.clear();
+        if (!asdasd) {
+            tasks.clear();
+            asdasd = false;
+        }
 
         // play music
         if (!musicPlaying) {
@@ -466,8 +472,11 @@ public class RoomLocation extends LocationActivity {
         fps.update(context);
     }
 
+    boolean zxczxc = false;
+
     @Override
     public void onSelected(Context context, Object data) {
+        if (zxczxc) return;
         if (data.equals("pc")) {
             System.out.println("pc "+Values.ARGUMENTO);
             if (Values.ARGUMENTO == 1) {
@@ -633,7 +642,61 @@ public class RoomLocation extends LocationActivity {
                                     if(dat3.equals("yes")) {
                                         keepinvestigating = true;
                                         Game.getInstance().popActivity();
+                                        Game.getInstance().popActivity();
+                                        Game.getInstance().popActivity();
+                                        Values.TEXT = "The End\nSorry\nYou have reached the 2nd ending";
+                                        Game.getInstance().pushActivity(GameActivity.Intro);
                                         Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                                    } else if (dat3.equals("no")) {
+                                        Values.BAR_BIF |= 0x2;
+                                        if (Values.BAR_BIF == 0x3) {
+                                            asdasd = true;
+                                            zxczxc = true;
+                                            // "good" ending
+                                            tasks.add(new Task() {
+                                                float t = 1;
+                                                @Override
+                                                public void onBegin() {
+                                                    composite.setTimer(1);
+                                                }
+
+                                                @Override
+                                                public boolean onUpdate() {
+                                                    t -= context.time.getFrameTime() * 0.25f;
+                                                    composite.setTimer(Math.max(t, 0));
+                                                    return t < 0;
+                                                }
+                                            });
+                                            tasks.add(new DoSomethingTask(() -> {
+                                                Values.ARGUMENTO = 21;
+                                                Game.getInstance().popActivity();
+                                                Game.getInstance().pushActivity(GameActivity.Room);
+                                            }));
+                                        } else {
+                                            asdasd = true;
+                                            zxczxc = true;
+                                            tasks.add(new Task() {
+                                                float t = 1;
+                                                @Override
+                                                public void onBegin() {
+                                                    composite.setTimer(1);
+                                                }
+
+                                                @Override
+                                                public boolean onUpdate() {
+                                                    t -= context.time.getFrameTime() * 0.25f;
+                                                    composite.setTimer(Math.max(t, 0));
+                                                    return t < 0;
+                                                }
+                                            });
+                                            tasks.add(new DoSomethingTask(() -> {
+                                                // go to club
+                                                Game.getInstance().popActivity();
+                                                Game.getInstance().popActivity();
+                                                Game.getInstance().pushActivity(GameActivity.Club);
+                                                Values.ARGUMENTO = 19;
+                                            }));
+                                        }
                                     }
                                 });
                             }
@@ -655,6 +718,6 @@ public class RoomLocation extends LocationActivity {
 
     @Override
     public void onLeft(Context context) {
-
+        zxczxc = false;
     }
 }

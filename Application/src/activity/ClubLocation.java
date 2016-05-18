@@ -336,15 +336,14 @@ public class ClubLocation extends LocationActivity {
                     Game.getInstance().popActivity();
                     Game.getInstance().pushActivity(GameActivity.Bar3Acuse, (asdasd, dd) -> {
                         if (dd.equals("accuse")) {
-                            Values.TEXT = "The End\nSorry";
                             Game.getInstance().popActivity();
                             Game.getInstance().popActivity();
+                            Values.TEXT = "The End\nSorry\nYou have reached the 1st ending";
                             Game.getInstance().pushActivity(GameActivity.Intro);
                             Game.getInstance().pushActivity(GameActivity.NewspaperBad);
                         } else if (dd.equals("keep")) {
                             asdasdasd = true;
                             Values.BAR_BIF |= 0x1;
-                            Values.ARGUMENTO = 20;
                             Game.getInstance().popActivity();
                             tasks.add(new Task() {
                                 float t = 1;
@@ -361,6 +360,9 @@ public class ClubLocation extends LocationActivity {
                                 }
                             });
                             tasks.add(new DoSomethingTask(() -> {
+                                if (Values.BAR_BIF == 0x3) Values.ARGUMENTO = 21;
+                                else Values.ARGUMENTO = 20;
+                                Game.getInstance().popActivity();
                                 Game.getInstance().pushActivity(GameActivity.Room);
                             }));
                         }

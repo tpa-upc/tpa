@@ -10,13 +10,10 @@
     },
     {
       "questions": [
-        {"text": "Accuse Paul McCarthy", "answer": 0 },
-        {"text": "Keep investigating", "answer": 1 }
+        {"preview": "Accuse Paul McCarthy", "text": "I'm 97% sure Paul McCarthy is the key to all of this", "data": "yes", "answer": -1 },
+        {"preview": "Keep investigating", "text": "No...;That doesn't make sense;In fact...;I don't think any of this makes any sense at all...;I'd better keep investigating this further...", "data": "no", "answer": -1 }
       ],
-      "answers": [
-        {"text": "", "data": "yes", "jump":-1},
-        {"text": "", "data": "no", "jump": -1}
-      ]
+      "answers": []
     }
   ]
 }
