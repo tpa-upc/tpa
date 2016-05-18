@@ -270,6 +270,12 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     }
 
     @Override
+    public void stopEverything() {
+        for (int i = 0; i < music.length; ++i)
+            stopMusic(music[i]);
+    }
+
+    @Override
     public void destroy() {
         // destroy allocated sources & buffers
         sources.forEach((s, source) -> alDeleteSources(source));

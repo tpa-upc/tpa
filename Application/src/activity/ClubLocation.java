@@ -42,7 +42,7 @@ public class ClubLocation extends LocationActivity {
     GeometryActor bar;
     GeometryActor bar2;
     DecalActor darts;
-    Sound steps, slide, open, floor;
+    Sound steps, slide, open, floor, snap;
 
 
 
@@ -52,6 +52,7 @@ public class ClubLocation extends LocationActivity {
     @Override
     public void onRoomPreLoad(Context context) {
         Game.getInstance().getResources().load("res/sfx/beer_open.wav", Sound.class);
+        Game.getInstance().getResources().load("res/sfx/camera_snap.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/beer_slide.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
         Game.getInstance().getResources().load("res/sfx/can_floor.wav", Sound.class);
@@ -102,6 +103,7 @@ public class ClubLocation extends LocationActivity {
         slide = Game.getInstance().getResources().get("res/sfx/beer_slide.wav", Sound.class);
         open = Game.getInstance().getResources().get("res/sfx/beer_open.wav", Sound.class);
         floor = Game.getInstance().getResources().get("res/sfx/can_floor.wav", Sound.class);
+        snap = Game.getInstance().getResources().get("res/sfx/camera_snap.wav", Sound.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -341,6 +343,7 @@ public class ClubLocation extends LocationActivity {
                             Values.TEXT = "The End\nSorry\nYou have reached the 1st ending";
                             Game.getInstance().pushActivity(GameActivity.Intro);
                             Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                            context.audioRenderer.stopEverything();
                         } else if (dd.equals("keep")) {
                             asdasdasd = true;
                             Values.BAR_BIF |= 0x1;
@@ -369,6 +372,7 @@ public class ClubLocation extends LocationActivity {
                     });
                     Game.getInstance().pushActivity(GameActivity.PokerReaction);
                     Game.getInstance().pushActivity(GameActivity.Poker);
+                    context.audioRenderer.playSound(snap, false);
                 }
             });
         } else if (data.equals("interrog0")) {

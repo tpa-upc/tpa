@@ -647,6 +647,7 @@ public class RoomLocation extends LocationActivity {
                                         Values.TEXT = "The End\nSorry\nYou have reached the 2nd ending";
                                         Game.getInstance().pushActivity(GameActivity.Intro);
                                         Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                                        context.audioRenderer.stopEverything();
                                     } else if (dat3.equals("no")) {
                                         Values.BAR_BIF |= 0x2;
                                         if (Values.BAR_BIF == 0x3) {
@@ -711,8 +712,12 @@ public class RoomLocation extends LocationActivity {
                 }
             });
         }else if(data.equals("goodend")){
+            Values.TEXT = "The End\nSorry\nYou have reached the 3rd ending";
+            Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Intro);
             Game.getInstance().pushActivity(GameActivity.NewspaperGood);
             Game.getInstance().pushActivity(GameActivity.ShortEnd);
+            context.audioRenderer.stopEverything();
         }
     }
 

@@ -1,9 +1,6 @@
 package activity;
 
-import activity.tasks.DelayTask;
-import activity.tasks.PrintTask;
-import activity.tasks.Task;
-import activity.tasks.TaskManager;
+import activity.tasks.*;
 import game.Game;
 import game.Values;
 import rendering.SpriteBatch;
@@ -176,8 +173,6 @@ public class DialogActivity extends Activity {
         lines = que.text.split(";");
         text = "";
 
-        if (que.data != null) report(que.data);
-
         //tasks.add(new DelayTask(0.25f, context.time));
         for (int i = 0; i < lines.length; ++i) {
             String str = lines[i];
@@ -210,6 +205,11 @@ public class DialogActivity extends Activity {
                 }
             });
         }
+
+        tasks.add(new DoSomethingTask(() -> {
+            if (que.data != null)
+                report(que.data);
+        }));
 
         //tasks.add(new DelayTask(1, context.time));
 

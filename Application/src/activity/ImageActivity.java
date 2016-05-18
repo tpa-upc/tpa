@@ -59,7 +59,7 @@ public class ImageActivity extends Activity {
     public void onBegin(Context context) {
         offX = 0;
         offY = 0;
-        context.audioRenderer.playSound(paper1, false);
+        //context.audioRenderer.playSound(paper1, false);
 
         context.keyboard.setKeyboardListener(new KeyboardAdapter() {
             @Override
@@ -127,7 +127,7 @@ public class ImageActivity extends Activity {
 
     @Override
     public void onEnd(Context context) {
-        context.audioRenderer.playSound(paper0, false);
+        //context.audioRenderer.playSound(paper0, false);
         Values.LOCATION_TRANSITION_ANIMATION = false;
     }
 }

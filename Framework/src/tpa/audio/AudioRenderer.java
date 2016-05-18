@@ -35,4 +35,9 @@ public interface AudioRenderer {
      * @param music music to be stopped
      */
     void stopMusic (Music music);
+
+    /**
+     * Stop everything!
+     */
+    void stopEverything ();
 }
