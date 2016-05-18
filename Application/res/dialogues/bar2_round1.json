@@ -2,38 +2,38 @@
   "dialog": [
     {
       "questions": [
-        {"preview": "Was she with someone else?", "text": "Yep;With a regular client of mine;his name is James...;James Stuart I believe", "answer": 0},
+        {"preview": "Was she with someone else?", "text": "Was she with someone else?", "answer": 0},
         {"preview": "Which days did she come?", "text": "And which Days did she come?", "answer": 1},
-        {"preview": "Can I really trust you?", "text": "Can I really trust you?;When you say that Anthony Brown has never been here?;It's important you know?;Have you heard about what happened?", "answer": 2}
+        {"preview": "Can I really trust you?", "text": "Can I really trust you ;when you say that Anthony Brown has never been here?;It's important you know?;Have you heard about what happened?;Jess Brown's been murdered,;and her son has disappeared.", "answer": 2}
       ],
 
       "answers": [
         {"text": "Yep;With a regular client of mine;his name is James...;James Stuart I believe", "data": "nop", "jump": -1},
-        {"text": "I'm sorry I don't remember that;I'm quite busy having a life, you know?", "data": "nop", "jump": -1},
+        {"text": "I'm sorry, I don't remember that;I'm quite busy having a life, you know?", "data": "nop", "jump": -1},
         {"text": "What?! Are you serious?", "jump": 1}
       ]
     },
 
     {
       "questions": [
-        {"text": "Of course I am;And I need you to cooperate;I can get you arrested you know?", "answer": 0}
+        {"text": "Of course I am...;and I need you to cooperate;I can get you arrested you know?", "answer": 0}
       ],
       "answers": [
-        {"text": "What?! Are you being serious, mate?", "jump": 2}
+        {"text": "Okay darling...;chill...;are you being serious with all that?", "jump": 2}
       ]
     },
 
     {
       "questions": [
-        {"text": "Of course I am. And the first suspect for the case is his husband Anthony. So if you really know something about him…", "answer": 0}
+        {"text": "Of course I am.;And the first suspect for the case;is his husband, Anthony.;So if you really know something about him...", "answer": 0}
       ],
       "answers": [
-        {"text": "Erm… mate, I didn’t tell you that okay? But… yeah, he’s been playing regularly here. Playing… Poker games. Trust me, he was here last night, alright? He didn’t kill her, come on mate, he was here the whole night.", "jump": 3, "data": "sip"}
+        {"text": "Erm... darling, I didn't tell you that okay?;But... yeah, he's been playing regularly here.;Playing...;Poker games.;Trust me, he was here last night, alright?;He didn't kill her, come on darling,;he was here the whole night.", "jump": 3, "data": "sip"}
       ]
     },
 
     {
-      "questions": [{"text": "Calm down;Ok. I'm going to trust you;Maybe I should go back home and find out who is this James Stuart guy", "data": "floor", "answer": -1}],
+      "questions": [{"text": "Calm down;Ok. I'm going to trust you...;Maybe I should go back home and;find out who that James Stuart guy is", "data": "floor", "answer": -1}],
       "answers": []
     }
   ]
