@@ -38,7 +38,8 @@ public class ClubLocation extends LocationActivity {
     GeometryActor bar;
     GeometryActor bar2;
     DecalActor darts;
-
+    DecalActor logo;
+    DecalActor logo2;
 
 
     int count = 0;
@@ -65,7 +66,7 @@ public class ClubLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/wood.jpg",Texture.class);
         Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/darts.png",Texture.class);
-
+        Game.getInstance().getResources().load("res/textures/sweet_malibu.png",Texture.class);
         fps = new FpsInput(camera);
     }
 
@@ -88,6 +89,7 @@ public class ClubLocation extends LocationActivity {
         Texture woodTex = Game.getInstance().getResources().get("res/textures/wood.jpg",Texture.class);
         Mesh cubeMesh = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
         Texture dartsTex = Game.getInstance().getResources().get("res/textures/darts.png",Texture.class);
+        Texture logoTex = Game.getInstance().getResources().get("res/textures/sweet_malibu.png",Texture.class);
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -102,6 +104,7 @@ public class ClubLocation extends LocationActivity {
         TexturedMaterial woodMat = new TexturedMaterial(woodTex);
         TexturedMaterial tableMat = new TexturedMaterial(woodTex);
         DecalMaterial dartsMat = new DecalMaterial(dartsTex,depth);
+        DecalMaterial logoMat = new DecalMaterial(logoTex,depth);
 
 
         wall0 = new GeometryActor(wallMesh, wallMat);
@@ -161,8 +164,22 @@ public class ClubLocation extends LocationActivity {
         darts.scale.set(0.4f,0.05f,0.4f);
         darts.rotation.rotateX((float)Math.toRadians(0));
         darts.rotation.rotateZ((float)Math.toRadians(-90));
-
         darts.update();
+
+        logo = new DecalActor(logoMat);
+        logo.position.set(3,1.3f,2);
+        logo.scale.set(1,0.05f,1);
+        logo.rotation.rotateX((float)Math.toRadians(90));
+        logo.rotation.rotateY((float)Math.toRadians(-90));
+        logo.update();
+
+        logo2 = new DecalActor(logoMat);
+        logo2.position.set(3,1.3f,-2);
+        logo2.scale.set(1,0.05f,1);
+        logo2.rotation.rotateX((float)Math.toRadians(90));
+        logo2.rotation.rotateY((float)Math.toRadians(90));
+        logo2.rotation.rotateZ((float)Math.toRadians(-180));
+        logo2.update();
 
 
         chair = new GeometryActor(chairMesh, woodMat);
@@ -190,8 +207,8 @@ public class ClubLocation extends LocationActivity {
         table2.update();
 
         bar = new GeometryActor(cubeMesh, wallMat);
-        bar.position.set(7f,0.3f,0);
-        bar.scale.set(1f,0.2f,0.3f);
+        bar.position.set(7.1f,0.3f,0);
+        bar.scale.set(0.9f,0.2f,0.3f);
         bar.rotation.rotateX((float)Math.toRadians(90));
         bar.update();
 
@@ -230,13 +247,14 @@ public class ClubLocation extends LocationActivity {
         addGeometry(chair3);
         addGeometry(chair4);
         addGeometry(table2);
-
+        addDecal(logo);
+        addDecal(logo2);
 
         if(Values.ARGUMENTO == 2){
-                addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
+                addPickerBox(new Vector3f(7,0,1), new Vector3f(0.2f, 1, 0.2f), "barman");
         }
         if(Values.ARGUMENTO == 3){
-                addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
+                addPickerBox(new Vector3f(7,0,1), new Vector3f(0.2f, 1, 0.2f), "barmanp");
                 addPickerBox(new Vector3f(0,0,-1), new Vector3f(0.1f, 1.75f, 0.5f), "gohome");
         }
         if(count == 666){ /*change to 666*/
@@ -247,7 +265,7 @@ public class ClubLocation extends LocationActivity {
         }
 
         if(Values.ARGUMENTO == 7){
-            addPickerBox(new Vector3f(5,0,1), new Vector3f(0.2f, 1, 0.2f), "barman2");
+            addPickerBox(new Vector3f(7,0,1), new Vector3f(0.2f, 1, 0.2f), "barman2");
 
         }
         // set camera
