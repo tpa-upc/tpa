@@ -48,8 +48,8 @@ public class LoadingActivity extends Activity {
             @Override
             public void onFailed(String string, Class<?> type, Exception e) {
                 //System.out.println("[ERR] "+string);
-                lines.add("[ERR] "+string);
-                errors.add("[ERR] "+string);
+                lines.add("[ERROR] "+string);
+                errors.add("[ERROR] "+string);
                 //if (e != null) e.printStackTrace();
             }
         });
