@@ -138,7 +138,7 @@ public class SimpleResourceManager implements ResourceManager {
     @Override
     public void update() {
         //System.out.println("queue: "+ queued.size());
-        if (queued.isEmpty() || System.currentTimeMillis() - last + 999999999 < (long)(500 * Math.random()))
+        if (queued.isEmpty() || System.currentTimeMillis() - last < (long)(500 * Math.random()))
             return;
 
         last = System.currentTimeMillis();
