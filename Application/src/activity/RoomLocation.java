@@ -193,9 +193,9 @@ public class RoomLocation extends LocationActivity {
         wall1flip.position.set(8,0,0);
         wall1flip.update();
         pc = new GeometryActor(pcMesh, pcMat);
-        pc.model.translate(3.5f, 0.675f, -1.5f).rotateY(0.25f);
+        pc.model.translate(3.9f, 0.675f, -1.5f).rotateY(0.25f);
         chair = new GeometryActor(chairMesh, pcMat);
-        chair.model.translate(5f, 0, -2.25f).rotateY(0.25f).scale(0.85f);
+        chair.model.translate(4f, 0, -0.55f).rotateY(0.25f).scale(0.85f);
         table = new GeometryActor(tableMesh, tableMat);
         table.model.translate(4f, 0, -2).rotateY(-0.1f);
         tile0 = new GeometryActor(tileMesh, tileMat);
@@ -239,7 +239,7 @@ public class RoomLocation extends LocationActivity {
         fps.setMovable(true);
 
         pcText = new TextActor("Laptop");
-        pcText.position.set(3.5f, 0.675f, -1.5f).add(0, 0.5f, 0);
+        pcText.position.set(3.9f, 0.675f, -1.5f).add(0, 0.5f, 0);
         pcText.update();
 
         phoneText = new TextActor("Telephone");

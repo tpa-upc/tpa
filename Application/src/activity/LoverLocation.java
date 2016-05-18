@@ -41,6 +41,13 @@ public class LoverLocation extends LocationActivity{
 
     Sound hangPhone;
 
+    DecalActor picture;
+    DecalActor kiddraw,kiddraw2;
+    GeometryActor table;
+    GeometryActor box1,box2,box3,box4;
+    GeometryActor color1,color2,color3;
+
+
     boolean forensicCardFound = false;
     boolean barCardFound = false;
     boolean phoneCallMade = false;
@@ -74,6 +81,11 @@ public class LoverLocation extends LocationActivity{
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
         Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
+        Game.getInstance().getResources().load("res/textures/kid_picture.jpg",Texture.class);
+        Game.getInstance().getResources().load("res/textures/kid_draw.jpg",Texture.class);
+        Game.getInstance().getResources().load("res/textures/kid_picture2.jpg",Texture.class);
+        Game.getInstance().getResources().load("res/models/table.json", Mesh.class);
+        Game.getInstance().getResources().load("res/textures/terciopelo.jpg",Texture.class);
 
         fps = new FpsInput(camera);
     }
@@ -102,6 +114,13 @@ public class LoverLocation extends LocationActivity{
         Mesh coneMesh = Game.getInstance().getResources().get("res/models/cone.json", Mesh.class);
         Mesh phoneMesh = Game.getInstance().getResources().get("res/models/telf.json", Mesh.class);
         Texture phoneTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
+        Texture pictureTex = Game.getInstance().getResources().get("res/textures/kid_picture.jpg",Texture.class);
+        Texture kidTex = Game.getInstance().getResources().get("res/textures/kid_draw.jpg",Texture.class);
+        Texture kid2Tex = Game.getInstance().getResources().get("res/textures/kid_picture2.jpg",Texture.class);
+        Mesh tableMesh = Game.getInstance().getResources().get("res/models/table.json", Mesh.class);
+        Texture pielTex = Game.getInstance().getResources().get("res/textures/terciopelo.jpg",Texture.class);
+
+
 
         // modify textures
         tileTex.setWrapU(TextureWrap.Repeat);
@@ -118,8 +137,32 @@ public class LoverLocation extends LocationActivity{
         DecalMaterial forensicCardMat = new DecalMaterial(forensicCardTex, depth);
         DecalMaterial barCardMat = new DecalMaterial(barCardTex, depth);
         TexturedMaterial phoneMat = new TexturedMaterial(phoneTex);
+        DecalMaterial pictureMat = new DecalMaterial(pictureTex,depth);
+        DecalMaterial kidMat = new DecalMaterial(kidTex,depth);
+        DecalMaterial kid2Mat = new DecalMaterial(kid2Tex,depth);
+        TexturedMaterial tableMat = new TexturedMaterial(barmanTex);
+        TexturedMaterial pielMat = new TexturedMaterial(pielTex);
 
         /**Toys creation**/
+
+        color1 = new GeometryActor(cubeMesh,pielMat);
+        color1.position.set(7.8f,0,-1.7f);
+        color1.scale.set(0.01f,0.02f,0.1f);
+        color1.rotation.rotateY((float)Math.toRadians(70));
+        color1.update();
+
+        color2 = new GeometryActor(cubeMesh,barmanMat);
+        color2.position.set(7.8f,0,-1);
+        color2.scale.set(0.01f,0.02f,0.1f);
+        color2.rotation.rotateY((float)Math.toRadians(110));
+        color2.update();
+
+        color3 = new GeometryActor(cubeMesh,tableMat);
+        color3.position.set(7.6f,0,-1.2f);
+        color3.scale.set(0.01f,0.02f,0.1f);
+        color3.rotation.rotateY((float)Math.toRadians(50));
+        color3.update();
+
         cube1 = new GeometryActor(cubeMesh, barmanMat);
         cube1.position.set(3,0,0);
         cube1.scale.set(0.05f,0.1f,0.05f);
@@ -230,6 +273,55 @@ public class LoverLocation extends LocationActivity{
         barCard.scale.set(0.1f, 0.05f, 0.1f);
         barCard.update();
 
+        kiddraw = new DecalActor(kidMat);
+        kiddraw.position.set(7.5f,0,-1);
+        kiddraw.rotation.rotateZ((float)Math.toRadians(180));
+        kiddraw.rotation.rotateY((float)Math.toRadians(20));
+        kiddraw.scale.set(0.2f,0.05f,0.2f);
+        kiddraw.update();
+
+        kiddraw2 = new DecalActor(kid2Mat);
+        kiddraw2.position.set(7.6f,0,-1.45f);
+        kiddraw2.rotation.rotateZ((float)Math.toRadians(180));
+        kiddraw2.rotation.rotateY((float)Math.toRadians(-20));
+
+
+        kiddraw2.scale.set(0.2f,0.05f,0.2f);
+        kiddraw2.update();
+
+        picture = new DecalActor(pictureMat);
+        picture.position.set(1.4f,1.2f,2f);
+        picture.scale.set(0.4f,0.05f,0.4f);
+        picture.rotation.rotateX((float)Math.toRadians(180));
+        picture.rotation.rotateY((float)Math.toRadians(90));
+        picture.rotation.rotateZ((float)Math.toRadians(90));
+        picture.update();
+
+
+        table = new GeometryActor(tableMesh, tableMat);
+        table.position.set(1.3f,0,0.4f);
+        table.scale.set(0.8f,0.8f,0.8f);
+        table.update();
+
+        box1 = new GeometryActor(cubeMesh,pielMat);
+        box1.position.set(1f,0,0.2f);
+        box1.scale.set(0.2f,0.35f,0.2f);
+        box1.update();
+
+        box2 = new GeometryActor(cubeMesh,pielMat);
+        box2.position.set(1.6f,0,0.2f);
+        box2.scale.set(0.2f,0.35f,0.2f);
+        box2.update();
+
+        box3 = new GeometryActor(cubeMesh,pielMat);
+        box3.position.set(1f,0,1.5f);
+        box3.scale.set(0.2f,0.35f,0.2f);
+        box3.update();
+
+        box4 = new GeometryActor(cubeMesh,pielMat);
+        box4.position.set(1.6f,0,1.5f);
+        box4.scale.set(0.2f,0.35f,0.2f);
+        box4.update();
         phoneMat.setTint(0,0,0);
         phone = new GeometryActor(phoneMesh, phoneMat);
         phone.position.set(6,1,1.75f);
@@ -276,6 +368,17 @@ public class LoverLocation extends LocationActivity{
         addDecal(barCard);
         addGeometry(phone);
         addText(phoneText);
+        addDecal(picture);
+        addDecal(kiddraw);
+        addDecal(kiddraw2);
+        addGeometry(table);
+        addGeometry(box1);
+        addGeometry(box2);
+        addGeometry(box3);
+        addGeometry(box4);
+        addGeometry(color1);
+        addGeometry(color2);
+        addGeometry(color3);
 
         /** Adding Picker Box for forensic and bar Cards**/
         addPickerBox(new Vector3f(7,0,0), new Vector3f(0.1f,0.05f,0.1f), "forensicCard");
