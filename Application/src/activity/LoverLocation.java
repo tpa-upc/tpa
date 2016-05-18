@@ -73,6 +73,7 @@ public class LoverLocation extends LocationActivity{
         Game.getInstance().getResources().load("res/models/sphere.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/telf.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
+        Game.getInstance().getResources().load("res/sfx/steps.wav", Sound.class);
 
         fps = new FpsInput(camera);
     }
@@ -239,6 +240,7 @@ public class LoverLocation extends LocationActivity{
         phoneText.update();
 
         fps.position.set(4, 1f, 0);
+        fps.setSteps(Game.getInstance().getResources().get("res/sfx/steps.wav", Sound.class));
     }
 
     @Override
