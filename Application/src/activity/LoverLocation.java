@@ -304,6 +304,7 @@ public class LoverLocation extends LocationActivity{
         camera.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
         camera.clearColor.set(0.85f);
         cameraReflect.projection.setPerspective((float) Math.toRadians(45), aspect, 0.01f, 100f);
+        cameraReflect.clearColor.set(0.85f);
     }
 
     private FpsInput fpsRefl = new FpsInput(cameraReflect);
