@@ -349,7 +349,7 @@ public abstract class LocationActivity extends Activity {
         // render debug geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
-            mat.render(context.renderer, camera, box, actor.model);
+            //mat.render(context.renderer, camera, box, actor.model);
         }
 
         // render text
