@@ -3,7 +3,7 @@
     {
       "questions": [
         {"text": "I am a VIP client am I not?", "answer": 0},
-        {"text": "You might remember I asked you about Jess Brown…;Did you know he had a lover called James Stuart?", "answer": 1}
+        {"text": "You might remember I asked you about Jess Brown...;Did you know he had a lover called James Stuart?", "answer": 1}
       ],
       "answers": [
         {"text": "Everyone who drinks Guimess is VIP in here.", "jump": 1},
@@ -13,7 +13,7 @@
 
     {
       "questions": [{"text": "So do you think I could see the recordings from your security cameras?", "answer": 0}],
-      "answers": [{"text": "Hmmm.. no;Because of that privacy thing, you know?", "jump": 2}]
+      "answers": [{"text": "Hmmm... no;Because of that privacy thing, you know?", "jump": 2}]
     },
 
     {

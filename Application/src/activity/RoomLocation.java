@@ -43,7 +43,7 @@ public class RoomLocation extends LocationActivity {
     TextActor pcText, phoneText, alterText;
 
     Sound telfSound, hangPhone, pickupPhone, emailSound, dialSound, dialTonesSound, holsSound;
-    Sound paper;
+    Sound paper, laugh;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,6 +100,7 @@ public class RoomLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/models/pc.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/capsule.json", Mesh.class);
         Game.getInstance().getResources().load("res/textures/pixel.png", Texture.class);
+        Game.getInstance().getResources().load("res/sfx/crazy_laught.wav", Sound.class);
 
     }
 
@@ -114,6 +115,7 @@ public class RoomLocation extends LocationActivity {
         dialTonesSound = Game.getInstance().getResources().get("res/sfx/dial_tones.wav", Sound.class);
         holsSound = Game.getInstance().getResources().get("res/sfx/phone_hold.wav", Sound.class);
         paper = Game.getInstance().getResources().get("res/sfx/paper_short_16.wav", Sound.class);
+        laugh = Game.getInstance().getResources().get("res/sfx/crazy_laught.wav", Sound.class);
 
         fps.setSteps(steps);
 
@@ -584,6 +586,7 @@ public class RoomLocation extends LocationActivity {
             });
         } else if(data.equals("alter_ego_pointless")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP);
+            context.audioRenderer.playSound(laugh, false);
         } else if (data.equals("leave")) {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Club);
@@ -600,6 +603,7 @@ public class RoomLocation extends LocationActivity {
 
         }else if(data.equals("alter_ego_pointless2")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoP2);
+            context.audioRenderer.playSound(laugh, false);
         }else if(data.equals("pc2")){
             Game.getInstance().pushActivity(GameActivity.Terminal2, new ActivityListener() {
                 @Override
@@ -630,6 +634,7 @@ public class RoomLocation extends LocationActivity {
             pointless_conversation=true;
         }else if (data.equals("alter_ego_pointless3")){
             Game.getInstance().pushActivity(GameActivity.AlterEgoRep4);
+            context.audioRenderer.playSound(laugh, false);
         }else if(data.equals("pc3")){
             Game.getInstance().pushActivity(GameActivity.Terminal3, new ActivityListener() {
                 @Override
