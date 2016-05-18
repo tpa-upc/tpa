@@ -28,7 +28,7 @@
         {"text": "Which days did she come?", "answer": 1}
       ],
       "answers": [
-        {"text": "With a regular client… James Stuart, if I’m not wrong. All this information needs another beer, mate.", "data": "name_lover", "jump": 2},
+        {"text": "With a regular client… James Stuart, if I’m not wrong.;All this information needs another beer, mate.", "data": "name_lover", "jump": 2},
         {"text": "Do you really think I’m that bored, mate? How the hell I am supposed to know that!", "data": null, "jump": 2}
       ]
     },
