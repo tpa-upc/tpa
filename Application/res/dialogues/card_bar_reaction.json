@@ -1,11 +1,9 @@
 {
   "dialog": [
     {
-      "questions": [
-        {"text": "This is the only clue we have; maybe I should have a look in that bar;...", "data":null, "answer":0}
-      ],
+      "questions": [],
       "answers": [
-        {"text": "", "data": "finish", "jump": -1 }
+        {"text": "This is the only clue we have, maybe; I should have a look in that bar… or find information about her.", "data": "finish", "jump": -1 }
       ]
     }
   ]
