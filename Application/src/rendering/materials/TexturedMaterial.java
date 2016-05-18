@@ -54,6 +54,10 @@ public class TexturedMaterial extends Material {
             "uniform int u_has_reflective;\n" +
             "uniform vec3 u_tint;\n" +
             "\n" +
+            "float rand(vec2 co){\n" +
+            "    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +
+            "}\n" +
+            "\n" +
             "void main () {\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    \n" +
@@ -61,7 +65,7 @@ public class TexturedMaterial extends Material {
             "        float cont = texture2D(u_reflective, v_uv).r;\n" +
             "        vec2 refl_uv = gl_FragCoord.xy/u_resolution;\n" +
             "        refl_uv.x = 1-refl_uv.x;// + sin(refl_uv.y * 256) * 0.005;\n" +
-            "        vec3 reflection = texture2D(u_reflective_map, refl_uv).rgb;\n" +
+            "        vec3 reflection = texture2D(u_reflective_map, refl_uv + vec2(rand(gl_FragCoord.xy)*2-1, rand(gl_FragCoord.xy)*2-1)*0.005).rgb;\n" +
             "        color = mix(color, reflection, cont);\n" +
             "    }\n" +
             "    \n" +
