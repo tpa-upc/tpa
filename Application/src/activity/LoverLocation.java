@@ -310,7 +310,7 @@ public class LoverLocation extends LocationActivity{
 
     @Override
     public void onTick(Context context) {
-        fpsRefl.position.set(fps.position).mul(1, -1, 1);
+        fpsRefl.position.set(fps.position).add(0, fps.off, 0).mul(1, -1, 1);
         fpsRefl.pitch = fpsRefl.sPitch = -fps.sPitch;
         fpsRefl.yaw = fpsRefl.sYaw = fps.sYaw;
 
