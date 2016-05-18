@@ -26,7 +26,7 @@ import java.util.List;
  */
 public abstract class LocationActivity extends Activity {
     
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     /** low res scale */
     private static final int SCALE = 2;
@@ -272,6 +272,7 @@ public abstract class LocationActivity extends Activity {
 
         // update camera
         camera.update();
+        cameraReflect.update();
 
         Window window = context.window;
         Renderer renderer = context.renderer;
@@ -280,15 +281,14 @@ public abstract class LocationActivity extends Activity {
         renderer.setFramebuffer(zPass);
         renderer.clearDepthBuffer();
         renderer.setViewport(0, 0, zPass.getWidth(), zPass.getHeight());
-
-        // set state for z pass
         RendererState stateZpass = new RendererState();
         stateZpass.depthTest = true;
         stateZpass.redMask = stateZpass.greenMask = stateZpass.blueMask = stateZpass.alphaMask = false;
         renderer.setState(stateZpass);
-
         for (GeometryActor actor : geometry) {
-            depthMaterial.render(renderer, camera, actor.getMesh(), actor.model);
+            if (((TexturedMaterial) actor.getMaterial()).discardReflectPass)
+                continue;
+            depthMaterial.render(renderer, cameraReflect, actor.getMesh(), actor.model);
         }
 
         // reflect pass
@@ -297,6 +297,7 @@ public abstract class LocationActivity extends Activity {
         renderer.setClearColor(camera.clearColor.x, camera.clearColor.y, camera.clearColor.z, 1);
         renderer.clearBuffers();
 
+        // reset state
         RendererState stateReflect = new RendererState();
         stateReflect.depthTest = true;
         renderer.setState(stateReflect);
@@ -319,9 +320,23 @@ public abstract class LocationActivity extends Activity {
 
         // render debug geometry
         for (GeometryActor actor : debugGeometry) {
-            Material mat = actor.getMaterial();
+            DecalMaterial mat = (DecalMaterial) actor.getMaterial();
             mat.render(context.renderer, cameraReflect, box, actor.model);
         }
+
+        renderer.setState(new RendererState());
+
+        //System.out.println(geometry.size());
+
+        // perfom early z pass
+        renderer.setFramebuffer(zPass);
+        renderer.clearDepthBuffer();
+        renderer.setViewport(0, 0, zPass.getWidth(), zPass.getHeight());
+        stateZpass.depthTest = true;
+        stateZpass.redMask = stateZpass.greenMask = stateZpass.blueMask = stateZpass.alphaMask = false;
+        renderer.setState(stateZpass);
+        for (GeometryActor actor : geometry)
+            depthMaterial.render(renderer, camera, actor.getMesh(), actor.model);
 
         // lowres pass
         renderer.setFramebuffer(lowresPass);
@@ -349,7 +364,7 @@ public abstract class LocationActivity extends Activity {
         // render debug geometry
         for (GeometryActor actor : debugGeometry) {
             Material mat = actor.getMaterial();
-            //mat.render(context.renderer, camera, box, actor.model);
+            mat.render(context.renderer, camera, box, actor.model);
         }
 
         // render text

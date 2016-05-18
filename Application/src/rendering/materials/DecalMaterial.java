@@ -125,7 +125,6 @@ public class DecalMaterial extends Material {
 
         // send resolution
         program.setUniform("u_resolution", UniformType.Vector2, new Vector2f(depth.getWidth(), depth.getHeight()));
-
         program.setUniform("u_reflective", UniformType.Sampler2D, 2);
         program.setUniform("u_reflective_map", UniformType.Sampler2D, 3);
         program.setUniform("u_has_reflective", UniformType.Integer, reflective==null ? 0 : 1);
