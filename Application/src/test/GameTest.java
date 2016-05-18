@@ -62,7 +62,7 @@ public class GameTest implements Application {
 
                 // push some activity
                 //Game.getInstance().pushActivity(GameActivity.Note0);
-                //Game.getInstance().pushActivity(GameActivity.Room);
+                Game.getInstance().pushActivity(GameActivity.Room);
                 //Game.getInstance().pushActivity(GameActivity.Club);
                 //Game.getInstance().pushActivity(GameActivity.NewspaperGood);
                 //Game.getInstance().pushActivity(GameActivity.Intro);
@@ -71,7 +71,7 @@ public class GameTest implements Application {
                 //Game.getInstance().pushActivity(GameActivity.Intro);
                 //Game.getInstance().pushActivity(GameActivity.Club);
                 //Game.getInstance().pushActivity(GameActivity.Interrogation);
-                Game.getInstance().pushActivity(GameActivity.Lover);
+                //Game.getInstance().pushActivity(GameActivity.Lover);
             }
 
             context.renderer.beginFrame();
