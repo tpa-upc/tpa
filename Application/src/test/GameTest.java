@@ -65,7 +65,7 @@ public class GameTest implements Application {
                 Game.getInstance().pushActivity(GameActivity.Room);
                 //Game.getInstance().pushActivity(GameActivity.Club);
                 //Game.getInstance().pushActivity(GameActivity.NewspaperGood);
-                //Game.getInstance().pushActivity(GameActivity.Intro);
+                Game.getInstance().pushActivity(GameActivity.Intro);
                 //Game.getInstance().pushActivity(GameActivity.Interrogation);
                 //Game.getInstance().pushActivity(GameActivity.Acid);
                 //Game.getInstance().pushActivity(GameActivity.Intro);

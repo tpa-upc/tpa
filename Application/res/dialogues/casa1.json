@@ -5,7 +5,7 @@
     {
       /**asdasdasd*/
       "questions": [
-        {"preview": "Ignore", "text": "I'm not picking it up...", "data": "finish", "answer": -1},
+        {"preview": "Ignore", "text": "I'm not picking it up...", "data": "ignore", "answer": -1},
         {"preview": "Answer the phone", "text": "Who's calling?", "data": "pickup", "answer": 0}
       ],
       "answers": [
