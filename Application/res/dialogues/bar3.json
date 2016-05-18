@@ -11,14 +11,14 @@
 
     {
       "questions": [
-        {"text": "I’ve been wondering… does the name Anthony Brown ring a bell with you?", "answer": 0},
-        {"text": "It’s really important, I need to know if Jess Brown has been around this bar lately.", "answer": 1},
+        {"text": "I’ve been wondering… does the name; Anthony Brown ring a bell with you?", "answer": 0},
+        {"text": "It’s really important, I need to know ; if Jess Brown has been around this bar lately.", "answer": 1},
         {"text": "Who are your regular clients?", "answer": 2}
       ],
       "answers": [
         {"text": "No, mate, I’ve never heard that name before.", "data": "unblock_question_6", "jump": 1},
         {"text": "Okay, mate…  yeah, she’s been around some days.", "data": "unblock_question_4_5","jump": 1},
-        {"text": "Anyone who drinks enough Guimess is a regular client, mate.", "data": null, "jump": 1}
+        {"text": "Anyone who drinks enough Guimess; is a regular client, mate.", "data": null, "jump": 1}
       ]
     },
 
