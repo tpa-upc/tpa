@@ -2,23 +2,23 @@
   "dialog": [
     {
       "questions": [
-        {"text": "Hey mate, another Guimess?", "answer": 0}
+        {"text": "Hey, may I have another Guimess?", "answer": 0}
       ],
       "answers": [
-        {"text": "Sure.", "data": null, "jump": 1}
+        {"text": "Sure, darling.", "data": null, "jump": 1}
       ]
     },
 
     {
       "questions": [
-        {"text": "I’ve been wondering… does the name; Anthony Brown ring a bell with you?", "answer": 0},
-        {"text": "It’s really important, I need to know ; if Jess Brown has been around this bar lately.", "answer": 1},
+        {"text": "I've been wondering... does the name Anthony Brown ring a bell with you?", "answer": 0},
+        {"text": "It's really important, I need to know if Jess Brown has been around this bar lately.", "answer": 1},
         {"text": "Who are your regular clients?", "answer": 2}
       ],
       "answers": [
-        {"text": "No, mate, I’ve never heard that name before.", "data": "unblock_question_6", "jump": 1},
-        {"text": "Okay, mate…  yeah, she’s been around some days.", "data": "unblock_question_4_5","jump": 1},
-        {"text": "Anyone who drinks enough Guimess; is a regular client, mate.", "data": null, "jump": 1}
+        {"text": "No, darling, I've never heard that name before.", "data": "unblock_question_6", "jump": 1},
+        {"text": "Okay, darling...  yeah, she’s been around some days.", "data": "unblock_question_4_5","jump": 1},
+        {"text": "Anyone who drinks enough Guimess is a regular client, darling.", "data": null, "jump": 1}
       ]
     },
 
@@ -28,14 +28,14 @@
         {"text": "Which days did she come?", "answer": 1}
       ],
       "answers": [
-        {"text": "With a regular client… James Stuart, if I’m not wrong. All this information needs another beer, mate.", "data": "name_lover", "jump": 2},
-        {"text": "Do you really think I’m that bored, mate? How the hell I am supposed to know that!", "data": null, "jump": 2}
+        {"text": "With a regular client... James Stuart, if I’m not wrong.;All this information needs another beer, darling.", "data": "name_lover", "jump": 2},
+        {"text": "Do you really think I’m that bored, darling? How the hell I am supposed to know that!", "data": null, "jump": 2}
       ]
     },
 
     {
       "questions": [
-        {"text": "Can I really trust you when you say that Anthony Brown has never been here? It is very important… have you heard about Jess Brown’s crime?", "answer": 0}
+        {"text": "Can I really trust you when you say that Anthony Brown has never been here? It is very important... have you heard about Jess Brown's crime?", "answer": 0}
       ],
       "answers": [
         {"text": "What?! Are you being serious, mate?", "data": "next", "jump": 4}
