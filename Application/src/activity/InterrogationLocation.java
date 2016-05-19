@@ -39,7 +39,7 @@ public class InterrogationLocation extends LocationActivity {
     GeometryActor tile0, tile1;
     GeometryActor thompson, thompsonHead;
     GeometryActor anthony, anthonyHead, anthonyCosmetic;
-    GeometryActor chair, chair2;
+    GeometryActor chair, chair2, melHead;
 
     TextActor antonText;
     TextActor thomText;
@@ -150,7 +150,7 @@ public class InterrogationLocation extends LocationActivity {
         tile1.update();
 
         capsuleMat.setTint(0,1,0);
-        capsuleMat2.setTint(0.8f,0.2f,0.5f);
+        capsuleMat2.setTint(0.8f,0.2f,0.2f);
         capsuleMat3.setTint(0.8f,0.2f,0.5f);
 
         anthony = new GeometryActor(capsuleMesh, capsuleMat);
@@ -166,6 +166,11 @@ public class InterrogationLocation extends LocationActivity {
         thompsonHead = new GeometryActor(monkeyMesh, capsuleMat2);
         thompsonHead.position.set(0.25f, 1.25f, 1.5f);
         thompsonHead.update();
+
+        TexturedMaterial melMaterial = new TexturedMaterial(capsuleTex);
+        melMaterial.setTint(1, 1, 1);
+        melMaterial.discardRenderPass = true;
+        melHead = new GeometryActor(monkeyMesh, melMaterial);
 
         anthonyCosmetic = new GeometryActor(cosmeticMesh, capsuleMat3);
 
@@ -228,6 +233,7 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(anthonyHead);
         addGeometry(anthonyCosmetic);
         addGeometry(thompsonHead);
+        addGeometry(melHead);
 
         System.out.println(start+" "+success+" "+youFuckedUp);
         if (success || start || youFuckedUp) {
@@ -266,6 +272,10 @@ public class InterrogationLocation extends LocationActivity {
             anthonyHead.update();
         }
 
+        melHead.position.set(fps.position);
+        melHead.rotation.set(camera.rotation).invert().rotateY((float)Math.toRadians(180));
+        melHead.update();
+
         anthonyHead.rotation.set(camera.rotation).invert();
         anthonyHead.update();
 
@@ -297,10 +307,12 @@ public class InterrogationLocation extends LocationActivity {
     @Override
     public void onSelected(Context context, Object data) {
         if (data.equals(16)) {
+            Game.getInstance().pushActivity(GameActivity.Heh);
             Game.getInstance().pushActivity(GameActivity.Enemies);
         } else if (data.equals(32)) {
 
         } if(data.equals("anton") && questionCount < MAX_QUESTIONS){
+            Values.TEXT_COLOR = 0x00FF00;
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
                     System.out.println(d0);
@@ -313,10 +325,11 @@ public class InterrogationLocation extends LocationActivity {
                         // :(
                         youFuckedUp = true;
                         Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.GoodDay);
                     }
                 });
             } else if (round == 1) {
-                System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
+                //System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
                 Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
                     questionCount++;
                     if (d0.equals("sep")) {
@@ -332,6 +345,7 @@ public class InterrogationLocation extends LocationActivity {
                 });
             }
         } else if (data.equals("thom")) {
+            Values.TEXT_COLOR = 0xFF3333;
             if (start) {
                 start = false;
                 Game.getInstance().pushActivity(GameActivity.InterrThompsonStart);

@@ -345,6 +345,7 @@ public class ClubLocation extends LocationActivity {
     public void onSelected(Context context, Object data) {
         if (asdasdasd) return;
         if(data.equals("barman")) {
+            Values.TEXT_COLOR = 0x3333FF;
             Game.getInstance().pushActivity(GameActivity.Bar0, (act, dat) -> {
                 if (dat.equals("finish")) {
                     Values.ARGUMENTO = 3;
@@ -352,6 +353,7 @@ public class ClubLocation extends LocationActivity {
                 }
             });
         } else if (data.equals("interrog1")) {
+            Values.TEXT_COLOR = 0x3333FF;
             Game.getInstance().pushActivity(GameActivity.Bar3, (asd, dat) -> {
                 if (dat.equals("recordings")) {
                     doRecordings = true;
@@ -396,6 +398,7 @@ public class ClubLocation extends LocationActivity {
                 }
             });
         } else if (data.equals("interrog0")) {
+            Values.TEXT_COLOR = 0x3333FF;
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Bar2Round0, (lol, dat) -> {
                     if (dat.equals("slide")) {
@@ -423,6 +426,7 @@ public class ClubLocation extends LocationActivity {
                 });
             }
         }else if(data.equals("barmanp")){
+            Values.TEXT_COLOR = 0x3333FF;
             Game.getInstance().pushActivity(GameActivity.Bar1, (act, dat) -> {
                 if (dat.equals("satan")) {
                   count ++;

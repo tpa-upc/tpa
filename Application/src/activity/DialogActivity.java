@@ -153,7 +153,12 @@ public class DialogActivity extends Activity {
 
             //batch.add(pixel, 0, h-42, 12*text.length()+8, 42, 0, 0, 1, 1);
 
-            if (state == 2) batch.setColor(1, 0, 1, 1);
+            if (state == 2) {
+                float r = ((Values.TEXT_COLOR >> 16) & 0xff)/255f;
+                float g = ((Values.TEXT_COLOR >> 8) & 0xff)/255f;
+                float b = (Values.TEXT_COLOR & 0xff)/255f;
+                batch.setColor(r, g, b, 1);
+            }
             else batch.setColor(1, 1, 1, 1);
 
             batch.addText(font, 16, h - 46, text, 12);

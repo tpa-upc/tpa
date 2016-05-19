@@ -92,6 +92,13 @@ public enum GameActivity {
     /**Reaction to Bar Card **/
     ReactionBarCard (new DialogActivity("res/dialogues/card_bar_reaction.json")),
 
+    /** I'm blue dadadida... */
+    HaveFeeling (new DialogActivity("res/dialogues/have_feeling.json")),
+
+    Heh (new DialogActivity("res/dialogues/enemies.json")),
+
+    GoodDay (new DialogActivity("res/dialogues/good_day.json")),
+
     /** First Bar Pointless Conversations **/
     Bar1 (new DialogActivity("res/dialogues/bar1.json")),
 

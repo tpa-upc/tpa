@@ -12,10 +12,13 @@ public class Values {
     public static boolean LOCATION_TRANSITION_ANIMATION = true;
 
     /** estado global del argumento */
-    public static int ARGUMENTO = 8;
+    public static int ARGUMENTO = 0;
 
     /** bar decision branching */
     public static int BAR_BIF = 0x0;
+
+    /** Text color */
+    public static int TEXT_COLOR = 0xFF00FF;
 
     private Values () {}
 }

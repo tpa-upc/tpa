@@ -69,7 +69,10 @@ public class TexturedMaterial extends Material {
             "        color = mix(color, reflection, cont);\n" +
             "    }\n" +
             "    \n" +
-            "    gl_FragData[0] = vec4(mix(color*u_tint, vec3(0.0), 1-exp(-max(0, length(v_position)-4) * 0.1)), 1.0);\n" +
+            "    float diff = clamp(dot(v_normal, vec3(0, 0, 1)), 0.0, 1.0);\n" +
+            "    diff = mix(0.75, 1.0, diff);\n" +
+            "    \n" +
+            "    gl_FragData[0] = vec4(mix(color*u_tint*diff, vec3(0.0), 1-exp(-max(0, length(v_position)-4) * 0.1)), 1.0);\n" +
             "    gl_FragData[1] = vec4(v_normal * 0.5 + 0.5, 1.0);\n" +
             "}";
 
@@ -86,6 +89,7 @@ public class TexturedMaterial extends Material {
 
     /** Tint */
     private Vector3f tint = new Vector3f(1);
+    public boolean discardRenderPass = false;
 
     /** Creates a Lambert material */
     public TexturedMaterial(Texture texture) {

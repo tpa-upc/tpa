@@ -335,8 +335,11 @@ public abstract class LocationActivity extends Activity {
         stateZpass.depthTest = true;
         stateZpass.redMask = stateZpass.greenMask = stateZpass.blueMask = stateZpass.alphaMask = false;
         renderer.setState(stateZpass);
-        for (GeometryActor actor : geometry)
+        for (GeometryActor actor : geometry) {
+            if (actor.getMaterial() instanceof TexturedMaterial && ((TexturedMaterial)actor.getMaterial()).discardRenderPass)
+                continue;
             depthMaterial.render(renderer, camera, actor.getMesh(), actor.model);
+        }
 
         // lowres pass
         renderer.setFramebuffer(lowresPass);
@@ -352,6 +355,8 @@ public abstract class LocationActivity extends Activity {
         // render geometry
         for (GeometryActor actor : geometry) {
             Material mat = actor.getMaterial();
+            if (mat instanceof TexturedMaterial && ((TexturedMaterial)mat).discardRenderPass)
+                continue;
             mat.render(renderer, camera, actor.getMesh(), actor.model);
         }
 

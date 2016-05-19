@@ -532,6 +532,7 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.FixDoor);
         } else if (data.equals("telf")) {
             if (Values.ARGUMENTO == 5) {
+                Values.TEXT_COLOR = 0xFF3333;
                 if (!dial) {
                     fps.setMovable(false);
                     dial = true;
@@ -560,6 +561,7 @@ public class RoomLocation extends LocationActivity {
                     }));
                 }
             } else if (Values.ARGUMENTO == 0) {
+                Values.TEXT_COLOR = 0xFF3333;
                 Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
                     if (dat.equals("finish")) {
                         alterShowUp = true;
@@ -580,6 +582,7 @@ public class RoomLocation extends LocationActivity {
                 });
             }
         }  else if(data.equals("alter_ego")){
+            Values.TEXT_COLOR = 0xff00ff;
             Game.getInstance().pushActivity(GameActivity.AlterEgo1, (act, dat) -> {
                 if(dat.equals("note_wall")){
                     notewallShowUp = true;
@@ -587,6 +590,7 @@ public class RoomLocation extends LocationActivity {
                 }
             });
         } else if(data.equals("alter_ego_pointless")){
+            Values.TEXT_COLOR = 0xff00ff;
             Game.getInstance().pushActivity(GameActivity.AlterEgoP);
             context.audioRenderer.playSound(laugh, false);
         } else if (data.equals("leave")) {
