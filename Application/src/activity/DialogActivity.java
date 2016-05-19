@@ -194,7 +194,7 @@ public class DialogActivity extends Activity {
                         return true;
                     }
                 });
-                tasks.add(new DelayTask(0.025f, context.time));
+                tasks.add(new DelayTask(0.035f, context.time));
             }
 
             tasks.add(new DelayTask(0.5f, context.time));
@@ -217,6 +217,7 @@ public class DialogActivity extends Activity {
         }));
 
         //tasks.add(new DelayTask(1, context.time));
+        tasks.add(new DelayTask(0.75f, context.time));
 
         if (ans != null) {
             tasks.add(new Task() {
@@ -232,6 +233,7 @@ public class DialogActivity extends Activity {
                 }
             });
             lines = ans.text.split(";");
+
 
             for (int i = 0; i < lines.length; ++i) {
                 String str = lines[i];
@@ -249,7 +251,7 @@ public class DialogActivity extends Activity {
                             return true;
                         }
                     });
-                    tasks.add(new DelayTask(0.025f, context.time));
+                    tasks.add(new DelayTask(0.035f, context.time));
                 }
 
                 tasks.add(new DelayTask(0.5f, context.time));

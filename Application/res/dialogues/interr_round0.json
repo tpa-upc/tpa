@@ -7,10 +7,25 @@
         {"text": "How was your relationship with your wife?", "answer": 2}
       ],
       "answers": [
-        {"text": "Where the hell would I be?! At home, of course!", "data": "nope", "jump": -1},
-        {"text": "The big guy behind you told me it's not allowed...", "data": "nope", "jump": -1},
-        {"text": "Well, we were...;things weren't going well between us to be honest.;She was spending a lot of time in some;god awful pub.", "data": "sep", "jump": -1}
+        {"text": "Where the hell would I be?! At home, of course!", "data": "nope", "jump": 3},
+        {"text": "The big guy behind you told me it's not allowed...", "data": "nope", "jump": 2},
+        {"text": "Well, we were...;things weren't going well between us to be honest.;She was spending a lot of time in some god awful pub.", "data": "sep", "jump": 1}
       ]
+    },
+
+    {
+      "questions": [{"text": "Interesting...", "answer": -1}],
+      "answers": []
+    },
+
+    {
+      "questions": [{"text": "Right...", "answer": -1}],
+      "answers": []
+    },
+
+    {
+      "questions": [{"text": "Careful... Children might be watching", "answer": -1}],
+      "answers": []
     }
   ]
 }

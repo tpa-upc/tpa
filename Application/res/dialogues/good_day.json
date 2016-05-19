@@ -2,7 +2,11 @@
   "dialog": [
     {
       "questions": [{"text": "Ok, I think we are doing some progress...;Let's continue on with this interview", "answer": 0}],
-      "answers": [{"text": "Continue? That red guy said 2 questions only;I know my rights;GOOD DAY", "jump": -1}]
+      "answers": [{"text": "Continue? That red guy said 2 questions only;I know my rights;GOOD DAY", "jump": 1}]
+    },
+    {
+      "questions": [{"text": "But...;But...", "answer": 0}],
+      "answers": [{"text": "I said Good Day sir", "jump": -1}]
     }
   ]
 }

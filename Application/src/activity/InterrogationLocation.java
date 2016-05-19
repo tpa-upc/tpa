@@ -341,6 +341,7 @@ public class InterrogationLocation extends LocationActivity {
                         // :(
                         youFuckedUp = true;
                         Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.GoodDay);
                     }
                 });
             }
