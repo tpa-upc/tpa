@@ -241,8 +241,8 @@ public class InterrogationLocation extends LocationActivity {
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
-        camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
-        cameraReflect.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
+        camera.projection.setPerspective((float) Math.toRadians(60), aspect, 0.01f, 100f);
+        cameraReflect.projection.setPerspective((float) Math.toRadians(60), aspect, 0.01f, 100f);
         camera.clearColor.set(0.125f);
         cameraReflect.clearColor.set(0.125f);
         //cam.position.set(cam.position.x, 1.5f, 2.5f);

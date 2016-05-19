@@ -26,7 +26,7 @@ import java.util.List;
  */
 public abstract class LocationActivity extends Activity {
     
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     /** low res scale */
     private static final int SCALE = 2;
@@ -320,7 +320,7 @@ public abstract class LocationActivity extends Activity {
 
         // render debug geometry
         for (GeometryActor actor : debugGeometry) {
-            DecalMaterial mat = (DecalMaterial) actor.getMaterial();
+            Material mat = actor.getMaterial();
             mat.render(context.renderer, cameraReflect, box, actor.model);
         }
 

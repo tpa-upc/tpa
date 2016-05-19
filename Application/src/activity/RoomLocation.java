@@ -303,7 +303,7 @@ public class RoomLocation extends LocationActivity {
 
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
-        camera.projection.setPerspective((float) Math.toRadians(50), aspect, 0.01f, 100f);
+        camera.projection.setPerspective((float) Math.toRadians(60), aspect, 0.01f, 100f);
         camera.clearColor.set(0.2f);
 
         // You will receive a call
@@ -322,12 +322,12 @@ public class RoomLocation extends LocationActivity {
         // you will receive an email
         if (Values.ARGUMENTO == 1) {
             if (perpetualPc) {
-                addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
+                addPickerBox(new Vector3f(3.9f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
             } else {
                 // wait and then add click region for the email
                 tasks.add(new DelayTask(5, context.time));
                 tasks.add(new DoSomethingTask(() -> {
-                    addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
+                    addPickerBox(new Vector3f(3.9f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
                     context.audioRenderer.playSound(emailSound, false);
                     perpetualPc = true;
                 }));
@@ -348,7 +348,7 @@ public class RoomLocation extends LocationActivity {
 
         if(Values.ARGUMENTO == 8){
             alterShowUp2 = true;
-            addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc2");
+            addPickerBox(new Vector3f(3.9f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc2");
         }
 
         if (Values.ARGUMENTO==20){
@@ -357,11 +357,11 @@ public class RoomLocation extends LocationActivity {
             addText(alterText);
             if(!pointless_conversation){
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_3");
-            }else{
+            } else {
                 addPickerBox(new Vector3f(7.5f, 0.25f, 1.5f), new Vector3f(0.25f, 0.25f, 0.25f), "alter_ego_pointless3");
             }
             if(!keepinvestigating) {
-                addPickerBox(new Vector3f(3.5f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc3");
+                addPickerBox(new Vector3f(3.9f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc3");
             }
         }
 
@@ -402,11 +402,11 @@ public class RoomLocation extends LocationActivity {
             }
         }
 
-        if(bar_card){
+        /*if(bar_card){
             bar_card = false;
             Game.getInstance().pushActivity(GameActivity.ReactionBarCard);
             Game.getInstance().pushActivity(GameActivity.BarCard);
-        }
+        }*/
 
         /*if (friendface_monologue) {
             friendface_monologue = false;
@@ -414,14 +414,13 @@ public class RoomLocation extends LocationActivity {
         }*/
 
         if(interrogation_room){
-            addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "int_room");
+            addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.1f), "int_room");
             Values.ARGUMENTO = 7;
         }
 
         if(lover_house){
-            addPickerBox(new Vector3f(1.0f,1.0f,-2.0f), new Vector3f(0.25f,1,0.1f), "lover_room");
+            addPickerBox(new Vector3f(1, 1, -2), new Vector3f(0.5f, 1f, 0.1f), "lover_room");
             Values.ARGUMENTO = 9;
-            lover_house = false;
         }
 
     }
@@ -488,6 +487,9 @@ public class RoomLocation extends LocationActivity {
                         System.out.println(data);
                         if (data.equals("inbox")) {
                             bar_card = true;
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.ReactionBarCard);
+                            Game.getInstance().pushActivity(GameActivity.BarCard);
                             Values.ARGUMENTO = 2;
                         }
                     }
@@ -623,6 +625,7 @@ public class RoomLocation extends LocationActivity {
                 }
             });
         }else if(data.equals("lover_room")){
+            lover_house = false;
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Acid);
         } else if(data.equals("int_room")){
