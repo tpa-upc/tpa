@@ -362,7 +362,11 @@ public class ClubLocation extends LocationActivity {
                         if (dd.equals("accuse")) {
                             Game.getInstance().popActivity();
                             Game.getInstance().popActivity();
-                            Values.TEXT = "The End\nSorry\nYou have reached the 1st ending";
+                            Values.TEXT = "The End\n\nYou have reached the 1st ending";
+                            Game.getInstance().popActivity();
+                            Game.getInstance().popActivity();
+                            Game.getInstance().popActivity();
+                            Game.getInstance().popActivity();
                             Game.getInstance().pushActivity(GameActivity.Intro);
                             Game.getInstance().pushActivity(GameActivity.NewspaperBad);
                             context.audioRenderer.stopEverything();

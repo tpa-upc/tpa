@@ -57,46 +57,46 @@ public abstract class LocationActivity extends Activity {
     private List<TextActor> text = new ArrayList<>();
 
     /** Framebuffer for early Z pass */
-    private Framebuffer zPass;
+    private static Framebuffer zPass = null;
 
     /** shadow map */
-    private Framebuffer zShadowMap;
+    private static Framebuffer zShadowMap = null;
 
     /** Reflection framebuffer pass */
-    private Framebuffer reflectPass;
+    private static Framebuffer reflectPass = null;
 
     /** texture containing reflection */
-    protected Texture reflectRender;
+    protected static Texture reflectRender = null;
 
     /** depth texture from early z pass */
-    protected Texture depth;
+    protected static Texture depth = null;
 
     /** text texture */
-    private Texture font;
+    private static Texture font;
 
     /** material used to render geometry */
-    private DepthMaterial depthMaterial = new DepthMaterial();
+    private static DepthMaterial depthMaterial = new DepthMaterial();
 
     /** framebuffer half as small as the window */
-    private Framebuffer lowresPass;
+    private static Framebuffer lowresPass = null;
 
     /** box for decals */
-    private Mesh box;
+    private static Mesh box;
 
     /** quad for rendering framebuffers */
-    private Mesh quad;
+    private static Mesh quad;
 
     /** material for rendering framebuffer */
-    protected CompositeMaterial composite;
+    protected static CompositeMaterial composite = null;
 
     /** Wireframe material for debugging */
     //private WireframeMaterial wireframe;
 
     /** Ray picker */
-    private RayPicker picker = new Raymarcher();
+    private static RayPicker picker = new Raymarcher();
 
     /** 3d rendering helper */
-    private SpriteBatch sprites;
+    private static SpriteBatch sprites = null;
 
     /** load location specific resources here */
     public abstract void onRoomPreLoad(Context context);
@@ -120,12 +120,12 @@ public abstract class LocationActivity extends Activity {
     public void onPreLoad(Context context) {
         // create needed resources
         Window win = context.window;
-        zPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{}, true);
-        zShadowMap = new Framebuffer(1024, 1024, new TextureFormat[]{}, true);
-        depth = zPass.getDepth();
-        lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
-        reflectPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
-        reflectRender = reflectPass.getTargets()[0];
+        if (zPass == null) zPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{}, true);
+        if (zShadowMap == null) zShadowMap = new Framebuffer(1024, 1024, new TextureFormat[]{}, true);
+        if (depth == null) depth = zPass.getDepth();
+        if (lowresPass == null) lowresPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
+        if (reflectPass == null) reflectPass = new Framebuffer(win.getWidth()/SCALE, win.getHeight()/SCALE, new TextureFormat[]{TextureFormat.Rgb, TextureFormat.Rgb}, true);
+        if (reflectRender == null) reflectRender = reflectPass.getTargets()[0];
 
         Game.getInstance().getResources().load("res/models/box.json", Mesh.class);
         Game.getInstance().getResources().load("res/models/quad.json", Mesh.class);
@@ -142,13 +142,16 @@ public abstract class LocationActivity extends Activity {
 
     @Override
     public void onPostLoad(Context context) {
-        font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
-        font.setMag(TextureFilter.Linear);
-        box = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
-        quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
-        composite = new CompositeMaterial(lowresPass.getTargets()[0], lowresPass.getTargets()[1], zPass.getDepth(), zShadowMap.getDepth(), context.time);
+        if (font == null) {
+            font = Game.getInstance().getResources().get("res/textures/ubuntu24.png", Texture.class);
+            font.setMag(TextureFilter.Linear);
+        }
+
+        if (box == null) box = Game.getInstance().getResources().get("res/models/box.json", Mesh.class);
+        if (quad == null) quad = Game.getInstance().getResources().get("res/models/quad.json", Mesh.class);
+        if (composite == null) composite = new CompositeMaterial(lowresPass.getTargets()[0], lowresPass.getTargets()[1], zPass.getDepth(), zShadowMap.getDepth(), context.time);
         //wireframe = new WireframeMaterial();
-        sprites = new SpriteBatch(context.renderer);
+        if (sprites == null) sprites = new SpriteBatch(context.renderer);
         onRoomPostLoad(context);
     }
 
@@ -208,6 +211,8 @@ public abstract class LocationActivity extends Activity {
 
     @Override
     public void onBegin(Context context) {
+        composite.setNoise(0);
+
         onEntered(context);
 
         // set input listeners
@@ -263,6 +268,7 @@ public abstract class LocationActivity extends Activity {
     @Override
     public void onEnd(Context context) {
         onLeft(context);
+        composite.setNoise(0);
         context.keyboard.setKeyboardListener(null);
         context.mouse.setMouseListener(null);
         context.mouse.setGrabbed(false);
