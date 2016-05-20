@@ -311,7 +311,7 @@ public class ClubLocation extends LocationActivity {
         }
 
         if(count == 666){ /*change to 666*/
-            System.out.println("You're the killer. The end.");
+            //System.out.println("You're the killer. The end.");
             Game.getInstance().pushActivity(GameActivity.ShortEnd);
             count = 0;
             /**set up variable to finish the game**/

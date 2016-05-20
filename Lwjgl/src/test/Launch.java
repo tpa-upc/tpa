@@ -23,11 +23,15 @@ public class Launch {
         // create a window
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
+
+        long monitor = MemoryUtil.NULL;
+        if (argv.length >= 1 && argv[0].equals("--fullscreen"))
+            monitor = GLFW.glfwGetPrimaryMonitor();
+
         //long window = GLFW.glfwCreateWindow(800, 600, "Hello world", GLFW.glfwGetPrimaryMonitor(), MemoryUtil.NULL);
-        long window = GLFW.glfwCreateWindow(800, 600, "Hello world", MemoryUtil.NULL, MemoryUtil.NULL);
+        long window = GLFW.glfwCreateWindow(800, 600, "Hello world", monitor, MemoryUtil.NULL);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwSwapInterval(1);
-
 
         // instantiate implementation for input, graphics, audio, etc...
         LwjglRenderer renderer = new LwjglRenderer();
@@ -39,6 +43,14 @@ public class Launch {
 
         // create a context for the application with all the needed stuff
         Context con = new Context(win, renderer, audio, time, mouse, keyboard);
+
+        // names
+        System.err.println("\nAriadna Sanchez");
+        System.err.println("Nil Oleart");
+        System.err.println("German Gomez @germangb");
+        System.err.println("Luc Espinach");
+        System.err.println("Fran Roldan");
+        System.err.println("Eduard Salado");
 
         // create an application from which to access the context
         Application program = new GameTest();

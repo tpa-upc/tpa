@@ -479,12 +479,12 @@ public class RoomLocation extends LocationActivity {
     public void onSelected(Context context, Object data) {
         if (zxczxc) return;
         if (data.equals("pc")) {
-            System.out.println("pc "+Values.ARGUMENTO);
+            //System.out.println("pc "+Values.ARGUMENTO);
             if (Values.ARGUMENTO == 1) {
                 Game.getInstance().pushActivity(GameActivity.DialogueEmail, new ActivityListener() {
                     @Override
                     public void onResult(Activity act, Object data) {
-                        System.out.println(data);
+                        //System.out.println(data);
                         if (data.equals("inbox")) {
                             bar_card = true;
                             Game.getInstance().popActivity();
@@ -495,7 +495,7 @@ public class RoomLocation extends LocationActivity {
                     }
                 });
             } else if (Values.ARGUMENTO == 3) {
-                System.out.println("SEARCH");
+                //System.out.println("SEARCH");
                 Game.getInstance().pushActivity(GameActivity.DialogueFriendface, new ActivityListener() {
                     @Override
                     public void onResult(Activity act, Object data) {

@@ -235,7 +235,7 @@ public class InterrogationLocation extends LocationActivity {
         addGeometry(thompsonHead);
         addGeometry(melHead);
 
-        System.out.println(start+" "+success+" "+youFuckedUp);
+        //System.out.println(start+" "+success+" "+youFuckedUp);
         if (success || start || youFuckedUp) {
             addPickerBox(new Vector3f(0.25f, 1, 1.5f), new Vector3f(0.25f, 1, 0.25f), "thom");
         } else {
@@ -315,7 +315,7 @@ public class InterrogationLocation extends LocationActivity {
             Values.TEXT_COLOR = 0x00FF00;
             if (round == 0) {
                 Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
-                    System.out.println(d0);
+                    //System.out.println(d0);
                     questionCount++;
                     if (d0.equals("sep")) {
                         round = 1;
@@ -329,7 +329,7 @@ public class InterrogationLocation extends LocationActivity {
                     }
                 });
             } else if (round == 1) {
-                //System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
+                ////System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
                 Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
                     questionCount++;
                     if (d0.equals("sep")) {
