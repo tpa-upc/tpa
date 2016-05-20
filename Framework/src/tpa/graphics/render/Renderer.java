@@ -29,6 +29,24 @@ public interface Renderer {
     }
 
     /**
+     * Return renderer vendor
+     * @return
+     */
+    String getVendor ();
+
+    /**
+     * Return renderer name
+     * @return
+     */
+    String getRenderer ();
+
+    /**
+     * Return renderer version
+     * @return
+     */
+    String getVersion ();
+
+    /**
      * Set listener so that things can be logged, for example
      * @param listener new listener or null
      */

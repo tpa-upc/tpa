@@ -333,7 +333,7 @@ public class ClubLocation extends LocationActivity {
         barmanHead.update();
     }
 
-    private int MAX_QUESTIONS = 4;
+    private int MAX_QUESTIONS = 999999999;
     private int round = 0;
     private int questionCount = 0;
     private int hehehe = 0;

@@ -43,8 +43,13 @@ public class CompositeMaterial extends Material {
             "uniform float u_noise;\n" +
             "\n" +
             "uniform sampler2D u_texture;\n" +
+            "uniform sampler2D u_shadowmap;\n" +
+            "uniform sampler2D u_depth;\n" +
             "uniform sampler2D u_normal;\n" +
             "uniform sampler2D u_random;\n" +
+            "\n" +
+            "uniform mat4 u_invViewProjection;\n" +
+            "uniform mat4 u_viewProjectionShadow;\n" +
             "\n" +
             "float smoothstep (float edge0, float edge1, float x) {\n" +
             "    float t;  /* Or genDType t; */\n" +
@@ -72,6 +77,14 @@ public class CompositeMaterial extends Material {
             "    vec2 uv2 = v_uv*2-1;\n" +
             "    uv2.x *= u_aspect;\n" +
             "    float center = smoothstep(0.02, 0.025, length(uv2));\n" +
+            "    \n" +
+            "    float shadow = 1;\n" +
+            "    vec4 clip = vec4(v_uv*2-1, texture2D(u_depth, v_uv).r*2-1, 1);\n" +
+            "    clip = u_viewProjectionShadow * u_invViewProjection * clip;\n" +
+            "    float testZ = texture2D(u_shadowmap, clip.xy/clip.w * 0.5 + 0.5).r*2-1;\n" +
+            "    if (testZ < clip.z/clip.w - 0.0025f) shadow = 0.5;\n" +
+            "    gl_FragColor.rgb *= shadow;\n" +
+            "    \n" +
             "    gl_FragColor.rgb = mix(vec3(1.0) - gl_FragColor.rgb * 0.75, gl_FragColor.rgb, center);\n" +
             "}";
 
@@ -79,14 +92,20 @@ public class CompositeMaterial extends Material {
 
     private Texture diffuse;
     private Texture normal;
+    public Texture shadowmap;
+    public Texture depth;
     private Time time;
     private Texture randTex;
     private float timer = 0, noise = 0;
+    public Matrix4f invViewProjection = new Matrix4f();
+    public Matrix4f viewProjectionShadow = new Matrix4f();
 
-    public CompositeMaterial (Texture diffuse, Texture normal, Time time) {
+    public CompositeMaterial (Texture diffuse, Texture normal, Texture depth, Texture shadowmap, Time time) {
         super(PROGRAM);
         this.diffuse = diffuse;
         this.normal = normal;
+        this.shadowmap = shadowmap;
+        this.depth = depth;
         this.time = time;
 
         randTex = new Texture(64, 64, TextureFormat.Red);
@@ -109,12 +128,20 @@ public class CompositeMaterial extends Material {
         program.setUniform("u_texture", UniformType.Sampler2D, 0);
         program.setUniform("u_normal", UniformType.Sampler2D, 1);
         program.setUniform("u_random", UniformType.Sampler2D, 2);
+        program.setUniform("u_shadowmap", UniformType.Sampler2D, 3);
+        program.setUniform("u_depth", UniformType.Sampler2D, 4);
         program.setUniform("u_timer", UniformType.Float, timer);
         program.setUniform("u_aspect", UniformType.Float, (float)diffuse.getWidth()/diffuse.getHeight());
         program.setUniform("u_noise", UniformType.Float, noise);
+
+        program.setUniform("u_invViewProjection", UniformType.Matrix4, invViewProjection);
+        program.setUniform("u_viewProjectionShadow", UniformType.Matrix4, viewProjectionShadow);
+
         renderer.setTexture(0, diffuse);
         renderer.setTexture(1, normal);
         renderer.setTexture(2, randTex);
+        renderer.setTexture(3, shadowmap);
+        renderer.setTexture(4, depth);
         renderer.renderMesh(mesh);
     }
 

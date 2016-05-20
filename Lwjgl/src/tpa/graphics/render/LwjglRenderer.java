@@ -84,6 +84,21 @@ public class LwjglRenderer implements Renderer, Destroyable {
     }
 
     @Override
+    public String getVendor() {
+        return glGetString(GL_VENDOR);
+    }
+
+    @Override
+    public String getRenderer() {
+        return glGetString(GL_RENDERER);
+    }
+
+    @Override
+    public String getVersion() {
+        return glGetString(GL_VERSION);
+    }
+
+    @Override
     public void setListener(RendererListener listener) {
         this.listener = listener;
     }

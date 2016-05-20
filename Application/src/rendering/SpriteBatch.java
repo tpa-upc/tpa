@@ -48,6 +48,11 @@ public class SpriteBatch {
         createMesh();
     }
 
+    public void resetState () {
+        this.renderer = renderer;
+        this.state.blending = Blending.Alpha;
+    }
+
     public RendererState getState () {
         return state;
     }
@@ -176,9 +181,9 @@ public class SpriteBatch {
         quads++;
     }
 
-    public void flush () {
+    public int flush () {
         if (!drawing) throw new IllegalStateException();
-        if (quads == 0) return;
+        if (quads == 0) return 0;
 
         position.rewind();
         color.rewind();
@@ -192,6 +197,7 @@ public class SpriteBatch {
         mesh.setIndices(indices);
         mesh.setLength(6*quads);
         mesh.setOffset(0);
+        int ret = quads;
 
         // render & clear data
         if (used != null) {
@@ -203,6 +209,7 @@ public class SpriteBatch {
         uv.clear();
         indices.clear();
         quads = 0;
+        return ret;
     }
 
     public void end () {

@@ -234,7 +234,6 @@ public class DialogActivity extends Activity {
             });
             lines = ans.text.split(";");
 
-
             for (int i = 0; i < lines.length; ++i) {
                 String str = lines[i];
                 tasks.add(new DelayTask(0.5f, context.time));
