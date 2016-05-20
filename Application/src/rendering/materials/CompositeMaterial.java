@@ -51,6 +51,10 @@ public class CompositeMaterial extends Material {
             "uniform mat4 u_invViewProjection;\n" +
             "uniform mat4 u_viewProjectionShadow;\n" +
             "\n" +
+            "float random(vec2 co){\n" +
+            "    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +
+            "}\n" +
+            "\n" +
             "float smoothstep (float edge0, float edge1, float x) {\n" +
             "    float t;  /* Or genDType t; */\n" +
             "    t = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);\n" +
@@ -60,7 +64,7 @@ public class CompositeMaterial extends Material {
             "void main () {\n" +
             "    vec3 color = texture2D(u_texture, v_uv).rgb;\n" +
             "    vec3 normal = texture2D(u_normal, v_uv).rgb * 2.0 - 1.0;\n" +
-            "    float rand = texture2D(u_random, v_uv*vec2(640, 480)/4/vec2(64)).r * 2 - 1;\n" +
+            "    float rand = texture2D(u_random, v_uv*vec2(800, 600)/4/vec2(64)).r * 2 - 1;\n" +
             "    \n" +
             "    float diff = clamp(dot(normal, normalize(vec3(-1, 3, 2))), 0.0, 1.0);\n" +
             "    diff = mix(0.5, 1.0, diff);\n" +
@@ -79,9 +83,10 @@ public class CompositeMaterial extends Material {
             "    float center = smoothstep(0.02, 0.025, length(uv2));\n" +
             "    \n" +
             "    float shadow = 1;\n" +
+            "    float r = random(gl_FragCoord.xy);\n" +
             "    vec4 clip = vec4(v_uv*2-1, texture2D(u_depth, v_uv).r*2-1, 1);\n" +
             "    clip = u_viewProjectionShadow * u_invViewProjection * clip;\n" +
-            "    float testZ = texture2D(u_shadowmap, clip.xy/clip.w * 0.5 + 0.5).r*2-1;\n" +
+            "    float testZ = texture2D(u_shadowmap, clip.xy/clip.w * 0.5 + 0.5+vec2(r, r)*0.002f).r*2-1;\n" +
             "    if (testZ < clip.z/clip.w - 0.0025f) shadow = 0.5;\n" +
             "    gl_FragColor.rgb *= shadow;\n" +
             "    \n" +

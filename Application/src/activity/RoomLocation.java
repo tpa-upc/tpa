@@ -304,7 +304,7 @@ public class RoomLocation extends LocationActivity {
         // set camera
         float aspect = (float) context.window.getWidth() / context.window.getHeight();
         camera.projection.setPerspective((float) Math.toRadians(60), aspect, 0.01f, 100f);
-        camera.clearColor.set(0.2f);
+        camera.clearColor.set(0.0f);
 
         // You will receive a call
         if (Values.ARGUMENTO == 0) {
