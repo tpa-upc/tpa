@@ -421,7 +421,7 @@ public abstract class LocationActivity extends Activity {
 
         // window pass
         renderer.setFramebuffer(null);
-        renderer.setClearColor(0, 1, 0, 1);
+        renderer.setClearColor(0, 0, 0, 1);
         renderer.clearBuffers();
         renderer.setViewport(0, 0, window.getWidth(), window.getHeight());
         composite.depth = lowresPass.getDepth();

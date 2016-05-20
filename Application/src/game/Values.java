@@ -6,7 +6,7 @@ package game;
 public class Values {
 
     /** text shown in intro */
-    public static String TEXT = "Hello\nworld\n:)";
+    public static String TEXT = "Somewhere in London\n8am\nfiller text...";
 
     /** text value */
     public static boolean LOCATION_TRANSITION_ANIMATION = true;

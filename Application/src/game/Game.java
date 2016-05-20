@@ -84,6 +84,7 @@ public class Game {
         if (!activities.isEmpty()) {
             GameActivity activity = activities.pop();
             activity.getActivity().onEnd(context);
+            activity.getActivity().begun = false;
         }
     }
 

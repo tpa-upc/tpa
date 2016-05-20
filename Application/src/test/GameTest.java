@@ -62,12 +62,24 @@ public class GameTest implements Application {
 
                 // push some activity
                 //Game.getInstance().pushActivity(GameActivity.Note0);
-                //Game.getInstance().pushActivity(GameActivity.Room);
+                Game.getInstance().pushActivity(GameActivity.Room);
                 //Game.getInstance().pushActivity(GameActivity.Club);
                 //Game.getInstance().pushActivity(GameActivity.BarCard);
-                Game.getInstance().pushActivity(GameActivity.Interrogation0);
-                //Game.getInstance().pushActivity(GameActivity.Intro);
+                //Game.getInstance().pushActivity(GameActivity.Interrogation0);
                 //Game.getInstance().pushActivity(GameActivity.Interrogation);
+                Game.getInstance().pushActivity(GameActivity.Intro);
+                Game.getInstance().pushActivity(GameActivity.SplashFill);
+                Game.getInstance().pushActivity(GameActivity.team5);
+                Game.getInstance().pushActivity(GameActivity.team0);
+                Game.getInstance().pushActivity(GameActivity.team3);
+                Game.getInstance().pushActivity(GameActivity.team1);
+                Game.getInstance().pushActivity(GameActivity.team2);
+                Game.getInstance().pushActivity(GameActivity.team4);
+                Game.getInstance().pushActivity(GameActivity.SplashFill);
+                Game.getInstance().pushActivity(GameActivity.Splash0);
+                Game.getInstance().pushActivity(GameActivity.SplashFill);
+                Game.getInstance().pushActivity(GameActivity.Splash1);
+                Game.getInstance().pushActivity(GameActivity.SplashFill);
                 //Game.getInstance().pushActivity(GameActivity.Acid);
                 //Game.getInstance().pushActivity(GameActivity.Intro);
                 //Game.getInstance().pushActivity(GameActivity.Club);

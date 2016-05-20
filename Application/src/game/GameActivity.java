@@ -7,6 +7,17 @@ import activity.*;
  */
 public enum GameActivity {
 
+    SplashFill(new SplashActivity("res/textures/black.png", "", 0.1f)),
+    Splash0(new SplashActivity("res/textures/upc0.png", "", 1)),
+    Splash1(new SplashActivity("res/textures/headphones.png", "You may put on your Headphones now", 2)),
+
+    team0(new SplashActivity("res/textures/team.png", "", 0.75f)),
+    team1(new SplashActivity("res/textures/team1.png", "", 0.75f)),
+    team2(new SplashActivity("res/textures/team2.png", "", 0.75f)),
+    team3(new SplashActivity("res/textures/team3.png", "", 0.75f)),
+    team4(new SplashActivity("res/textures/team4.png", "", 0.75f)),
+    team5(new SplashActivity("res/textures/team5.png", "", 0.75f)),
+
     /** Loading screen */
     Loading(new LoadingActivity()),
 
