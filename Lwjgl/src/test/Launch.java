@@ -44,14 +44,6 @@ public class Launch {
         // create a context for the application with all the needed stuff
         Context con = new Context(win, renderer, audio, time, mouse, keyboard);
 
-        // names
-        System.err.println("\nAriadna Sanchez");
-        System.err.println("Nil Oleart");
-        System.err.println("German Gomez @germangb");
-        System.err.println("Luc Espinach");
-        System.err.println("Fran Roldan");
-        System.err.println("Eduard Salado");
-
         // create an application from which to access the context
         Application program = new GameTest();
         program.onInit(con);
