@@ -134,7 +134,10 @@ public class DialogActivity extends Activity {
         context.mouse.setCursor(Cursor.Arrow);
         if (state == 0) {
             int my = h-context.mouse.getCursorY();
+            int mx = context.mouse.getCursorX();
             selected = my/32;
+            if (mx > context.window.getWidth()/2) selected += 2;
+            //if (selected > 1) selected = 99;
             if (selected < node.questions.length)
                 context.mouse.setCursor(Cursor.Hand);
 
@@ -145,7 +148,10 @@ public class DialogActivity extends Activity {
                 batch.setColor(0.25f, 0.25f, 0.25f, 1);
                 if (selected == i)
                     batch.setColor(1, 1, 1, 1);
-                batch.addText(font, 16, h - 24*(i+1) - 12, "> "+text, 12);
+                String truncText = text;
+                int max = 28;
+                if (truncText.length() > max) truncText = truncText.substring(0, max-3).trim()+"...";
+                batch.addText(font, 16 + context.window.getWidth()/2 * (i/2), h - 24*(i%2+1) - 12, "> "+truncText, 12);
             }
         } else if ((state == 1 || state == 2) && text.length() > 0) {
             if (state == 1) batch.setColor(0, 0, 0, 1);
