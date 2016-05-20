@@ -597,6 +597,7 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Club);
         }else if(data.equals("alter_ego2")){
+            Values.TEXT_COLOR = 0xFF00FF;
             Game.getInstance().pushActivity(GameActivity.AlterEgo2, (act, dat) -> {
                 if(dat.equals("note2")){
                     context.audioRenderer.playSound(paper, false);
@@ -608,6 +609,7 @@ public class RoomLocation extends LocationActivity {
             });
 
         }else if(data.equals("alter_ego_pointless2")){
+            Values.TEXT_COLOR = 0xFF00FF;
             Game.getInstance().pushActivity(GameActivity.AlterEgoP2);
             context.audioRenderer.playSound(laugh, false);
         }else if(data.equals("pc2")){
@@ -637,9 +639,11 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().popActivity();
             Game.getInstance().pushActivity(GameActivity.Interrogation);
         }else if (data.equals("alter_ego_3")){
+            Values.TEXT_COLOR = 0xFF00FF;
             Game.getInstance().pushActivity(GameActivity.AlterEgo4);
             pointless_conversation=true;
         }else if (data.equals("alter_ego_pointless3")){
+            Values.TEXT_COLOR = 0xFF00FF;
             Game.getInstance().pushActivity(GameActivity.AlterEgoRep4);
             context.audioRenderer.playSound(laugh, false);
         }else if(data.equals("pc3")){

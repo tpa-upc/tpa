@@ -439,6 +439,7 @@ public class LoverLocation extends LocationActivity{
             barCardFound = true;
         }else if (data.equals("phone")) {
             phoneCallMade = true;
+            Values.TEXT_COLOR = 0xFF3333;
             Game.getInstance().pushActivity(GameActivity.LoverHouse2);
             Game.getInstance().pushActivity(GameActivity.LoverHouse1, (act,dat) -> {
                 if(dat.equals("finish")){

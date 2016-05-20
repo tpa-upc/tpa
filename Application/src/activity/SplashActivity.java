@@ -87,7 +87,7 @@ public class SplashActivity extends Activity {
             end = true;
         }));
 
-        if (image.endsWith("black.png")) System.out.println("asdasdasdasdsa");
+        //if (image.endsWith("black.png")) System.out.println("asdasdasdasdsa");
     }
 
     boolean end = false;
