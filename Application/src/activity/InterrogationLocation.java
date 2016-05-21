@@ -305,7 +305,7 @@ public class InterrogationLocation extends LocationActivity {
     }
 
     @Override
-    public void onSelected(Context context, Object data) {
+    public void onSelected(final Context context, Object data) {
         if (data.equals(16)) {
             Game.getInstance().pushActivity(GameActivity.Heh);
             Game.getInstance().pushActivity(GameActivity.Enemies);
@@ -314,34 +314,40 @@ public class InterrogationLocation extends LocationActivity {
         } if(data.equals("anton") && questionCount < MAX_QUESTIONS){
             Values.TEXT_COLOR = 0x00FF00;
             if (round == 0) {
-                Game.getInstance().pushActivity(GameActivity.Interrogation0, (lol, d0) -> {
-                    //System.out.println(d0);
-                    questionCount++;
-                    if (d0.equals("sep")) {
-                        round = 1;
-                    }
+                Game.getInstance().pushActivity(GameActivity.Interrogation0, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity lol, Object d0) {
+                        //System.out.println(d0);
+                        questionCount++;
+                        if (d0.equals("sep")) {
+                            round = 1;
+                        }
 
-                    if (questionCount >= MAX_QUESTIONS) {
-                        // :(
-                        youFuckedUp = true;
-                        Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.GoodDay);
+                        if (questionCount >= MAX_QUESTIONS) {
+                            // :(
+                            youFuckedUp = true;
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.GoodDay);
+                        }
                     }
                 });
             } else if (round == 1) {
                 ////System.out.println("askldhkashdkjhaskjhdhakjsdhkjaskjdkjashkjdhaksd");
-                Game.getInstance().pushActivity(GameActivity.Interrogation1, (lol, d0) -> {
-                    questionCount++;
-                    if (d0.equals("sep")) {
-                        round = 2;
-                        success = true;
-                    }
+                Game.getInstance().pushActivity(GameActivity.Interrogation1, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity lol, Object d0) {
+                        questionCount++;
+                        if (d0.equals("sep")) {
+                            round = 2;
+                            success = true;
+                        }
 
-                    if (questionCount >= MAX_QUESTIONS) {
-                        // :(
-                        youFuckedUp = true;
-                        Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.GoodDay);
+                        if (questionCount >= MAX_QUESTIONS) {
+                            // :(
+                            youFuckedUp = true;
+                            Game.getInstance().popActivity();
+                            Game.getInstance().pushActivity(GameActivity.GoodDay);
+                        }
                     }
                 });
             }
@@ -372,13 +378,16 @@ public class InterrogationLocation extends LocationActivity {
                                 }
                             });
 
-                            tasks.add(new DoSomethingTask(() -> {
-                                // Go back to room :)
-                                Game.getInstance().popActivity();
-                                Game.getInstance().pushActivity(GameActivity.Club);
-                                Values.ARGUMENTO = 7;
-                                start = false;
-                                youFuckedUp = false;
+                            tasks.add(new DoSomethingTask(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Go back to room :)
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().pushActivity(GameActivity.Club);
+                                    Values.ARGUMENTO = 7;
+                                    start = false;
+                                    youFuckedUp = false;
+                                }
                             }));
                         }
                     });
@@ -405,16 +414,19 @@ public class InterrogationLocation extends LocationActivity {
                             }
                         });
 
-                        tasks.add(new DoSomethingTask(() -> {
-                            // Go back to room :)
-                            Game.getInstance().popActivity();
-                            Game.getInstance().pushActivity(GameActivity.Room);
-                            Values.ARGUMENTO = 3;
-                            round = 0;
-                            questionCount = 0;
-                            start = true;
-                            youFuckedUp = false;
-                            success = false;
+                        tasks.add(new DoSomethingTask(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Go back to room :)
+                                Game.getInstance().popActivity();
+                                Game.getInstance().pushActivity(GameActivity.Room);
+                                Values.ARGUMENTO = 3;
+                                round = 0;
+                                questionCount = 0;
+                                start = true;
+                                youFuckedUp = false;
+                                success = false;
+                            }
                         }));
                     }
                 });

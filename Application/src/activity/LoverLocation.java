@@ -429,7 +429,7 @@ public class LoverLocation extends LocationActivity{
     }
 
     @Override
-    public void onSelected(Context context, Object data) {
+    public void onSelected(final Context context, Object data) {
         if(data.equals("forensicCard")){
             Game.getInstance().pushActivity(GameActivity.ForensicCardFound);
             Game.getInstance().pushActivity(GameActivity.ForensicCard);
@@ -442,9 +442,12 @@ public class LoverLocation extends LocationActivity{
             phoneCallMade = true;
             Values.TEXT_COLOR = 0xFF3333;
             Game.getInstance().pushActivity(GameActivity.LoverHouse2);
-            Game.getInstance().pushActivity(GameActivity.LoverHouse1, (act,dat) -> {
-                if(dat.equals("finish")){
-                    context.audioRenderer.playSound(hangPhone, false);
+            Game.getInstance().pushActivity(GameActivity.LoverHouse1, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object dat) {
+                    if (dat.equals("finish")) {
+                        context.audioRenderer.playSound(hangPhone, false);
+                    }
                 }
             });
         }else if (data.equals("leaveRoom")){

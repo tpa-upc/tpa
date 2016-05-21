@@ -180,7 +180,7 @@ public class DialogActivity extends Activity {
         int ansId = node.questions[id].answer;
         Dialog.Answer ans = null;
         if (ansId >= 0) ans = node.answers[ansId];
-        Dialog.Question que = node.questions[id];
+        final Dialog.Question que = node.questions[id];
         lines = que.text.split(";");
         text = "";
 
@@ -188,7 +188,7 @@ public class DialogActivity extends Activity {
         for (int i = 0; i < lines.length; ++i) {
             String str = lines[i];
             for (int x = 0; x < str.length(); ++x) {
-                String sub = str.substring(0, x+1);
+                final String sub = str.substring(0, x+1);
                 tasks.add(new Task() {
                     @Override
                     public void onBegin() {
@@ -217,9 +217,12 @@ public class DialogActivity extends Activity {
             });
         }
 
-        tasks.add(new DoSomethingTask(() -> {
-            if (que.data != null)
-                report(que.data);
+        tasks.add(new DoSomethingTask(new Runnable() {
+            @Override
+            public void run() {
+                if (que.data != null)
+                    DialogActivity.this.report(que.data);
+            }
         }));
 
         //tasks.add(new DelayTask(1, context.time));
@@ -244,7 +247,7 @@ public class DialogActivity extends Activity {
                 String str = lines[i];
                 tasks.add(new DelayTask(0.5f, context.time));
                 for (int x = 0; x < str.length(); ++x) {
-                    String sub = str.substring(0, x + 1);
+                    final String sub = str.substring(0, x + 1);
                     tasks.add(new Task() {
                         @Override
                         public void onBegin() {

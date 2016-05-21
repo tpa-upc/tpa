@@ -56,7 +56,7 @@ public class ImageActivity extends Activity {
     }
 
     @Override
-    public void onBegin(Context context) {
+    public void onBegin(final Context context) {
         offX = 0;
         offY = 0;
         //context.audioRenderer.playSound(paper1, false);

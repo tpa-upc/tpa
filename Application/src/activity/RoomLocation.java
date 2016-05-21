@@ -256,7 +256,7 @@ public class RoomLocation extends LocationActivity {
     boolean asdasd = false;
 
     @Override
-    public void onEntered(Context context) {
+    public void onEntered(final Context context) {
         if (!asdasd) {
             tasks.clear();
             asdasd = false;
@@ -312,10 +312,13 @@ public class RoomLocation extends LocationActivity {
             tasks.add(new DelayTask(10, context.time));
 
             // after 10 seconds, add the clickable region and play the telf sound
-            tasks.add(new DoSomethingTask(() -> {
-                phoneActive = true;
-                addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
-                context.audioRenderer.playSound(telfSound, false);
+            tasks.add(new DoSomethingTask(new Runnable() {
+                @Override
+                public void run() {
+                    phoneActive = true;
+                    RoomLocation.this.addPickerBox(new Vector3f(2.25f, 1.0f, -2f), new Vector3f(0.25f, 0.35f, 0.25f), "telf");
+                    context.audioRenderer.playSound(telfSound, false);
+                }
             }));
         }
 
@@ -326,10 +329,13 @@ public class RoomLocation extends LocationActivity {
             } else {
                 // wait and then add click region for the email
                 tasks.add(new DelayTask(5, context.time));
-                tasks.add(new DoSomethingTask(() -> {
-                    addPickerBox(new Vector3f(3.9f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
-                    context.audioRenderer.playSound(emailSound, false);
-                    perpetualPc = true;
+                tasks.add(new DoSomethingTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomLocation.this.addPickerBox(new Vector3f(3.9f, 1.0f, -1.5f), new Vector3f(0.35f, 0.25f, 0.35f), "pc");
+                        context.audioRenderer.playSound(emailSound, false);
+                        perpetualPc = true;
+                    }
                 }));
             }
         }
@@ -476,7 +482,7 @@ public class RoomLocation extends LocationActivity {
     boolean zxczxc = false;
 
     @Override
-    public void onSelected(Context context, Object data) {
+    public void onSelected(final Context context, Object data) {
         if (zxczxc) return;
         if (data.equals("pc")) {
             //System.out.println("pc "+Values.ARGUMENTO);
@@ -538,55 +544,70 @@ public class RoomLocation extends LocationActivity {
                     dial = true;
                     context.audioRenderer.playSound(dialSound, false);
                     tasks.add(new DelayTask(4, context.time));
-                    tasks.add(new DoSomethingTask(() -> {
-                        context.audioRenderer.playSound(dialTonesSound, false);
+                    tasks.add(new DoSomethingTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            context.audioRenderer.playSound(dialTonesSound, false);
+                        }
                     }));
                     tasks.add(new DelayTask(1, context.time));
-                    tasks.add(new DoSomethingTask(() -> {
-                        context.audioRenderer.playSound(holsSound, false);
+                    tasks.add(new DoSomethingTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            context.audioRenderer.playSound(holsSound, false);
+                        }
                     }));
                     tasks.add(new DelayTask(10, context.time));
-                    tasks.add(new DoSomethingTask(() -> {
-                        Game.getInstance().pushActivity(GameActivity.WantToInterrogate, new ActivityListener() {
-                            @Override
-                            public void onResult(Activity act, Object data) {
-                                if (data.equals("finish")) {
-                                    interrogation_room = true;
-                                    dial = false;
-                                    Values.ARGUMENTO = 6;
-                                    fps.setMovable(true);
+                    tasks.add(new DoSomethingTask(new Runnable() {
+                        @Override
+                        public void run() {
+                            Game.getInstance().pushActivity(GameActivity.WantToInterrogate, new ActivityListener() {
+                                @Override
+                                public void onResult(Activity act, Object data) {
+                                    if (data.equals("finish")) {
+                                        interrogation_room = true;
+                                        dial = false;
+                                        Values.ARGUMENTO = 6;
+                                        fps.setMovable(true);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }));
                 }
             } else if (Values.ARGUMENTO == 0) {
                 Values.TEXT_COLOR = 0xFF3333;
-                Game.getInstance().pushActivity(GameActivity.DialoguePhone, (act, dat) -> {
-                    if (dat.equals("finish")) {
-                        alterShowUp = true;
-                        Values.ARGUMENTO = 1;   // advance "plot counter"
-                        context.audioRenderer.playSound(hangPhone, false);
-                    } else if (dat.equals("screw_you")) {
-                        phoneActive = false;
-                        context.audioRenderer.playSound(hangPhone, false);
-                    } else if (dat.equals("ignore")) {
-                        phoneActive = false;
-                        context.audioRenderer.playSound(hangPhone, false);
-                        context.audioRenderer.stopSound(telfSound);
-                    } else if (dat.equals("pickup")) {
-                        phoneActive = false;
-                        context.audioRenderer.stopSound(telfSound);
-                        context.audioRenderer.playSound(pickupPhone, false);
+                Game.getInstance().pushActivity(GameActivity.DialoguePhone, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity act, Object dat) {
+                        if (dat.equals("finish")) {
+                            alterShowUp = true;
+                            Values.ARGUMENTO = 1;   // advance "plot counter"
+                            context.audioRenderer.playSound(hangPhone, false);
+                        } else if (dat.equals("screw_you")) {
+                            phoneActive = false;
+                            context.audioRenderer.playSound(hangPhone, false);
+                        } else if (dat.equals("ignore")) {
+                            phoneActive = false;
+                            context.audioRenderer.playSound(hangPhone, false);
+                            context.audioRenderer.stopSound(telfSound);
+                        } else if (dat.equals("pickup")) {
+                            phoneActive = false;
+                            context.audioRenderer.stopSound(telfSound);
+                            context.audioRenderer.playSound(pickupPhone, false);
+                        }
                     }
                 });
             }
         }  else if(data.equals("alter_ego")){
             Values.TEXT_COLOR = 0xff00ff;
-            Game.getInstance().pushActivity(GameActivity.AlterEgo1, (act, dat) -> {
-                if(dat.equals("note_wall")){
-                    notewallShowUp = true;
-                    pointless_conversation = true;
+            Game.getInstance().pushActivity(GameActivity.AlterEgo1, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object dat) {
+                    if (dat.equals("note_wall")) {
+                        notewallShowUp = true;
+                        pointless_conversation = true;
+                    }
                 }
             });
         } else if(data.equals("alter_ego_pointless")){
@@ -598,13 +619,16 @@ public class RoomLocation extends LocationActivity {
             Game.getInstance().pushActivity(GameActivity.Club);
         }else if(data.equals("alter_ego2")){
             Values.TEXT_COLOR = 0xFF00FF;
-            Game.getInstance().pushActivity(GameActivity.AlterEgo2, (act, dat) -> {
-                if(dat.equals("note2")){
-                    context.audioRenderer.playSound(paper, false);
-                    pointless_conversation = true;
-                    Game.getInstance().popActivity();
-                    Game.getInstance().pushActivity(GameActivity.ReactionNote2);
-                    Game.getInstance().pushActivity(GameActivity.Note1);
+            Game.getInstance().pushActivity(GameActivity.AlterEgo2, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object dat) {
+                    if (dat.equals("note2")) {
+                        context.audioRenderer.playSound(paper, false);
+                        pointless_conversation = true;
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.ReactionNote2);
+                        Game.getInstance().pushActivity(GameActivity.Note1);
+                    }
                 }
             });
 
@@ -652,71 +676,85 @@ public class RoomLocation extends LocationActivity {
                 public void onResult(Activity act, Object data) {
                     if (data.equals("database")) {
                         Game.getInstance().popActivity();
-                        Game.getInstance().pushActivity(GameActivity.LogWarning, (act2, dat) -> {
-                            if (dat.equals("paul")) {
-                                Game.getInstance().popActivity();
-                                Game.getInstance().pushActivity(GameActivity.Ending1, (act3, dat3) -> {
-                                    if(dat3.equals("yes")) {
-                                        keepinvestigating = true;
-                                        Game.getInstance().popActivity();
-                                        Game.getInstance().popActivity();
-                                        Game.getInstance().popActivity();
-                                        Values.TEXT = "The End\n\nYou have reached the 2nd ending";
-                                        Game.getInstance().pushActivity(GameActivity.Intro);
-                                        Game.getInstance().pushActivity(GameActivity.NewspaperBad);
-                                        context.audioRenderer.stopEverything();
-                                    } else if (dat3.equals("no")) {
-                                        Values.BAR_BIF |= 0x2;
-                                        if (Values.BAR_BIF == 0x3) {
-                                            asdasd = true;
-                                            zxczxc = true;
-                                            // "good" ending
-                                            tasks.add(new Task() {
-                                                float t = 1;
-                                                @Override
-                                                public void onBegin() {
-                                                    composite.setTimer(1);
-                                                }
+                        Game.getInstance().pushActivity(GameActivity.LogWarning, new ActivityListener() {
+                            @Override
+                            public void onResult(Activity act2, Object dat) {
+                                if (dat.equals("paul")) {
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().pushActivity(GameActivity.Ending1, new ActivityListener() {
+                                        @Override
+                                        public void onResult(Activity act3, Object dat3) {
+                                            if (dat3.equals("yes")) {
+                                                keepinvestigating = true;
+                                                Game.getInstance().popActivity();
+                                                Game.getInstance().popActivity();
+                                                Game.getInstance().popActivity();
+                                                Values.TEXT = "The End\n\nYou have reached the 2nd ending";
+                                                Game.getInstance().pushActivity(GameActivity.Intro);
+                                                Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                                                context.audioRenderer.stopEverything();
+                                            } else if (dat3.equals("no")) {
+                                                Values.BAR_BIF |= 0x2;
+                                                if (Values.BAR_BIF == 0x3) {
+                                                    asdasd = true;
+                                                    zxczxc = true;
+                                                    // "good" ending
+                                                    tasks.add(new Task() {
+                                                        float t = 1;
 
-                                                @Override
-                                                public boolean onUpdate() {
-                                                    t -= context.time.getFrameTime() * 0.25f;
-                                                    composite.setTimer(Math.max(t, 0));
-                                                    return t < 0;
-                                                }
-                                            });
-                                            tasks.add(new DoSomethingTask(() -> {
-                                                Values.ARGUMENTO = 21;
-                                                Game.getInstance().popActivity();
-                                                Game.getInstance().pushActivity(GameActivity.Room);
-                                            }));
-                                        } else {
-                                            asdasd = true;
-                                            zxczxc = true;
-                                            tasks.add(new Task() {
-                                                float t = 1;
-                                                @Override
-                                                public void onBegin() {
-                                                    composite.setTimer(1);
-                                                }
+                                                        @Override
+                                                        public void onBegin() {
+                                                            composite.setTimer(1);
+                                                        }
 
-                                                @Override
-                                                public boolean onUpdate() {
-                                                    t -= context.time.getFrameTime() * 0.25f;
-                                                    composite.setTimer(Math.max(t, 0));
-                                                    return t < 0;
+                                                        @Override
+                                                        public boolean onUpdate() {
+                                                            t -= context.time.getFrameTime() * 0.25f;
+                                                            composite.setTimer(Math.max(t, 0));
+                                                            return t < 0;
+                                                        }
+                                                    });
+                                                    tasks.add(new DoSomethingTask(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Values.ARGUMENTO = 21;
+                                                            Game.getInstance().popActivity();
+                                                            Game.getInstance().pushActivity(GameActivity.Room);
+                                                        }
+                                                    }));
+                                                } else {
+                                                    asdasd = true;
+                                                    zxczxc = true;
+                                                    tasks.add(new Task() {
+                                                        float t = 1;
+
+                                                        @Override
+                                                        public void onBegin() {
+                                                            composite.setTimer(1);
+                                                        }
+
+                                                        @Override
+                                                        public boolean onUpdate() {
+                                                            t -= context.time.getFrameTime() * 0.25f;
+                                                            composite.setTimer(Math.max(t, 0));
+                                                            return t < 0;
+                                                        }
+                                                    });
+                                                    tasks.add(new DoSomethingTask(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            // go to club
+                                                            Game.getInstance().popActivity();
+                                                            Game.getInstance().popActivity();
+                                                            Game.getInstance().pushActivity(GameActivity.Club);
+                                                            Values.ARGUMENTO = 19;
+                                                        }
+                                                    }));
                                                 }
-                                            });
-                                            tasks.add(new DoSomethingTask(() -> {
-                                                // go to club
-                                                Game.getInstance().popActivity();
-                                                Game.getInstance().popActivity();
-                                                Game.getInstance().pushActivity(GameActivity.Club);
-                                                Values.ARGUMENTO = 19;
-                                            }));
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                         });
                     }else if(data.equals("pacman")){

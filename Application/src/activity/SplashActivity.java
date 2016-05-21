@@ -83,8 +83,11 @@ public class SplashActivity extends Activity {
 
         //tasks.add(new DelayTask(1, context.time));
 
-        tasks.add(new DoSomethingTask(() -> {
-            end = true;
+        tasks.add(new DoSomethingTask(new Runnable() {
+            @Override
+            public void run() {
+                end = true;
+            }
         }));
 
         //if (image.endsWith("black.png")) System.out.println("asdasdasdasdsa");

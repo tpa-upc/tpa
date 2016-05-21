@@ -242,7 +242,7 @@ public class ClubLocation extends LocationActivity {
     }
 
     @Override
-    public void onEntered(Context context) {
+    public void onEntered(final Context context) {
         //addGeometry(box);
 
         addGeometry(wall0);
@@ -294,11 +294,14 @@ public class ClubLocation extends LocationActivity {
                     return t < 0;
                 }
             });
-            tasks.add(new DoSomethingTask(() -> {
-                Values.ARGUMENTO = 8;
-                success = false;
-                Game.getInstance().popActivity();
-                Game.getInstance().pushActivity(GameActivity.Room);
+            tasks.add(new DoSomethingTask(new Runnable() {
+                @Override
+                public void run() {
+                    Values.ARGUMENTO = 8;
+                    success = false;
+                    Game.getInstance().popActivity();
+                    Game.getInstance().pushActivity(GameActivity.Room);
+                }
             }));
         } else {
             if (Values.ARGUMENTO == 7 && questionCount <= MAX_QUESTIONS) {
@@ -342,98 +345,120 @@ public class ClubLocation extends LocationActivity {
     boolean asdasdasd = false;
 
     @Override
-    public void onSelected(Context context, Object data) {
+    public void onSelected(final Context context, Object data) {
         if (asdasdasd) return;
         if(data.equals("barman")) {
             Values.TEXT_COLOR = 0x3333FF;
-            Game.getInstance().pushActivity(GameActivity.Bar0, (act, dat) -> {
-                if (dat.equals("finish")) {
-                    Values.ARGUMENTO = 3;
-                    Game.getInstance().popActivity();
+            Game.getInstance().pushActivity(GameActivity.Bar0, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object dat) {
+                    if (dat.equals("finish")) {
+                        Values.ARGUMENTO = 3;
+                        Game.getInstance().popActivity();
+                    }
                 }
             });
         } else if (data.equals("interrog1")) {
             Values.TEXT_COLOR = 0x3333FF;
-            Game.getInstance().pushActivity(GameActivity.Bar3, (asd, dat) -> {
-                if (dat.equals("recordings")) {
-                    doRecordings = true;
-                    Game.getInstance().popActivity();
-                    Game.getInstance().pushActivity(GameActivity.Bar3Acuse, (asdasd, dd) -> {
-                        if (dd.equals("accuse")) {
-                            Game.getInstance().popActivity();
-                            Game.getInstance().popActivity();
-                            Values.TEXT = "The End\n\nYou have reached the 1st ending";
-                            Game.getInstance().popActivity();
-                            Game.getInstance().popActivity();
-                            Game.getInstance().popActivity();
-                            Game.getInstance().popActivity();
-                            Game.getInstance().pushActivity(GameActivity.Intro);
-                            Game.getInstance().pushActivity(GameActivity.NewspaperBad);
-                            context.audioRenderer.stopEverything();
-                        } else if (dd.equals("keep")) {
-                            asdasdasd = true;
-                            Values.BAR_BIF |= 0x1;
-                            Game.getInstance().popActivity();
-                            tasks.add(new Task() {
-                                float t = 1;
-                                @Override
-                                public void onBegin() {
-                                    composite.setTimer(1);
-                                }
+            Game.getInstance().pushActivity(GameActivity.Bar3, new ActivityListener() {
+                @Override
+                public void onResult(Activity asd, Object dat) {
+                    if (dat.equals("recordings")) {
+                        doRecordings = true;
+                        Game.getInstance().popActivity();
+                        Game.getInstance().pushActivity(GameActivity.Bar3Acuse, new ActivityListener() {
+                            @Override
+                            public void onResult(Activity asdasd, Object dd) {
+                                if (dd.equals("accuse")) {
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().popActivity();
+                                    Values.TEXT = "The End\n\nYou have reached the 1st ending";
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().popActivity();
+                                    Game.getInstance().pushActivity(GameActivity.Intro);
+                                    Game.getInstance().pushActivity(GameActivity.NewspaperBad);
+                                    context.audioRenderer.stopEverything();
+                                } else if (dd.equals("keep")) {
+                                    asdasdasd = true;
+                                    Values.BAR_BIF |= 0x1;
+                                    Game.getInstance().popActivity();
+                                    tasks.add(new Task() {
+                                        float t = 1;
 
-                                @Override
-                                public boolean onUpdate() {
-                                    t -= context.time.getFrameTime() * 0.25f;
-                                    composite.setTimer(Math.max(t, 0));
-                                    return t < 0;
+                                        @Override
+                                        public void onBegin() {
+                                            composite.setTimer(1);
+                                        }
+
+                                        @Override
+                                        public boolean onUpdate() {
+                                            t -= context.time.getFrameTime() * 0.25f;
+                                            composite.setTimer(Math.max(t, 0));
+                                            return t < 0;
+                                        }
+                                    });
+                                    tasks.add(new DoSomethingTask(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (Values.BAR_BIF == 0x3) Values.ARGUMENTO = 21;
+                                            else Values.ARGUMENTO = 20;
+                                            Game.getInstance().popActivity();
+                                            Game.getInstance().pushActivity(GameActivity.Room);
+                                        }
+                                    }));
                                 }
-                            });
-                            tasks.add(new DoSomethingTask(() -> {
-                                if (Values.BAR_BIF == 0x3) Values.ARGUMENTO = 21;
-                                else Values.ARGUMENTO = 20;
-                                Game.getInstance().popActivity();
-                                Game.getInstance().pushActivity(GameActivity.Room);
-                            }));
-                        }
-                    });
-                    Game.getInstance().pushActivity(GameActivity.PokerReaction);
-                    Game.getInstance().pushActivity(GameActivity.Poker);
-                    context.audioRenderer.playSound(snap, false);
+                            }
+                        });
+                        Game.getInstance().pushActivity(GameActivity.PokerReaction);
+                        Game.getInstance().pushActivity(GameActivity.Poker);
+                        context.audioRenderer.playSound(snap, false);
+                    }
                 }
             });
         } else if (data.equals("interrog0")) {
             Values.TEXT_COLOR = 0x3333FF;
             if (round == 0) {
-                Game.getInstance().pushActivity(GameActivity.Bar2Round0, (lol, dat) -> {
-                    if (dat.equals("slide")) {
-                        context.audioRenderer.playSound(slide, false);
-                    } else if (dat.equals("open")) {
-                        context.audioRenderer.playSound(open, false);
-                    } else {
-                        questionCount++;
-                        if (dat.equals("sep0")) hehehe |= 1 << 0;
-                        if (dat.equals("sep1")) hehehe |= 1 << 1;
-                        if (hehehe == 3) round++;
+                Game.getInstance().pushActivity(GameActivity.Bar2Round0, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity lol, Object dat) {
+                        if (dat.equals("slide")) {
+                            context.audioRenderer.playSound(slide, false);
+                        } else if (dat.equals("open")) {
+                            context.audioRenderer.playSound(open, false);
+                        } else {
+                            questionCount++;
+                            if (dat.equals("sep0")) hehehe |= 1 << 0;
+                            if (dat.equals("sep1")) hehehe |= 1 << 1;
+                            if (hehehe == 3) round++;
+                        }
                     }
                 });
             } else if (round == 1) {
-                Game.getInstance().pushActivity(GameActivity.Bar2Round1, (lol, dat) -> {
-                    if (dat.equals("floor")) {
-                        context.audioRenderer.playSound(floor, false);
-                    } else {
-                        questionCount++;
-                        if (dat.equals("sip")) {
-                            round++;
-                            success = true;
+                Game.getInstance().pushActivity(GameActivity.Bar2Round1, new ActivityListener() {
+                    @Override
+                    public void onResult(Activity lol, Object dat) {
+                        if (dat.equals("floor")) {
+                            context.audioRenderer.playSound(floor, false);
+                        } else {
+                            questionCount++;
+                            if (dat.equals("sip")) {
+                                round++;
+                                success = true;
+                            }
                         }
                     }
                 });
             }
         }else if(data.equals("barmanp")){
             Values.TEXT_COLOR = 0x3333FF;
-            Game.getInstance().pushActivity(GameActivity.Bar1, (act, dat) -> {
-                if (dat.equals("satan")) {
-                  count ++;
+            Game.getInstance().pushActivity(GameActivity.Bar1, new ActivityListener() {
+                @Override
+                public void onResult(Activity act, Object dat) {
+                    if (dat.equals("satan")) {
+                        count++;
+                    }
                 }
             });
         }else if(data.equals("gohome")){

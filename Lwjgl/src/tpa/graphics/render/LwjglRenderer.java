@@ -598,7 +598,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
 
     private void updateUniforms () {
         Set<Uniform> unif = used.getUniforms();
-        unif.forEach(u -> {
+        for (Uniform u : unif) {
             int loc = glGetUniformLocation(usedId, u.getName());
             switch (u.getType()) {
                 case Float:
@@ -663,7 +663,7 @@ public class LwjglRenderer implements Renderer, Destroyable {
                     glUniformMatrix4fv(loc, false, matbuffer);
                     break;
             }
-        });
+        }
     }
 
     @Override
@@ -677,21 +677,40 @@ public class LwjglRenderer implements Renderer, Destroyable {
 
     @Override
     public void destroy() {
-        textures.forEach((tex, id) -> glDeleteTextures(id));
+        //textures.forEach((tex, id) -> glDeleteTextures(id));
+        for (Integer tex : textures.values())
+            glDeleteTextures(tex);
 
-        vboPos.forEach((vbos, id) -> glDeleteBuffers(id));
-        vboColor.forEach((vbos, id) -> glDeleteBuffers(id));
-        vboUv.forEach((vbos, id) -> glDeleteBuffers(id));
-        vboNormal.forEach((vbos, id) -> glDeleteBuffers(id));
-        ibos.forEach((ibos, id) -> glDeleteBuffers(id));
+        //vboPos.forEach((vbos, id) -> glDeleteBuffers(id));
+        for (Integer id : vboPos.values()) glDeleteBuffers(id);
 
-        programs.forEach((prog, id) -> glDeleteProgram(id));
-        verts.forEach((vert, id) -> glDeleteShader(id));
-        frags.forEach((frag, id) -> glDeleteShader(id));
+        //vboColor.forEach((vbos, id) -> glDeleteBuffers(id));
+        for (Integer id : vboColor.values()) glDeleteBuffers(id);
 
-        if (caps.OpenGL30)
-            fbos.forEach((fbo, id) -> glDeleteFramebuffers(id));
-        else if (FBO_EXT)
-            fbos.forEach((fbo, id) -> glDeleteFramebuffersEXT(id));
+        //vboUv.forEach((vbos, id) -> glDeleteBuffers(id));
+        for (Integer id : vboUv.values()) glDeleteBuffers(id);
+
+        //vboNormal.forEach((vbos, id) -> glDeleteBuffers(id));
+        for (Integer id : vboNormal.values()) glDeleteBuffers(id);
+
+        //ibos.forEach((ibos, id) -> glDeleteBuffers(id));
+        for (Integer id : ibos.values()) glDeleteBuffers(id);
+
+        //programs.forEach((prog, id) -> glDeleteProgram(id));
+        for (Integer id : programs.values()) glDeleteProgram(id);
+
+        //verts.forEach((vert, id) -> glDeleteShader(id));
+        for (Integer id : verts.values()) glDeleteShader(id);
+
+        //frags.forEach((frag, id) -> glDeleteShader(id));
+        for (Integer id : frags.values()) glDeleteShader(id);
+
+        if (caps.OpenGL30) {
+            //fbos.forEach((fbo, id) -> glDeleteFramebuffers(id));
+            for (Integer id : fbos.values()) glDeleteFramebuffers(id);
+        } else if (FBO_EXT) {
+            //fbos.forEach((fbo, id) -> glDeleteFramebuffersEXT(id));
+            for (Integer id : fbos.values()) glDeleteFramebuffersEXT(id);
+        }
     }
 }

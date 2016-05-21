@@ -93,7 +93,7 @@ public class AcidLocation extends LocationActivity {
     TaskManager task = new TaskManager();
 
     @Override
-    public void onEntered(Context context) {
+    public void onEntered(final Context context) {
         setNoise(0.5f);
         //Game.getInstance().pushActivity(GameActivity.Acid1);
         task.clear();
@@ -113,10 +113,13 @@ public class AcidLocation extends LocationActivity {
                 return t < 0;
             }
         });
-        task.add(new DoSomethingTask(() -> {
-            Game.getInstance().popActivity();
-            Game.getInstance().pushActivity(GameActivity.Lover);
-            Game.getInstance().pushActivity(GameActivity.Acid2);
+        task.add(new DoSomethingTask(new Runnable() {
+            @Override
+            public void run() {
+                Game.getInstance().popActivity();
+                Game.getInstance().pushActivity(GameActivity.Lover);
+                Game.getInstance().pushActivity(GameActivity.Acid2);
+            }
         }));
 
         addGeometry(cubo);

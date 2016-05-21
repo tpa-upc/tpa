@@ -40,7 +40,7 @@ public class LwjglMouseInput implements MouseInput, Destroyable {
         lastX = x = 0;
         lastY = y = 0;
 
-        LwjglMouseInput handle = this;
+        final LwjglMouseInput handle = this;
 
         glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback() {
             @Override

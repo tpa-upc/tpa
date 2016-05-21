@@ -278,8 +278,10 @@ public class LwjglAudioRenderer implements AudioRenderer, Destroyable {
     @Override
     public void destroy() {
         // destroy allocated sources & buffers
-        sources.forEach((s, source) -> alDeleteSources(source));
-        buffers.forEach((s, buffer) -> alDeleteBuffers(buffer));
+        //sources.forEach((s, source) -> alDeleteSources(source));
+        for (Integer source : sources.values()) alDeleteSources(source);
+        //buffers.forEach((s, buffer) -> alDeleteBuffers(buffer));
+        for (Integer buffer: buffers.values()) alDeleteBuffers(buffer);
 
         // destroy openAL context
         ALC10.alcDestroyContext(context);

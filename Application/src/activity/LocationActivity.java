@@ -210,7 +210,7 @@ public abstract class LocationActivity extends Activity {
     private TaskManager taks = new TaskManager();
 
     @Override
-    public void onBegin(Context context) {
+    public void onBegin(final Context context) {
         composite.setNoise(0);
 
         onEntered(context);

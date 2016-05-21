@@ -49,7 +49,7 @@ public class IntroActivity extends Activity {
     }
 
     @Override
-    public void onBegin(Context context) {
+    public void onBegin(final Context context) {
         int w = context.window.getWidth();
         int h = context.window.getHeight();
         batch.setProjection(new Matrix4f().setOrtho2D(0, w, h, 0));
@@ -57,11 +57,11 @@ public class IntroActivity extends Activity {
 
         alpha = 1;
         text = "";
-        String show = Values.TEXT;
+        final String show = Values.TEXT;
         blink = false;
         tasks.add(new DelayTask(2, context.time));
         for (int i = 0; i < 7; ++i) {
-            int ind = i;
+            final int ind = i;
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
@@ -77,7 +77,7 @@ public class IntroActivity extends Activity {
         }
 
         for (int i = 0; i < show.length(); ++i) {
-            int ind = i;
+            final int ind = i;
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
@@ -101,7 +101,7 @@ public class IntroActivity extends Activity {
         }
 
         for (int i = 0; i < 5; ++i) {
-            int ind = i;
+            final int ind = i;
             tasks.add(new Task() {
                 @Override
                 public void onBegin() {
