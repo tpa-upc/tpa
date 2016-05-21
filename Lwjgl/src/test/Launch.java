@@ -29,7 +29,7 @@ public class Launch {
             monitor = GLFW.glfwGetPrimaryMonitor();
 
         //long window = GLFW.glfwCreateWindow(800, 600, "Hello world", GLFW.glfwGetPrimaryMonitor(), MemoryUtil.NULL);
-        long window = GLFW.glfwCreateWindow(800, 600, "Hello world", monitor, MemoryUtil.NULL);
+        long window = GLFW.glfwCreateWindow(800, 600, "Video game project :: TPA@ETSETB-UPC", monitor, MemoryUtil.NULL);
         GLFW.glfwMakeContextCurrent(window);
         GLFW.glfwSwapInterval(1);
 
