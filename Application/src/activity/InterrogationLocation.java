@@ -69,7 +69,7 @@ public class InterrogationLocation extends LocationActivity {
         Game.getInstance().getResources().load("res/textures/interrogation_texture.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_left.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/interrogation_texture_top.png", Texture.class);
-        Game.getInstance().getResources().load("res/textures/albert.png", Texture.class);
+        Game.getInstance().getResources().load("res/textures/pixelated.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/enemies.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/window.png", Texture.class);
         Game.getInstance().getResources().load("res/textures/windowReflect.png", Texture.class);
@@ -94,7 +94,7 @@ public class InterrogationLocation extends LocationActivity {
         Texture tileTex = Game.getInstance().getResources().get("res/textures/interrogation_texture.png", Texture.class);
         Texture wallTex = Game.getInstance().getResources().get("res/textures/interrogation_texture_left.png", Texture.class);
         Texture doorTex = Game.getInstance().getResources().get("res/textures/pixel.png", Texture.class);
-        Texture albertTex = Game.getInstance().getResources().get("res/textures/albert.png", Texture.class);
+        Texture albertTex = Game.getInstance().getResources().get("res/textures/pixelated.png", Texture.class);
         Texture enemiesTex = Game.getInstance().getResources().get("res/textures/enemies.png", Texture.class);
         Texture windowTex = Game.getInstance().getResources().get("res/textures/window.png", Texture.class);
         Texture windowTexRefl = Game.getInstance().getResources().get("res/textures/windowReflect.png", Texture.class);
